@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+
+      <CartNavbar />
+
       <img class="home-slogan" src="./../assets/home-slogan.png" />
     <div class="home-mask">
       <div class="home-anime">
@@ -15,16 +18,35 @@
       <img class="home-major-product" src="./../assets/home-major.jpg" />
       <img class="home-major-name" src="./../assets/home-major-04.png" />
     </div>
+    <div class="nav">
+      <Navbar />
+    </div>
   </div>
 </template>
 
-<style lang="scss">
+<script>
+import Navbar from "@/components/Navbar.vue";
+import CartNavbar from "@/components/CartNavbar.vue";
+export default {
+  name: "Home",
+  components: {
+    Navbar,
+    CartNavbar
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+
 .home {
   margin: 0 0;
   outline: 1px red solid;
   width: 100vw;
   height: 100vh;
   background-image: url("./../assets/home-background.png");
+
+
+
   &-slogan {
     z-index: 5;
     left: 5%;
@@ -47,9 +69,6 @@
       display: block;
       position: absolute;
       opacity: 0;
-      filter: alpha(opacity=0);
-      /*動畫全長時間設定*/
-      -webkit-animation: slider 18s linear infinite;
       animation: slider 18s linear infinite;
     }
     img {
@@ -118,17 +137,14 @@
 }
 
 .home-anime div:nth-child(1) {
-  -webkit-animation-delay: 0s;
   animation-delay: 0s;
 }
 
 .home-anime div:nth-child(2) {
-  -webkit-animation-delay: 6s;
   animation-delay: 6s;
 }
 
 .home-anime div:nth-child(3) {
-  -webkit-animation-delay: 12s;
   animation-delay: 12s;
 }
 </style>
