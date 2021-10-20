@@ -4,10 +4,14 @@
       <img src="./../assets/home-nav-icon-08.png" />
     </div>
     <div class="home-nav-icon">
-      <img src="./../assets/home-nav-icon-06.png" />
+      <router-link :to="{ name: 'Product' }">
+        <img src="./../assets/home-nav-icon-06.png" />
+      </router-link>
     </div>
     <div class="home-nav-logo">
-      <img src="./../assets/home-logo.png" />
+      <router-link :to="{ name: 'Home' }">
+        <img src="./../assets/home-logo.png" />
+      </router-link>
     </div>
     <div class="home-nav-icon">
       <img src="./../assets/home-nav-icon-09.png" />
@@ -20,8 +24,8 @@
 
 <style lang="scss" scoped>
 .home-nav {
-  bottom: 5vh;
-  position: absolute;
+  // position: absolute;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -29,48 +33,50 @@
   width: 100vw;
   &-logo {
     display: flex;
-    width: 30%;
+    max-width: 30%;
+
     img {
       margin: 0 auto;
+      min-width: 220px;
       width: 70%;
     }
-    :hover {
-       animation: logoFocus 0.1s linear infinite;
+    &:hover {
+      animation: logoFocus 0.1s linear infinite;
     }
   }
   &-icon {
     margin: 0 2%;
     width: 10%;
-   // border-left: 4px #38301f solid;
+    min-width: 100px;
+    // border-left: 4px #38301f solid;
     padding: 0 0 0 1%;
-     z-index: 2;
- 
+    z-index: 2;
+
     &::after {
       content: "";
-      top:80%;
+      top: 80%;
       position: absolute;
       display: block;
-      width: 9VW;
+      width: 9vw;
       height: 10%;
       z-index: -1;
       background-color: #edda7e;
+      transition: 0.3s;
     }
     &::before {
-       position: absolute;
+      position: absolute;
       display: block;
-  transform: translateX(-250%);
-      top:70%;
-       content: "";
-       height: 30%;
-       width: 0.5%;
-       background-color: #38301f;
-
+      transform: translateX(-250%);
+      top: 70%;
+      content: "";
+      height: 30%;
+      width: 0.5%;
+      background-color: #38301f;
     }
     &:hover {
       &::after {
-      background-color: #9ac167;
-    }
-
+        background-color: #9ac167;
+      }
     }
   }
 }
@@ -79,19 +85,17 @@
   0% {
     transform: rotate(0deg);
   }
-    25% {
+  25% {
     transform: rotate(-2deg);
   }
-      50% {
+  50% {
     transform: rotate(0deg);
   }
-       75% {
+  75% {
     transform: rotate(2deg);
   }
   100% {
     transform: rotate(0deg);
   }
-
-
 }
 </style>
