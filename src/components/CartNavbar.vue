@@ -10,6 +10,7 @@
 </template>
 
 <style lang="scss" scoped>
+@import "../assets/scss/color.scss";
 .cart-navbar {
   background-image: url("./../assets/home-background.png");
   z-index: 5;
@@ -19,6 +20,7 @@
   padding: 0 0.6%;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
+  box-shadow: -1px 1px 2px 1px rgba(0, 0, 0, 0.2);
   .icon::before {
     content: "";
       transform: translateY(120%);

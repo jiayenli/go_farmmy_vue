@@ -37,6 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/scss/color.scss";
 
 .home {
   margin: 0 0;
@@ -44,8 +45,7 @@ export default {
   width: 100vw;
   height: 100vh;
   background-image: url("./../assets/home-background.png");
-
-
+  position: relative;
 
   &-slogan {
     z-index: 5;
@@ -64,7 +64,7 @@ export default {
   }
   &-anime {
     position: relative;
-    height: 90vh;
+    height: 95vh;
     div {
       display: block;
       position: absolute;
@@ -103,7 +103,7 @@ export default {
     &-product {
       position: absolute;
       z-index: 2;
-      border: 8px #38301f solid;
+      border: 8px $color-brown solid;
       border-radius: 50%;
       overflow: hidden;
       object-fit: cover;
@@ -117,6 +117,11 @@ export default {
       left: 40px;
     }
   }
+}
+.nav {
+  position: absolute;
+  bottom:6vh;
+
 }
 
 /*動畫關鍵影格, slider動畫名字*/
