@@ -29,7 +29,7 @@
         />
         <span>個</span>
       </div>
-      <div class="product-content-items-card-panel-button">加入購物車</div>
+      <div class="product-content-items-card-panel-button">購物車</div>
     </div>
   </div>
 </div>
@@ -39,14 +39,16 @@
 @import "../assets/scss/color.scss";
 .product-items {
         display: flex;
+        justify-content: space-between;
       flex-wrap: wrap;
-      border-top: solid $color-brown 4px;
-      padding-top:5%;
+      
+      padding:5% 0;
 }
 .product-content-items-card {
-  margin-right: 4%;
-  height: 450px;
-  width: 300px;
+  //margin-right: 4%;
+  max-height: 420px;
+  max-width: 33.3%;
+  padding:0 2%;
   h2 {
     margin-top: 3%;
     text-align: center;
@@ -62,9 +64,11 @@
     position: relative;
     display: flex;
     height: 60%;
+    white-space: normal;
+    overflow: hidden;
     img {
       object-fit: cover;
-      transition: 0.5s;
+      transition: 0.5s;  
     }
     h4 {
       position: absolute;
@@ -73,10 +77,12 @@
       right: 50%;
       transform: translateX(50%);
       width: 90%;
+      height: 100%;
       opacity: 0;
-      word-wrap: break-word;
+      //word-wrap: break-word;
       line-height: 200%;
       transition: 0.5s;
+      //text-overflow: ellipsis
     }
     &:hover {
       img {

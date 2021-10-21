@@ -91,7 +91,7 @@ export default {
   //outline: 1px red solid;
   width: 100vw;
   height: 100vh;
-  overflow: scroll;
+  overflow-y: scroll;
   background-image: url("./../assets/home-background.png");
   &-cover {
     position: relative;
@@ -175,8 +175,12 @@ export default {
       }
     }
     &-items {
-      padding-right: 10%;
+      padding-right: 7.5%;
       width: 70%;
+      h2 {
+        margin:0 2%;
+        border-bottom: solid $color-brown 4px;
+      }
 
       //outline: red 1px solid;
     }

@@ -30,7 +30,7 @@
   justify-content: center;
   align-items: flex-end;
 
-  width: 100vw;
+  //width: 100vw;
   &-logo {
     display: flex;
     max-width: 30%;
