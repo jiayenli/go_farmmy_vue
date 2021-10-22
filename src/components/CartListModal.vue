@@ -1,0 +1,111 @@
+<template>
+  <div class="cartList-modal">
+    <div class="cartList-modal-notication">
+      <h4>購物車</h4>
+      <div class="cartList-modal-notication-content">
+        <div
+          class="cartList-modal-notication-content-item"
+          v-for="item in shoppingCart"
+          :key="item.id"
+        >
+          <div class="cartList-modal-notication-content-item-name">
+            <h6>{{ item.name }}</h6>
+          </div>
+          <div class="cartList-modal-notication-content-item-number">
+            <h6>{{ item.number }}組</h6>
+          </div>
+          <div
+            class="cartList-modal-notication-content-item-delete"
+            @click.stop.prevent="deleteItems(item)"
+          >
+            <h6>x</h6>
+          </div>
+        </div>
+        <div class="cartList-modal-notication-content-button">
+          <h5>結帳</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState(["shoppingCart"]),
+  },
+  methods: {
+    deleteItems(item) {
+   
+      this.$store.commit("deleteItem", item);
+      if (this.isAuthenticated) {
+        //待補打刪除api
+      } else {
+        localStorage.setItem(
+          "go_farmmy_products",
+          JSON.stringify(this.shoppingCart)
+        );
+      }
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../assets/scss/color.scss";
+.cartList-modal {
+  border-radius: 5px;
+  top: 0;
+  right: 115%;
+  position: absolute;
+  width: 400%;
+  background-color: $color-brown;
+  border: 4px $color-brown solid;
+  box-shadow: -1px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  &-notication {
+    h4 {
+      padding: 2%;
+      color: white;
+    }
+    &-content {
+      padding: 2% 2% 5% 2%;
+      background-image: url("./../assets/home-background.png");
+      &-item {
+        padding: 2% 0;
+        display: flex;
+        &-name,
+        &-number {
+          width: 50%;
+        }
+        &-delete {
+          background-color: $color-red;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 18px;
+          width: 18px;
+          border-radius: 50%;
+          padding-bottom: 1%;
+          cursor: pointer;
+          h6 {
+            color: white;
+          }
+        }
+      }
+      &-button {
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2%;
+        background-color: $color-yellow;
+        margin-top: 5%;
+        &:hover {
+          background-color: $color-green;
+        }
+      }
+    }
+  }
+}
+</style>
