@@ -28,13 +28,17 @@
             ><h3>密碼</h3></label
           >
           <input
-            v-model="email"
+            v-model="password"
             class="signin-form-content-password-input"
             id="password"
-            type="password"
+            :type="showPassword"
             autofocus
             required
           />
+          <div class="signin-form-content-password-eye">
+            <i v-if="showPassword" class="fas fa-eye-slash" @click.stop.prevent="clickShowPassword"></i>
+            <i v-else class="fas fa-eye" @click.stop.prevent="clickHidePassword"></i>
+          </div>
         </div>
         <div class="signin-form-content-fast">
           <h3>快速登入</h3>
@@ -56,8 +60,7 @@
   position: relative;
   overflow: hidden;
   &-img-1 {
-
-transform-origin: bottom ;
+    transform-origin: bottom right;
     top: 10%;
     height: 50%;
     position: absolute;
@@ -65,8 +68,8 @@ transform-origin: bottom ;
     animation: vegatable-move-1 1.5s ease-in infinite;
   }
   &-img-2 {
-    transform-origin: bottom ;
-     animation: vegatable-move-1 1.5s ease-in infinite;
+    transform-origin: bottom;
+    animation: vegatable-move-1 1.5s ease-in infinite;
     bottom: -10%;
     height: 75%;
     position: absolute;
@@ -108,6 +111,16 @@ transform-origin: bottom ;
         border: 4px $color-brown solid;
       }
     }
+    &-password {
+      position: relative;
+      &-eye {
+        position: absolute;
+        right: 10%;
+        top: 50%;
+        color: $color-yellow;
+        cursor: pointer;
+      }
+    }
     &-fast {
       margin-top: 5%;
       border-top: 4px $color-brown dashed;
@@ -139,19 +152,19 @@ transform-origin: bottom ;
 }
 @keyframes vegatable-move-1 {
   0% {
-    transform:rotateX(0deg);
+    transform: rotateX(0deg);
   }
   25% {
-    transform:rotate(5deg); 
+    transform: rotate(5deg);
   }
   50% {
-    transform:rotate(10deg);
+    transform: rotate(10deg);
   }
   75% {
-    transform:rotate(5deg);
+    transform: rotate(5deg);
   }
   100% {
-    transform:rotate(0deg);
+    transform: rotate(0deg);
   }
 }
 </style>
@@ -160,14 +173,20 @@ transform-origin: bottom ;
 export default {
   data() {
     return {
+      showPassword: "password",
+      email: "",
+      password: "",
     };
   },
   methods: {
-
+    clickShowPassword() {
+      this.showPassword= ""
+    },
+    clickHidePassword() {
+      this.showPassword= "password"
+    }
   },
 
-  mounted() {
-
-  },
+  mounted() {},
 };
 </script>
