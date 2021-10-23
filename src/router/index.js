@@ -26,6 +26,11 @@ const routes = [
     name: 'Product',
     component: () => import('../views/Product.vue')
   },
+  {
+    path: '/goFarmmy/signin',
+    name: 'Sign-in',
+    component: () => import('../views/Signin.vue')
+  },
 
 ]
 

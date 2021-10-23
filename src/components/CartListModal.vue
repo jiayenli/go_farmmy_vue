@@ -1,7 +1,7 @@
 <template>
   <div class="cartList-modal">
     <div class="cartList-modal-notication">
-      <h4>購物車</h4>
+      <h3>購物車</h3>
       <div class="cartList-modal-notication-content">
         <div
           class="cartList-modal-notication-content-item"
@@ -9,10 +9,10 @@
           :key="item.id"
         >
           <div class="cartList-modal-notication-content-item-name">
-            <h6>{{ item.name }}</h6>
+            <h4>{{ item.name }}</h4>
           </div>
           <div class="cartList-modal-notication-content-item-number">
-            <h6>{{ item.number }}組</h6>
+            <h4>{{ item.number }}組</h4>
           </div>
           <div
             class="cartList-modal-notication-content-item-delete"
@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="cartList-modal-notication-content-button">
-          <h5>結帳</h5>
+          <h4>結帳</h4>
         </div>
       </div>
     </div>
@@ -59,12 +59,12 @@ export default {
   top: 0;
   right: 115%;
   position: absolute;
-  width: 400%;
+  width: 500%;
   background-color: $color-brown;
   border: 4px $color-brown solid;
   box-shadow: -1px 1px 2px 1px rgba(0, 0, 0, 0.2);
   &-notication {
-    h4 {
+    h3 {
       padding: 2%;
       color: white;
     }
@@ -88,6 +88,7 @@ export default {
           border-radius: 50%;
           padding-bottom: 1%;
           cursor: pointer;
+          flex-shrink: 0;
           h6 {
             color: white;
           }
@@ -102,7 +103,8 @@ export default {
         background-color: $color-yellow;
         margin-top: 5%;
         &:hover {
-          background-color: $color-green;
+          // background-color: $color-green;
+          opacity: 0.8;
         }
       }
     }

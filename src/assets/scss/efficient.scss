@@ -1,0 +1,15 @@
+%cover-title {
+  position: absolute;
+  max-height: 90px;
+  max-width: 250px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+}
+
+%cover-img {
+  margin-top: 1%;
+  height: 300px;
+  width: 100%;
+  object-fit: cover;
+}

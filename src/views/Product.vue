@@ -17,15 +17,15 @@
         <div class="product-content-nav-category">
           <h2>商品分類</h2>
           <div class="product-content-nav-category-name">
-          <div >
-            <h3>全部</h3>
-          </div>
-          <div >
-            <h3>果物</h3>
-          </div>
-          <div >
-            <h3>蔬菜</h3>
-          </div>
+            <div>
+              <h3>全部</h3>
+            </div>
+            <div>
+              <h3>果物</h3>
+            </div>
+            <div>
+              <h3>蔬菜</h3>
+            </div>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@ import ProductAPI from "./../apis/products";
 import Swal from "sweetalert2";
 
 export default {
-  name: "Home",
+  name: "Product",
   components: {
     Navbar,
     CartNavbar,
@@ -85,6 +85,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/scss/color.scss";
+@import "../assets/scss/efficient.scss";
 
 .product {
   margin: 0 0;
@@ -96,18 +97,10 @@ export default {
   &-cover {
     position: relative;
     &-title {
-      position: absolute;
-      max-height: 90px;
-      max-width: 250px;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      top: 50%;
+      @extend %cover-title;
     }
     &-img {
-      margin-top: 1%;
-      height: 300px;
-      width: 100%;
-      object-fit: cover;
+      @extend %cover-img;
     }
   }
   &-content {
@@ -154,7 +147,7 @@ export default {
           padding: 2%;
           padding-top: 5%;
           h3 {
-            margin-bottom:5% ;
+            margin-bottom: 5%;
           }
           h3::before {
             content: "";
@@ -178,7 +171,7 @@ export default {
       padding-right: 7.5%;
       width: 70%;
       h2 {
-        margin:0 2%;
+        margin: 0 2%;
         border-bottom: solid $color-brown 4px;
       }
 
@@ -186,6 +179,4 @@ export default {
     }
   }
 }
-
-
 </style>
