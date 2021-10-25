@@ -1,78 +1,84 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Swal from "sweetalert2";
+//import Swal from "sweetalert2";
+import UserAPI from "./../apis/users";
+import cart from './modules/cart'
 
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    shoppingCart:[],
-    isAuthenticated:false,
+    //shoppingCart: [],
+    isAuthenticated: false,
+    currentUser: [],
+    token: '',
+   cartModel: false
   },
   mutations: {
-    //沒登入存在local storage
-    addProducts(state, items) {
-      state.shoppingCart = [
-        ...items
-      ]
+    //控制購物車modal顯示
+    openCartModel(state) {
+      state.cartModel = true
+
+    },
+    closeCartModel(state) {
+      state.cartModel = false
+
+    },
+
+    //建立登入者資料
+    setCurrentUser(state, currentUser) {
+      state.currentUser = {
+        ...state.currentUser,
+        ...currentUser,
+      };
+      
+      state.isAuthenticated = true
+      state.token = localStorage.getItem('gofarmmy_token')
     },
 
 
-    updateProducts(state, item) {
-      const itemOrder = state.shoppingCart.findIndex(
-        (product) => product.id === item.id
-      );
-  
-      if (itemOrder !== -1) {
-        let itemNumber = state.shoppingCart[itemOrder].number 
-        if (Number(itemNumber) + Number(item.number) > item.quantity) {
-          state.shoppingCart[itemOrder].number = item.quantity
-          Swal.fire({
-            icon: "success",
-            title: `已達${item.name}購買上限數量！`,
-            toast: true,
-            showConfirmButton: false,
-            timer: 3000,
-          });
-        } else {
-          state.shoppingCart[itemOrder].number = Number(itemNumber) + Number(item.number);
-          Swal.fire({
-            icon: "success",
-            title: `${item.number}組${item.name} 已加入購物車！`,
-            toast: true,
-            showConfirmButton: false,
-            timer: 3000,
-          });
+
+ 
+
+     logOut(state) {
+       
+       localStorage.removeItem("gofarmmy_token");
+       localStorage.removeItem("go_farmmy_products");
+      state.cart.shoppingCart = []
+      state.currentUser = []
+       state.token = ''
+      state.isAuthenticated = false
+
+    }
+
+
+
+
+  },
+  actions: {
+
+    async fetchCurrentUser({ commit }) {
+      try {
+        const { data } = await UserAPI.getCurrentUser();
+        if (data.status === "error") {
+          throw new Error(data.message);
         }
-         
-      } else {
-        state.shoppingCart.push({
-          name: item.name,
-          id: item.id,
-          number: item.number,
-        });
-        Swal.fire({
-          icon: "success",
-          title: `${item.number}組${item.name} 已加入購物車！`,
-          toast: true,
-          showConfirmButton: false,
-          timer: 3000,
-        });
+        console.log(data.currentUser)
+
+        commit("setCurrentUser", data.currentUser)
+        return true
+      } catch (error) {
+        console.log(error.message);
+        commit('logOut')
+        return false
       }
     },
 
-    deleteItem(state, item) {
-      const newItem = state.shoppingCart.filter((product) => product.name !== item.name)
-      state.shoppingCart = [
-        ...newItem
-      ]
-    }
-  },
-  actions: {
-    // 有登入存在帳號
+    
 
   },
   modules: {
+    cart,
   }
 })

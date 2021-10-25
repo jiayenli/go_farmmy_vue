@@ -2,11 +2,11 @@
   <div class="product">
     <Navbar />
     <CartNavbar />
-    <div class="product-cover">
+    <div class="product-cover" @click="controlCartModel">
       <img class="product-cover-title" src="./../assets/product-icon-1.png" />
       <img class="product-cover-img" src="./../assets/product-img-1.png" />
     </div>
-    <div class="product-content">
+    <div class="product-content" @click="controlCartModel">
       <div class="product-content-nav">
         <div class="product-content-nav-search">
           <div>
@@ -60,6 +60,10 @@ export default {
   },
 
   methods: {
+     controlCartModel() {
+       this.$store.commit('closeCartModel')
+
+     },
     async fetchData() {
       try {
         const response = await ProductAPI.getProducts({ categoryId: "" });

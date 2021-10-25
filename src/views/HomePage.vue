@@ -4,14 +4,14 @@
       <CartNavbar />
 
       <img class="home-slogan" src="./../assets/home-slogan.png" />
-    <div class="home-mask">
+    <div class="home-mask" @click="controlCartModel">
       <div class="home-anime">
         <div><img src="./../assets/home-img-4.png" /></div>
         <div><img src="./../assets/home-img-5.png" /></div>
         <div><img src="./../assets/home-img-3.jpg" /></div>
       </div>
     </div>
-    <div class="home-major">
+    <div class="home-major" @click="controlCartModel">
       <img class="home-major-crown" src="./../assets/home-major-02.png" />
       <img class="home-major-msg" src="./../assets/home-major-03.png" />
 
@@ -33,6 +33,13 @@ export default {
     Navbar,
     CartNavbar
   },
+  methods: {
+        controlCartModel() {
+       this.$store.commit('closeCartModel')
+
+
+     },
+  }
 };
 </script>
 

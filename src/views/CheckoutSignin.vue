@@ -45,7 +45,7 @@ export default {
     SigninForm
   },
   methods: {
-        controlCartModel() {
+       controlCartModel() {
        this.$store.commit('closeCartModel')
 
      },

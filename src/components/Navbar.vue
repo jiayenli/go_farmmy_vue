@@ -1,5 +1,5 @@
 <template>
-  <div class="home-nav">
+  <div class="home-nav" @click="controlCartModel">
     <div class="home-nav-icon">
       <img src="./../assets/home-nav-icon-08.png" />
     </div>
@@ -21,6 +21,17 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+        controlCartModel() {
+       this.$store.commit('closeCartModel')
+
+     },
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .home-nav {

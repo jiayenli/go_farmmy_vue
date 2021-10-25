@@ -1,11 +1,11 @@
 <template>
   <div class="cartList-modal">
-    <div class="cartList-modal-notication">
+    <div class="cartList-modal-notication" >
       <h3>購物車</h3>
       <div class="cartList-modal-notication-content">
         <div
           class="cartList-modal-notication-content-item"
-          v-for="item in shoppingCart"
+          v-for="item in cart.shoppingCart"
           :key="item.id"
         >
           <div class="cartList-modal-notication-content-item-name">
@@ -21,8 +21,20 @@
             <h6>x</h6>
           </div>
         </div>
-        <div class="cartList-modal-notication-content-button">
+
+        <div
+          v-if="isAuthenticated"
+          @click.stop.prevent="authenticatedCheckOut"
+          class="cartList-modal-notication-content-button"
+        >
           <h4>結帳</h4>
+        </div>
+        <div
+          v-if="!isAuthenticated"
+          class="cartList-modal-notication-content-button"
+          @click.stop.prevent="unAuthenticatedCheckOut"
+        >
+          <h4>登入結帳</h4>
         </div>
       </div>
     </div>
@@ -31,22 +43,69 @@
 
 <script>
 import { mapState } from "vuex";
+import Swal from "sweetalert2";
+import CartAPI from "./../apis/cart";
 export default {
   computed: {
-    ...mapState(["shoppingCart"]),
+    ...mapState(["cart", "isAuthenticated"]),
   },
   methods: {
-    deleteItems(item) {
-   
-      this.$store.commit("deleteItem", item);
+    async deleteItems(item) {
       if (this.isAuthenticated) {
-        //待補打刪除api
+        this.$store.commit("deleteItem", item);
+        try {
+          await CartAPI.deleteCartItem({
+            Id: item.id,
+          });
+          localStorage.setItem(
+            "go_farmmy_products",
+            JSON.stringify(this.cart.shoppingCart)
+          );
+        } catch (error) {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            title: "刪除失敗，請稍後再試！",
+            toast: true,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          this.$store.dispatch("fetchSoppingCard");
+
+          return;
+        }
       } else {
+        this.$store.commit("deleteItem", item);
         localStorage.setItem(
           "go_farmmy_products",
           JSON.stringify(this.shoppingCart)
         );
       }
+    },
+    authenticatedCheckOut() {
+      this.$store.commit("closeCartModel");
+      if (this.cart.shoppingCart.length === 0) {
+        this.notification();
+        return;
+      }
+      this.$router.push({ name: "CheckOut-Products" });
+    },
+    unAuthenticatedCheckOut() {
+      this.$store.commit("closeCartModel");
+      if (this.cart.shoppingCart.length === 0) {
+        this.notification();
+        return;
+      }
+      this.$router.push({ name: "CheckOut-Sign-in" });
+    },
+    notification() {
+      Swal.fire({
+        icon: "warning",
+        title: "購物車內沒有商品！！",
+        toast: true,
+        showConfirmButton: false,
+        timer: 2000,
+      });
     },
   },
 };
@@ -105,6 +164,7 @@ export default {
         &:hover {
           // background-color: $color-green;
           opacity: 0.8;
+          cursor: pointer;
         }
       }
     }

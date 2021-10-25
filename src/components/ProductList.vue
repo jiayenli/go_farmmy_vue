@@ -6,8 +6,17 @@
       :key="item.id"
     >
       <div class="product-content-items-card-img">
-        <div class="product-content-items-card-img-number">
+        <div
+          v-if="item.quantity > 0"
+          class="product-content-items-card-img-number"
+        >
           <h5>限量{{ item.quantity }}組</h5>
+        </div>
+        <div
+          v-if="item.quantity === 0"
+          class="product-content-items-card-img-number"
+        >
+          <h5>已售完</h5>
         </div>
         <img :src="item.image" />
         <h4>
@@ -55,7 +64,8 @@
           :disabled="
             item.number > item.quantity ||
             Number(item.number) <= 0 ||
-            !Number.isInteger(Number(item.number))
+            !Number.isInteger(Number(item.number)) ||
+            item.quantity === 0
           "
         >
           加入
@@ -63,7 +73,7 @@
       </div>
       <div
         class="product-content-items-card-warm"
-        v-if="item.number > item.quantity"
+        v-if="item.number > item.quantity && item.quantity !== 0"
       >
         上限 {{ item.quantity }} 組
       </div>
@@ -72,7 +82,7 @@
         v-if="
           !Number.isInteger(Number(item.number)) ||
           Number(item.number) < 0 ||
-          item.number === '0'
+          (item.number === '0' && item.quantity !== 0)
         "
       >
         請輸入有效數量
@@ -217,7 +227,7 @@
 <script>
 import { descriptionLengthFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
-import ProductAPI from "./../apis/products";
+import CartAPI from "./../apis/cart";
 import Swal from "sweetalert2";
 export default {
   props: {
@@ -230,7 +240,6 @@ export default {
     return {
       items: this.initialItems,
       productLimit: false,
-
     };
   },
   methods: {
@@ -251,48 +260,100 @@ export default {
         item.number = 1;
       }
     },
-    //加入購物車時判斷是不是登入狀態
+
     addItemsTOcard(item) {
-      this.$store.commit("updateProducts", item);
-      if (this.isAuthenticated) {
-        this.addisAuthenticated(item);
-        
-      } else {
-        localStorage.setItem(
-          "go_farmmy_products",
-          JSON.stringify(this.shoppingCart)
-        );
-        item.number = 1;
-      }
-    },
-    //有驗證直接打api加入後端購物車
-    async addisAuthenticated(item) {
-      try {
-        await ProductAPI.postCart({
-          productId: item.id,
-          quantity: item.quantity,
+     
+      const itemOrder = this.cart.shoppingCart.findIndex(
+        (product) => product.id === item.id
+      );
+ 
+      //商品沒有庫存
+      if (item.quantity === 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "商品已完售",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1000,
         });
-        item.number = 1;
+        return;
+      }
+
+      //商品數量無效
+      if (Number(item.number) <= 0 || !Number.isInteger(Number(item.number))) {
+        Swal.fire({
+          icon: "warning",
+          title: "請輸入有效數量",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return;
+      }
+      
+      //加入購物車的商品+購物車內商品數量已超過庫存數量
+      if (itemOrder !== -1) {
+        let itemNumber = this.cart.shoppingCart[itemOrder].number;
+        if (Number(itemNumber) + Number(item.number) > item.quantity) {
+          Swal.fire({
+            icon: "warning",
+            title: `已達${item.name}購買上限數量！`,
+            toast: true,
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          return;
+        }
+      }
+      
+      this.$store.commit("addProductinCart", item); //沒問題就存到vuex
+      localStorage.setItem(
+        "go_farmmy_products",
+        JSON.stringify(this.cart.shoppingCart)
+      ); //沒問題存到localstorage
+      
+      if (this.isAuthenticated) {
+        this.addisAuthenticated(item); //有驗證打api加入後端購物車
+      } else {
         Swal.fire({
           icon: "success",
           title: `${item.number}組${item.name} 已加入購物車！`,
           toast: true,
           showConfirmButton: false,
-          timer: 3000,
-        })
+          timer: 1000,
+        });
+        item.number = 1;
+      }
+    },
+
+    async addisAuthenticated(item) {
+      this.$store.commit('closeCartModel')
+      try {
+        await  CartAPI.postCart({
+          productId: item.id,
+          quantity: item.number,
+        });
+        Swal.fire({
+          icon: "success",
+          title: `${item.number}組${item.name} 已加入購物車！`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        item.number = 1;
       } catch (error) {
         Swal.fire({
           icon: "error",
-          title: "加入購物車失敗，請稍後再試",
+          title: "購物車發生錯誤，請稍後再試",
           toast: true,
           showConfirmButton: false,
-          timer: 3000,
+          timer: 1000,
         });
       }
     },
   },
   computed: {
-    ...mapState(["isAuthenticated", "shoppingCart"]),
+    ...mapState(["isAuthenticated", "cart"]),
   },
 };
 </script>
