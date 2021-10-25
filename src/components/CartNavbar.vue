@@ -139,7 +139,7 @@ export default {
           return;
         }
       }
-this.$router.push({ name: "Home" });
+this.$router.push({ name: "Sign-in" });
       this.$store.commit("logOut");
       
       Swal.fire({

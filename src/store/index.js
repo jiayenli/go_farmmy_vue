@@ -38,13 +38,9 @@ export default new Vuex.Store({
     },
 
 
-
- 
-
      logOut(state) {
-       
        localStorage.removeItem("gofarmmy_token");
-       localStorage.removeItem("go_farmmy_products");
+       localStorage.removeItem("go_farmmy_products");//***確認後可刪 */
       state.cart.shoppingCart = []
       state.currentUser = []
        state.token = ''

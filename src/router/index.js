@@ -57,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
   let getItem = false
   let isAuthenticated = store.state.isAuthenticated
   const pathsWithoutAuthentication = ['Sign-in', 'CheckOut-Sign-in',]
-  
+
   //要再加入去會員中心會導到登入
 
   //如果vuex會員資料被清空，用local storage token抓
@@ -66,7 +66,7 @@ router.beforeEach(async (to, from, next) => {
 
   ////////////這裡是非登入狀態////////////////////////////////
   //非登入如果要去結帳葉面
-  if (!isAuthenticated && !tokenInLocalStorage &&store.state.cart.shoppingCart!== productInLocalStorage) {
+  if (!isAuthenticated && !tokenInLocalStorage && store.state.cart.shoppingCart !== productInLocalStorage) {
     store.commit('updateProducts', productInLocalStorage)
     next()
     return
@@ -74,10 +74,10 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (!isAuthenticated && tokenInLocalStorage) {
-    
+
     store.dispatch('fetchSoppingCard')
     isAuthenticated = await store.dispatch('fetchCurrentUser')
-    
+
   }
 
 
@@ -88,18 +88,17 @@ router.beforeEach(async (to, from, next) => {
 
   if (isAuthenticated && pathsWithoutAuthentication.includes(from.name)) {
     getItem = await store.dispatch('fetchSoppingCard') //確定vuex同步後端購物車了
-    
+
 
   }
   const shoppingCartinVuex = store.state.cart.shoppingCart
-  
 
 
   if (getItem && pathsWithoutAuthentication.includes(from.name) &&
     isAuthenticated) {
-      //local storage和vuex都有資料，詢問使用者要保留哪個資料
+    //local storage和vuex都有資料，詢問使用者要保留哪個資料
     if (shoppingCartinVuex.length !== 0 &&
-      productInLocalStorage.length !== 0 ) {
+      productInLocalStorage.length !== 0) {
       const result = await Swal.fire({
         title: "是否更新購物車",
         text: "帳號內之購物車已有商品，是否需要更新",
@@ -112,49 +111,42 @@ router.beforeEach(async (to, from, next) => {
         confirmButtonText: "更新為現有購物車",
       })
 
+      //要保留local host資料
       if (result.isConfirmed) {
-        store.dispatch('EmptyShoppingCart', productInLocalStorage)
+        await store.dispatch('ChangeShoppingCart', productInLocalStorage)
         store.state.cart.shoppingCart = JSON.parse(localStorage.getItem("go_farmmy_products"))
-
-      } else {
-        //把已取得的後端商品，同步到local storage即可(完成)
-        localStorage.setItem(
-          "go_farmmy_products",
-          JSON.stringify(store.state.cart.shoppingCart)
-        );
-
       }
-   
-      
+      localStorage.removeItem("go_farmmy_products")
       next()
       return
-      }
-    
-      //local storage有資料，但vuex沒有，將local storage存到vuex和後端
+    }
+
+    //local storage有資料，但vuex沒有，將local storage存到vuex和後端
     if (
       productInLocalStorage.length !== 0 &&
       shoppingCartinVuex.length === 0) {
       const productInLocalStorage = JSON.parse(localStorage.getItem("go_farmmy_products")) || []
       store.dispatch('addEmptyShoppingCart', productInLocalStorage)
+      localStorage.removeItem("go_farmmy_products")
       next()
       return
     }
 
-    //如果local storage沒資料，但vuex有(後端有)，將資料存到local storage
-    if (
-      productInLocalStorage.length === 0) {
-      localStorage.setItem(
-        "go_farmmy_products",
-        JSON.stringify(store.state.cart.shoppingCart)
-      );
-      next()
-      return
-    }
+    // //如果local storage沒資料，但vuex有(後端有)，將資料存到local storage
+    // if (
+    //   productInLocalStorage.length === 0) {
+    //   localStorage.setItem(
+    //     "go_farmmy_products",
+    //     JSON.stringify(store.state.cart.shoppingCart)
+    //   );
+    //   next()
+    //   return
+    // }
 
   }
 
   ////////////這裡是操作中狀態////////////////////////////////
-  
+
 
   //(保險起見)非剛登入的情況下，如果vuex跟local storage的商品不一樣，都重新打api
   // if (
@@ -173,9 +165,9 @@ router.beforeEach(async (to, from, next) => {
   // }
 
 
- 
 
-next()
+
+  next()
 
 
 })

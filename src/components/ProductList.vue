@@ -262,7 +262,6 @@ export default {
     },
 
     addItemsTOcard(item) {
-     
       const itemOrder = this.cart.shoppingCart.findIndex(
         (product) => product.id === item.id
       );
@@ -307,14 +306,14 @@ export default {
       }
       
       this.$store.commit("addProductinCart", item); //沒問題就存到vuex
-      localStorage.setItem(
-        "go_farmmy_products",
-        JSON.stringify(this.cart.shoppingCart)
-      ); //沒問題存到localstorage
       
       if (this.isAuthenticated) {
         this.addisAuthenticated(item); //有驗證打api加入後端購物車
       } else {
+        localStorage.setItem(
+        "go_farmmy_products",
+        JSON.stringify(this.cart.shoppingCart)
+      )
         Swal.fire({
           icon: "success",
           title: `${item.number}組${item.name} 已加入購物車！`,
@@ -329,7 +328,7 @@ export default {
     async addisAuthenticated(item) {
       this.$store.commit('closeCartModel')
       try {
-        await  CartAPI.postCart({
+         await  CartAPI.postCart({
           productId: item.id,
           quantity: item.number,
         });
@@ -340,6 +339,7 @@ export default {
           showConfirmButton: false,
           timer: 1000,
         });
+        this.$store.dispatch('fetchSoppingCard')
         item.number = 1;
       } catch (error) {
         Swal.fire({

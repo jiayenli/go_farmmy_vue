@@ -8,8 +8,8 @@ const state = {
 }
 
 const mutations = {
-  //vuex商品重新賦值
 
+  //vuex商品重新賦值
   updateProducts(state, items) {
     state.shoppingCart = [
       ...items
@@ -21,7 +21,6 @@ const mutations = {
     const itemOrder = state.shoppingCart.findIndex(
       (product) => product.id === item.id
     );
-
     if (itemOrder !== -1) {
       let itemNumber = state.shoppingCart[itemOrder].number
       state.shoppingCart[itemOrder].number = Number(itemNumber) + Number(item.number);
@@ -45,13 +44,6 @@ const mutations = {
   },
 
 
-
-  //登入後發現購物車有衝突時使用
-  // async chooseItem(state) {
-   
-
-  // },
-
 }
 
 const actions = {
@@ -59,15 +51,10 @@ const actions = {
     try {
       const { data } = await CartAPI.getCart()
       const { items } = data.cart
-
       const CartItems = items.map(item => ({
-        name: item.name,
-        id: item.id,
+        ...item,
         number: item.CartItem.quantity
-
       }))
-
-
       commit('updateProducts', CartItems)
       return true
     } catch (error) {
@@ -77,32 +64,25 @@ const actions = {
 
   },
 
-  // async emptySoppingCard({}) {
-
-  // },
-
   async addEmptyShoppingCart({ commit }, items) {
-    console.log('有執行')
     try {
       await items.map(item => CartAPI.postCart({
         productId: item.id,
         quantity: item.number,
       }))
       commit('updateProducts', items)
-      console.log('加入成功')
     } catch (error) {
       console.log(error)
     }
   },
 
-  async EmptyShoppingCart({dispatch}, items) {
+  async ChangeShoppingCart({ dispatch }, items) {
     const response = await CartAPI.deleteAllCartItem()
-   if(response.data.status === 'success') {
-     dispatch('addEmptyShoppingCart',items)
+    if (response.data.status === 'success') {
+      dispatch('addEmptyShoppingCart', items)
+    }
 
-   }
 
-    
     //console.log(products)
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div class="cartList-modal">
-    <div class="cartList-modal-notication" >
+    <div class="cartList-modal-notication">
       <h3>購物車</h3>
       <div class="cartList-modal-notication-content">
         <div
@@ -51,16 +51,12 @@ export default {
   },
   methods: {
     async deleteItems(item) {
-      if (this.isAuthenticated) {
-        this.$store.commit("deleteItem", item);
+      this.$store.commit("deleteItem", item);
+      if (this.isAuthenticated) {  
         try {
           await CartAPI.deleteCartItem({
             Id: item.id,
           });
-          localStorage.setItem(
-            "go_farmmy_products",
-            JSON.stringify(this.cart.shoppingCart)
-          );
         } catch (error) {
           console.log(error);
           Swal.fire({
@@ -71,14 +67,12 @@ export default {
             timer: 2000,
           });
           this.$store.dispatch("fetchSoppingCard");
-
           return;
         }
       } else {
-        this.$store.commit("deleteItem", item);
         localStorage.setItem(
           "go_farmmy_products",
-          JSON.stringify(this.shoppingCart)
+          JSON.stringify(this.cart.shoppingCart)
         );
       }
     },
