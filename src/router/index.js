@@ -74,7 +74,6 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (!isAuthenticated && tokenInLocalStorage) {
-
     store.dispatch('fetchSoppingCard')
     isAuthenticated = await store.dispatch('fetchCurrentUser')
 
@@ -88,8 +87,6 @@ router.beforeEach(async (to, from, next) => {
 
   if (isAuthenticated && pathsWithoutAuthentication.includes(from.name)) {
     getItem = await store.dispatch('fetchSoppingCard') //確定vuex同步後端購物車了
-
-
   }
   const shoppingCartinVuex = store.state.cart.shoppingCart
 
@@ -112,9 +109,9 @@ router.beforeEach(async (to, from, next) => {
       })
 
       //要保留local host資料
+      console.log(productInLocalStorage)
       if (result.isConfirmed) {
         await store.dispatch('ChangeShoppingCart', productInLocalStorage)
-        store.state.cart.shoppingCart = JSON.parse(localStorage.getItem("go_farmmy_products"))
       }
       localStorage.removeItem("go_farmmy_products")
       next()
@@ -125,7 +122,6 @@ router.beforeEach(async (to, from, next) => {
     if (
       productInLocalStorage.length !== 0 &&
       shoppingCartinVuex.length === 0) {
-      const productInLocalStorage = JSON.parse(localStorage.getItem("go_farmmy_products")) || []
       store.dispatch('addEmptyShoppingCart', productInLocalStorage)
       localStorage.removeItem("go_farmmy_products")
       next()

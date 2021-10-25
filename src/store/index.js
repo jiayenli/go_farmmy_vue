@@ -60,8 +60,6 @@ export default new Vuex.Store({
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        console.log(data.currentUser)
-
         commit("setCurrentUser", data.currentUser)
         return true
       } catch (error) {

@@ -26,34 +26,37 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="product in products" :key="product.id">
+            <tr v-for="product in cart.shoppingCart" :key="product.id">
               <td class="product-name">
                 <img :src="product.image" />
                 <div>
-                  <h2>{{ product.name }}</h2>
-                  <h6>規格：</h6>
+                  <h1>{{ product.name }}</h1>
+                  <h6>規格：{{ product.specification}}</h6>
                 </div>
               </td>
               <td class="product-price">${{ product.price }}</td>
               <td class="product-number">
                 <button class="add-item">+</button>
 
-                <span>{{ product.CartItem.quantity }}組</span>
+                <span>{{ product.number }}組</span>
                 <button class="reduce-item">-</button>
               </td>
-              <td class="product-totle">${{ product.totle }}</td>
+              <td class="product-totle">${{ product.totalPrice }}</td>
               <td class="product-delete">
                 <i class="fas fa-trash-alt"></i>
               </td>
             </tr>
           </tbody>
-     
         </table>
-             <div class="delivery">
-          <div>運送方式待補</div>
-          <div>運費待補</div>
-          <div>合計待補</div>
+        <div class="checkout-product-content-delivery">
+          <div class="checkout-product-content-delivery-content">
+            <div>商品合計：{{cart.totalPrice}} 元</div>
+            <div>運費合計：{{cart.shippingInfo.fee}}元</div>
+          <div>運送方式：{{cart.shippingInfo.name}}</div>
+          <div class="total">合計：{{total}}元(含運費)</div>
+          <p>為了確保品質，農作伙的生鮮產品皆採冷藏宅配</p>
           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,7 +65,8 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
-import CartAPI from "./../apis/cart";
+//import CartAPI from "./../apis/cart";
+import { mapState } from "vuex";
 //import ProductAPI from "./../apis/products";
 //import Swal from "sweetalert2";
 
@@ -75,23 +79,41 @@ export default {
   data() {
     return {
       products: [],
+      total: 0
     };
   },
   methods: {
-    async fetchShoppingCart() {
-      try {
-        const { data } = await CartAPI.getCart();
-        this.products = {
-          ...data.cart.items,
-        };
-        console.log(this.products);
-      } catch (error) {
-        console.log(error);
-      }
-    },
+    calculateTotal() {
+      this.total = this.cart.totalPrice + this.cart.shippingInfo.fee
+
+    }
+    // async fetchShoppingCart() {
+    //   try {
+    //     const { data } = await CartAPI.getCart();
+    //     this.products = {
+    //       ...data.cart.items,
+    //     };
+    //     console.log(this.products);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
   },
-  created() {
-    this.fetchShoppingCart();
+  mounted() {
+    this.calculateTotal()
+  },
+  computed: {
+    ...mapState(["isAuthenticated", "cart"]),
+  },
+    watch: {
+    //監聽使用者資料有沒有改變
+    cart: {
+      handler: function () {
+        this.calculateTotal()
+        },
+      deep: true,
+    
+    },
   },
 };
 </script>
@@ -154,7 +176,7 @@ export default {
             align-items: center;
             img {
               margin-left: 2%;
-              margin-right: 2%;
+              margin-right: 5%;
               height: 90%;
               width: 80%;
               overflow: hidden;
@@ -166,7 +188,7 @@ export default {
               display: flex;
               flex-direction: column;
               width: 100%;
-              h2,
+              h1,
               h6 {
                 white-space: nowrap;
               }
@@ -178,7 +200,7 @@ export default {
           .product-delete {
             text-align: center;
             font-weight: bolder;
-            font-size: 18px;
+            font-size: 24px;
           }
           .product-number {
             color: $color-red;
@@ -195,12 +217,34 @@ export default {
             }
           }
         }
-      
       }
-        .delivery {
-          width: 100%;
-          border-top: 4px $color-brown dashed;
-        }
+    }
+    &-delivery {
+      margin-top:3% ;
+      padding: 2%;
+      width: 100%;
+      border-top: 4px $color-brown dashed;
+      display: flex;
+      justify-content: flex-end;
+      &-content {
+          font-weight: bolder;
+            font-size: 18px;
+            div {
+              margin-top:3% ;
+            }
+            p {
+              color: $color-red;
+              font-size: 12px;
+
+            }
+            .total {
+              color: $color-red;
+              font-size: 24px;
+
+
+            }
+
+      }
     }
   }
 }

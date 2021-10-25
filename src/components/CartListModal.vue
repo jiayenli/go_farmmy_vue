@@ -57,6 +57,7 @@ export default {
           await CartAPI.deleteCartItem({
             Id: item.id,
           });
+          this.$store.dispatch("fetchSoppingCard");
         } catch (error) {
           console.log(error);
           Swal.fire({

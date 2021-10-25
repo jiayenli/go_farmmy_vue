@@ -305,11 +305,11 @@ export default {
         }
       }
       
-      this.$store.commit("addProductinCart", item); //沒問題就存到vuex
       
       if (this.isAuthenticated) {
         this.addisAuthenticated(item); //有驗證打api加入後端購物車
       } else {
+        this.$store.commit("addProductinCart", item)
         localStorage.setItem(
         "go_farmmy_products",
         JSON.stringify(this.cart.shoppingCart)
@@ -339,7 +339,7 @@ export default {
           showConfirmButton: false,
           timer: 1000,
         });
-        this.$store.dispatch('fetchSoppingCard')
+        this.$store.dispatch('fetchSoppingCard') 
         item.number = 1;
       } catch (error) {
         Swal.fire({
