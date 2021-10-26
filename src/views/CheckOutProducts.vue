@@ -53,13 +53,26 @@
               </td>
               <td class="product-price">${{ product.price }} 元</td>
               <td class="product-number">
-                <button class="add-item" @click="increaseItem(product)">
-                  +
-                </button>
-                <span>{{ product.number }}組</span>
-                <button class="reduce-item" @click="decreaseItem(product)">
-                  -
-                </button>
+                <div>
+                  <button
+                    class="add-item"
+                    @click="increaseItem(product)"
+                    :disabled="
+                      product.number === product.quantity || cart.controlButton
+                    "
+                  >
+                    +
+                  </button>
+                  <span>{{ product.number }}組</span>
+                  <button
+                    class="reduce-item"
+                    @click="decreaseItem(product)"
+                    :disabled="product.number <= 1 || cart.controlButton"
+                  >
+                    -
+                  </button>
+                </div>
+                <h6>商品剩{{ product.quantity }}組</h6>
               </td>
               <td class="product-totle">${{ product.totalPrice }} 元</td>
               <td class="product-delete">
@@ -99,8 +112,13 @@
       </div>
     </div>
     <div class="checkout-product-button">
-      <div class="checkout-product-button-previous">上一步</div>
-      <div class="checkout-product-button-next">下一步</div>
+      <button class="checkout-product-button-previous">上一步</button>
+      <button
+        class="checkout-product-button-next" 
+        :class="total ? '' : 'block'"
+        @click.prevent.stop ="nextStep"
+        >填寫資料</button
+      >
     </div>
   </div>
 </template>
@@ -109,6 +127,7 @@
 import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
 import CheckOutStep from "@/components/CheckOutStep.vue";
+import Swal from "sweetalert2";
 //import CartAPI from "./../apis/cart";
 import { mapState } from "vuex";
 //import Swal from "sweetalert2";
@@ -121,44 +140,74 @@ export default {
   components: {
     Navbar,
     CartNavbar,
-    CheckOutStep
+    CheckOutStep,
   },
   data() {
     return {
       products: [],
       total: 0,
+      controlButton: false,
     };
   },
   methods: {
+    nextStep() {
+      if(this.cart.totalPrice) {
+        this.$router.push({ name: 'CheckOut-Info' })
+      } else {
+            Swal.fire({
+          icon: "warning",
+          title: `購物車發生錯誤，請洽客服`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+
+      }
+
+    },
     calculateTotal() {
       this.total = this.cart.totalPrice + this.cart.shippingInfo.fee;
     },
     async increaseItem(item) {
+      if (item.number === item.quantity) {
+        Swal.fire({
+          icon: "warning",
+          title: `${item.name}僅剩${item.quantity}箱庫存！`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return;
+      }
       this.$store.dispatch("increaseItemNumber", item);
     },
     async decreaseItem(item) {
+      if (item.number === 1) {
+        Swal.fire({
+          icon: "warning",
+          title: "數量不可為零",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return;
+      }
       this.$store.dispatch("decreaseItemNumber", item);
     },
     async deleteItems(item) {
       this.$store.dispatch("deleteItem", item);
     },
-    // async fetchShoppingCart() {
-    //   try {
-    //     const { data } = await CartAPI.getCart();
-    //     this.products = {
-    //       ...data.cart.items,
-    //     };
-    //     console.log(this.products);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
   },
   mounted() {
     this.calculateTotal();
+    this.$store.commit("changeCheckOutStep", 1);
+  },
+
+  beforeDestroy() {
+    this.$store.commit("changeCheckOutStep", 0);
   },
   computed: {
-    ...mapState(["isAuthenticated", "cart"]),
+    ...mapState(["isAuthenticated", "cart", "checkOutStep"]),
   },
   watch: {
     //監聽使用者資料有沒有改變
@@ -258,9 +307,12 @@ export default {
           }
           .product-number {
             color: $color-red;
+            h6 {
+              font-size: 12px;
+            }
             .add-item,
             .reduce-item {
-              margin: 5%;
+              margin: 0 5%;
               height: 30px;
               width: 30px;
               background-color: $color-yellow;
@@ -353,18 +405,21 @@ export default {
 
   &-button {
     @extend %checkout-button-area;
-    &-previous,
-    &-next {
-      @extend %checkout-button;
-    }
-    &-previous {
+     &-next, &-previous {
+       @extend %checkout-button;
+        color: $color-brown;
+     }
+
+    &-previous{
       opacity: 0.5;
-      cursor: not-allowed;;
+      cursor: not-allowed;
     }
+
     &-next {
         &:hover {
-        transform: scale(1.1, 1.1);
-      }
+          transform: scale(1.1, 1.1);
+        }
+      
     }
   }
 }

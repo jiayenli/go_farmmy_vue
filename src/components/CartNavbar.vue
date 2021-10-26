@@ -6,7 +6,7 @@
         class="icon cart-navbar-cart"
         @click.stop.prevent="showCardModel"
         title="購物車"
-        v-if="$route.name !== 'CheckOut-Products'"
+        v-if="checkOutStep === 0"
       >
         <span
           v-if="cart.shoppingCart.length > 0"
@@ -98,7 +98,7 @@ import Swal from "sweetalert2";
 
 export default {
   computed: {
-    ...mapState(["cart", "isAuthenticated", "cartModel"]),
+    ...mapState(["cart", "isAuthenticated", "cartModel", "checkOutStep"]),
   },
   components: {
     CartListModal,

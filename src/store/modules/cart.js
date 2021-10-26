@@ -6,6 +6,7 @@ const state = {
   shoppingCart: [],
   shippingInfo: {},
   totalPrice: 0,
+  controlButton: false
 
 
 }
@@ -18,6 +19,15 @@ const mutations = {
       ...items
     ]
   },
+
+  effectButton(state) {
+    state.controlButton = false
+  },
+
+  blockButton(state) {
+    state.controlButton = true
+  },
+
   //運費重新賦值
   updateDelivery(state, items) {
     state.shippingInfo = {
@@ -82,15 +92,15 @@ const actions = {
         ...item,
         number: item.CartItem.quantity,
       }))
+      
       commit('updateDelivery', data.shippingInfo)
       commit('updateTotlePrice', data.totalPrice)
       commit('updateProducts', CartItems)
+      commit('effectButton')
       return true
     } catch (error) {
       console.log(error)
-
     }
-
   },
 
   async addEmptyShoppingCart({ commit, dispatch }, items) {
@@ -128,6 +138,7 @@ const actions = {
 
   async increaseItemNumber({ commit,dispatch }, item) {
     try {
+      commit('blockButton')
       commit('increaseItem', item)
       const response = await CartAPI.postAddCartItem({Id: item.id})
       if (response.status === 200) {
@@ -149,6 +160,7 @@ const actions = {
 
   async decreaseItemNumber({commit, dispatch }, item) {
     try {
+      commit('blockButton')
       commit('decreaseItem', item)
       const response = await CartAPI.postSubCartItem({ Id: item.id })
       if (response.status === 200) {
@@ -170,6 +182,7 @@ const actions = {
 
   async deleteItem({ commit, dispatch }, item) {
     try {
+      commit('blockButton')
       commit('deleteItem', item)
       const response = await CartAPI.deleteCartItem({ Id: item.id })
       if (response.data.status === 'success') {

@@ -42,6 +42,17 @@ const routes = [
     name: 'CheckOut-Products',
     component: () => import('../views/CheckOutProducts.vue'),
   },
+  {
+    path: '/goFarmmy/checkout/information',
+    name: 'CheckOut-Info',
+    component: () => import('../views/CheckOutInfo'),
+  },
+ 
+    {
+    path: '/goFarmmy/checkout/payment',
+      name: 'CheckOut-Payment',
+      component: () => import('../views/CheckOutPayment'),
+  },
 
 
 ]

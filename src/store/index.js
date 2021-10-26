@@ -13,9 +13,17 @@ export default new Vuex.Store({
     isAuthenticated: false,
     currentUser: [],
     token: '',
-   cartModel: false
+    cartModel: false,
+    checkOutStep: 0
   },
   mutations: {
+    //更改結帳階段
+    changeCheckOutStep(state, number) {
+      state.checkOutStep = number
+    },
+
+
+
     //控制購物車modal顯示
     openCartModel(state) {
       state.cartModel = true
@@ -32,18 +40,18 @@ export default new Vuex.Store({
         ...state.currentUser,
         ...currentUser,
       };
-      
+
       state.isAuthenticated = true
       state.token = localStorage.getItem('gofarmmy_token')
     },
 
 
-     logOut(state) {
-       localStorage.removeItem("gofarmmy_token");
-       localStorage.removeItem("go_farmmy_products");//***確認後可刪 */
+    logOut(state) {
+      localStorage.removeItem("gofarmmy_token");
+      localStorage.removeItem("go_farmmy_products");//***確認後可刪 */
       state.cart.shoppingCart = []
       state.currentUser = []
-       state.token = ''
+      state.token = ''
       state.isAuthenticated = false
 
     }
@@ -69,7 +77,7 @@ export default new Vuex.Store({
       }
     },
 
-    
+
 
   },
   modules: {

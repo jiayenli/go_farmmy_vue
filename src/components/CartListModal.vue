@@ -44,7 +44,6 @@
 <script>
 import { mapState } from "vuex";
 import Swal from "sweetalert2";
-//import CartAPI from "./../apis/cart";
 export default {
   computed: {
     ...mapState(["cart", "isAuthenticated"]),
@@ -52,7 +51,6 @@ export default {
   methods: {
     async deleteItems(item) {
       if (this.isAuthenticated) {  
-        
           this.$store.dispatch("deleteItem", item)
       } else {
         localStorage.setItem(
