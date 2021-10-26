@@ -12,10 +12,27 @@
         src="./../assets/product-img-1.png"
       />
     </div>
-    <div class="checkout-product-step"></div>
+    <div class="checkout-product-step">
+      <CheckOutStep />
+    </div>
     <div class="checkout-product-content">
       <div class="checkout-product-content-product">
-        <table>
+        <div
+          v-if="cart.shoppingCart.length === 0"
+          class="checkout-product-content-product-noproduct"
+        >
+          <h2>您的購物車尚無商品！</h2>
+
+          <div class="checkout-product-content-product-noproduct-button">
+            <router-link
+              class="checkout-product-content-product-noproduct-button"
+              :to="{ name: 'Product' }"
+            >
+              找新鮮
+            </router-link>
+          </div>
+        </div>
+        <table v-if="cart.shoppingCart.length > 0">
           <thead>
             <tr>
               <th class="product-name-th">購買商品</th>
@@ -31,33 +48,59 @@
                 <img :src="product.image" />
                 <div>
                   <h1>{{ product.name }}</h1>
-                  <h6>規格：{{ product.specification}}</h6>
+                  <h6>規格：{{ product.specification }}</h6>
                 </div>
               </td>
-              <td class="product-price">${{ product.price }}</td>
+              <td class="product-price">${{ product.price }} 元</td>
               <td class="product-number">
-                <button class="add-item">+</button>
-
+                <button class="add-item" @click="increaseItem(product)">
+                  +
+                </button>
                 <span>{{ product.number }}組</span>
-                <button class="reduce-item">-</button>
+                <button class="reduce-item" @click="decreaseItem(product)">
+                  -
+                </button>
               </td>
-              <td class="product-totle">${{ product.totalPrice }}</td>
+              <td class="product-totle">${{ product.totalPrice }} 元</td>
               <td class="product-delete">
-                <i class="fas fa-trash-alt"></i>
+                <i class="fas fa-trash-alt" @click="deleteItems(product)"></i>
               </td>
             </tr>
           </tbody>
         </table>
-        <div class="checkout-product-content-delivery">
+        <div
+          v-if="cart.shoppingCart.length > 0"
+          class="checkout-product-content-delivery"
+        >
+          <div
+            class="checkout-product-content-delivery-notice"
+            v-if="!cart.shippingInfo.fee"
+          >
+            <h3>超過10箱的大量訂購</h3>
+            <h3>將由專人為您計算運費</h3>
+            <h6>謝謝您的支持！</h6>
+          </div>
           <div class="checkout-product-content-delivery-content">
-            <div>商品合計：{{cart.totalPrice}} 元</div>
-            <div>運費合計：{{cart.shippingInfo.fee}}元</div>
-          <div>運送方式：{{cart.shippingInfo.name}}</div>
-          <div class="total">合計：{{total}}元(含運費)</div>
-          <p>為了確保品質，農作伙的生鮮產品皆採冷藏宅配</p>
+            <div>商品小計：{{ cart.totalPrice }} 元</div>
+            <div>
+              運費合計：{{
+                cart.shippingInfo.fee
+                  ? `${cart.shippingInfo.fee} 元`
+                  : "大量請洽客服人員"
+              }}
+            </div>
+
+            <div class="total">
+              商品總計：{{ total ? `${total}元(含運費)` : "請洽客服" }}
+            </div>
+            <p>為了確保品質，農作伙的生鮮產品皆採冷藏宅配</p>
           </div>
         </div>
       </div>
+    </div>
+    <div class="checkout-product-button">
+      <div class="checkout-product-button-previous">上一步</div>
+      <div class="checkout-product-button-next">下一步</div>
     </div>
   </div>
 </template>
@@ -65,8 +108,11 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
+import CheckOutStep from "@/components/CheckOutStep.vue";
 //import CartAPI from "./../apis/cart";
 import { mapState } from "vuex";
+//import Swal from "sweetalert2";
+//import CartAPI from "./../apis/cart";
 //import ProductAPI from "./../apis/products";
 //import Swal from "sweetalert2";
 
@@ -75,18 +121,27 @@ export default {
   components: {
     Navbar,
     CartNavbar,
+    CheckOutStep
   },
   data() {
     return {
       products: [],
-      total: 0
+      total: 0,
     };
   },
   methods: {
     calculateTotal() {
-      this.total = this.cart.totalPrice + this.cart.shippingInfo.fee
-
-    }
+      this.total = this.cart.totalPrice + this.cart.shippingInfo.fee;
+    },
+    async increaseItem(item) {
+      this.$store.dispatch("increaseItemNumber", item);
+    },
+    async decreaseItem(item) {
+      this.$store.dispatch("decreaseItemNumber", item);
+    },
+    async deleteItems(item) {
+      this.$store.dispatch("deleteItem", item);
+    },
     // async fetchShoppingCart() {
     //   try {
     //     const { data } = await CartAPI.getCart();
@@ -100,19 +155,18 @@ export default {
     // },
   },
   mounted() {
-    this.calculateTotal()
+    this.calculateTotal();
   },
   computed: {
     ...mapState(["isAuthenticated", "cart"]),
   },
-    watch: {
+  watch: {
     //監聽使用者資料有沒有改變
     cart: {
       handler: function () {
-        this.calculateTotal()
-        },
+        this.calculateTotal();
+      },
       deep: true,
-    
     },
   },
 };
@@ -214,36 +268,102 @@ export default {
               border-radius: 5px;
               font-size: 15px;
               font-weight: bolder;
+              transform: 0.3s;
+              &:hover {
+                transform: scale(1.1, 1.1);
+              }
             }
+          }
+          .product-delete {
+            .fas {
+              cursor: pointer;
+              transform: 0.3s;
+              &:hover {
+                transform: scale(1.1, 1.1);
+              }
+            }
+          }
+        }
+      }
+      &-noproduct {
+        flex-direction: column;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 2%;
+        &-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 5px;
+          height: 50px;
+          background-color: $color-yellow;
+          color: white;
+          width: 80px;
+          margin: 3%;
+          transform: 0.3s;
+          &:hover {
+            transform: scale(1.1, 1.1);
           }
         }
       }
     }
     &-delivery {
-      margin-top:3% ;
+      margin-top: 3%;
       padding: 2%;
       width: 100%;
       border-top: 4px $color-brown dashed;
       display: flex;
       justify-content: flex-end;
       &-content {
-          font-weight: bolder;
-            font-size: 18px;
-            div {
-              margin-top:3% ;
-            }
-            p {
-              color: $color-red;
-              font-size: 12px;
+        font-weight: bolder;
+        font-size: 18px;
+        div {
+          white-space: nowrap;
+          margin-bottom: 3%;
+        }
+        p {
+          color: $color-red;
+          font-size: 12px;
+        }
+        .total {
+          color: $color-red;
+          font-size: 24px;
+        }
+      }
+      &-notice {
+        margin-right: 2%;
+        border: 4px $color-red solid;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: $color-yellow;
+        h3,
+        h6 {
+          white-space: nowrap;
+          margin-bottom: 1%;
+          color: $color-red;
+        }
+      }
+    }
+  }
 
-            }
-            .total {
-              color: $color-red;
-              font-size: 24px;
-
-
-            }
-
+  &-button {
+    @extend %checkout-button-area;
+    &-previous,
+    &-next {
+      @extend %checkout-button;
+    }
+    &-previous {
+      opacity: 0.5;
+      cursor: not-allowed;;
+    }
+    &-next {
+        &:hover {
+        transform: scale(1.1, 1.1);
       }
     }
   }

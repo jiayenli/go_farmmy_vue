@@ -44,32 +44,16 @@
 <script>
 import { mapState } from "vuex";
 import Swal from "sweetalert2";
-import CartAPI from "./../apis/cart";
+//import CartAPI from "./../apis/cart";
 export default {
   computed: {
     ...mapState(["cart", "isAuthenticated"]),
   },
   methods: {
     async deleteItems(item) {
-      this.$store.commit("deleteItem", item);
       if (this.isAuthenticated) {  
-        try {
-          await CartAPI.deleteCartItem({
-            Id: item.id,
-          });
-          this.$store.dispatch("fetchSoppingCard");
-        } catch (error) {
-          console.log(error);
-          Swal.fire({
-            icon: "error",
-            title: "刪除失敗，請稍後再試！",
-            toast: true,
-            showConfirmButton: false,
-            timer: 2000,
-          });
-          this.$store.dispatch("fetchSoppingCard");
-          return;
-        }
+        
+          this.$store.dispatch("deleteItem", item)
       } else {
         localStorage.setItem(
           "go_farmmy_products",

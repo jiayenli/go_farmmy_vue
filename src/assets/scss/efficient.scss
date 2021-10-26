@@ -13,3 +13,26 @@
   width: 100%;
   object-fit: cover;
 }
+
+%checkout-button-area {
+  margin: 2% auto;
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+    height: 60px;
+}
+
+%checkout-button {
+     border-radius: 5px;
+      width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $color-yellow;
+      border: 3px $color-brown solid;
+      font-weight: bolder;
+      color: $color-brown;
+      transform: 0.3s;
+      cursor: pointer;
+
+}
