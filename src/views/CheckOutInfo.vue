@@ -157,7 +157,7 @@
             !this.receiverAddress
           "
         >
-          前往付款
+          送出訂單
         </button>
         <button v-else class="checkout-product-button-next" disabled>
           確認中
