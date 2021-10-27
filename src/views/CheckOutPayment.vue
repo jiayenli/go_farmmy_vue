@@ -15,150 +15,107 @@
     <div class="checkout-product-step">
       <CheckOutStep />
     </div>
-    <form>
-      <div class="checkout-product-content">
-        <div class="checkout-product-content-top">
-          <h2>訂購人資料</h2>
 
-          <div class="checkout-product-content-top-input">
-            <div class="checkout-input checkout-product-content-top-input-name">
-              <label for="name"><h3>訂購人姓名</h3></label>
-              <input
-                placeholder="請填寫「訂購人」姓名，如：李喵吉"
-                v-model="orderName"
-                class="checkout-product-content-top-input-name-input"
-                id="name"
-                type="text"
-                autofocus
-                required
-              />
+    <div class="checkout-product-content">
+      <div class="checkout-product-content-left">
+        <h2>
+          訂單資訊
+          <i
+            class="fas fa-plus-circle"
+            @click="openProductList"
+            v-if="!productList"
+          ></i
+          ><i class="fas fa-minus-circle" v-else @click="openProductList"></i>
+        </h2>
+        <div class="checkout-product-content-left-content" v-if="productList">
+          <div class="checkout-product-content-left-content-products">
+            <div class="checkout-product-content-left-content-title">
+              <div class="product-image"></div>
+              <div class="product-name">名稱</div>
+              <div class="product-number">數量</div>
+              <div class="product-price">單價</div>
+              <div class="product-totle">小計</div>
             </div>
-
             <div
-              class="checkout-input checkout-product-content-top-input-phone"
+              v-for="product in cart.shoppingCart"
+              :key="product.id"
+              class="checkout-product-content-left-content-product"
             >
-              <label for="name"><h3>訂購人電話</h3></label>
-              <input
-                placeholder="請填寫「訂購人」電話，如：0910000xxx"
-                v-model="orderPhone"
-                class="checkout-product-content-top-input-phone-input"
-                id="phone"
-                type="tel"
-                required
-              />
+              <img class="product-image" :src="product.image" />
+              <div class="product-name">{{ product.name }}</div>
+              <div class="product-number">{{ product.number }} 箱</div>
+              <div class="product-price">{{ product.price }} 元</div>
+              <div class="product-totle">{{ product.totalPrice }} 元</div>
             </div>
-
-            <div
-              class="checkout-input checkout-product-content-top-input-email"
-            >
-              <label for="name"><h3>訂購人Email</h3></label>
-              <input
-                placeholder="將會寄送訂單資訊至訂購人信箱"
-                v-model="orderEmail"
-                class="checkout-product-content-top-input-email-input"
-                id="email"
-                type="email"
-                required
-              />
+            <div class="checkout-product-content-left-content-totlePrice">
+              <h4>小計：{{ cart.totalPrice }}元</h4>
+              <h4>運費：{{ cart.shippingInfo.fee }}元</h4>
+              <h3>總計：{{ cart.totalPrice + cart.shippingInfo.fee }}元</h3>
             </div>
           </div>
         </div>
-        <div class="checkout-product-content-top">
-          <h2>收件人資料</h2>
-
-          <div class="checkout-product-content-top-input">
-            <div class="checkout-input checkout-product-content-top-input-name">
-              <label for="name"><h3>收件人姓名</h3></label>
-              <input
-                v-model="receiverName"
-                class="checkout-product-content-top-input-name-input"
-                id="name"
-                type="text"
-                autofocus
-                required
-              />
+        <h2>
+          寄送資訊
+          <i
+            class="fas fa-plus-circle"
+            @click="openUserInfoList"
+            v-if="!userInfoList"
+          ></i
+          ><i class="fas fa-minus-circle" @click="openUserInfoList" v-else></i>
+        </h2>
+        <div class="checkout-product-content-left-content" v-if="userInfoList">
+          <div class="checkout-product-content-left-content-orderInfo">
+            <h3>訂購人資料</h3>
+            <div>姓名：{{ this.userInfo.orderName }}</div>
+            <div>電話：{{ this.userInfo.orderPhone }}</div>
+            <div>Email：{{ this.userInfo.orderEmail }}</div>
+          </div>
+          <div class="checkout-product-content-left-content-recieverInfo">
+            <h3>收件人資料</h3>
+            <div>姓名：{{ this.userInfo.receiverName }}</div>
+            <div>電話：{{ this.userInfo.receiverPhone }}</div>
+            <div>
+              地址：{{
+                this.userInfo.receiverCity + this.userInfo.receiverAddress
+              }}
             </div>
-
-            <div
-              class="checkout-input checkout-product-content-top-input-phone"
-            >
-              <label for="name"><h3>收件人電話</h3></label>
-              <input
-                v-model="receiverPhone"
-                class="checkout-product-content-top-input-phone-input"
-                id="phone"
-                type="tel"
-                required
-              />
-            </div>
-
-            <div
-              class="checkout-input checkout-product-content-top-input-email"
-            >
-              <label for="name"><h3>收件人地址</h3></label>
-              <select name="city" id="city" v-model="receiverCity" required>
-                <option value="man" disabled selected>請選擇縣市</option>
-                <option
-                  v-for="city in cities"
-                  :key="city.id"
-                  :value="city.name"
-                >
-                  {{ city.name }}
-                </option>
-              </select>
-
-              <input
-                v-model="receiverAddress"
-                class="checkout-product-content-top-input-email-input"
-                id="email"
-                type="email"
-                required
-              />
-            </div>
-
-            <div
-              class="checkout-input checkout-product-content-top-input-email"
-            >
-              <label for="name"><h3>收件人Email</h3></label>
-              <input
-                v-model="receiverEmail"
-                class="checkout-product-content-top-input-email-input"
-                id="email"
-                type="email"
-                required
-              />
-            </div>
+            <div>Email：{{ this.userInfo.receiverEmail }}</div>
           </div>
         </div>
       </div>
-      <div class="checkout-product-button">
-        <button
-          @click.stop.prevent="previousPage"
-          :to="{ name: 'CheckOut-Products' }"
-          class="checkout-product-button-previous"
-        >
-          上一步
-        </button>
-        <button
-          type="submit"
-          :to="{ name: 'CheckOut-Info' }"
-          class="checkout-product-button-next"
-          :class="{
-            block:
-              !this.orderName ||
-              !this.orderPhone ||
-              !this.orderEmail ||
-              !this.receiverName ||
-              !this.receiverPhone ||
-              !this.receiverEmail ||
-              !this.receiverCity ||
-              !this.receiverAddress,
-          }"
-        >
-          前往付款
-        </button>
+      <div class="checkout-product-content-right">
+        <h2>付款方式</h2>
+        <div class="checkout-product-content-right-content">
+          <div>
+            <spn class="payment-choice" :class="{'focus':payWay === 'online'}" @click="choicePayWay('online')"></spn>
+            <h3>線上付款</h3>
+          </div>
+          <div>
+            <spn class="payment-choice"></spn>
+            <h3>轉帳(即將開放)</h3>
+          </div>
+          <div>
+            <spn class="payment-choice"></spn>
+            <h3>貨到付款(即將開放)</h3>
+          </div>
+        </div>
       </div>
-    </form>
+    </div>
+    <div class="checkout-product-button">
+      <button
+        @click.stop.prevent="previousPage"
+        :to="{ name: 'CheckOut-Products' }"
+        class="checkout-product-button-previous"
+      >
+        上一步
+      </button>
+      <button
+        type="submit"
+        :to="{ name: 'CheckOut-Info' }"
+        class="checkout-product-button-next">
+        確認付款
+      </button>
+    </div>
   </div>
 </template>
 
@@ -182,47 +139,35 @@ export default {
   },
   data() {
     return {
-      orderName: "",
-      orderPhone: "",
-      orderEmail: "",
-      receiverName: "",
-      receiverPhone: "",
-      receiverEmail: "",
-      receiverCity: "",
-      receiverAddress: "",
-      cities: [
-        { name: "基隆市", id: "1" },
-        { name: "台北市", id: "2" },
-        { name: "新北市", id: "3" },
-        { name: "桃園市", id: "4" },
-        { name: "新竹市", id: "5" },
-        { name: "新竹縣", id: "6" },
-        { name: "苗栗市", id: "7" },
-        { name: "台中縣", id: "8" },
-        { name: "彰化縣", id: "9" },
-        { name: "南投縣", id: "10" },
-        { name: "雲林縣", id: "11" },
-        { name: "嘉義市", id: "12" },
-        { name: "嘉義縣", id: "13" },
-        { name: "台南市", id: "14" },
-        { name: "高雄市", id: "15" },
-        { name: "屏東縣", id: "16" },
-        { name: "台東縣", id: "18" },
-        { name: "花蓮縣", id: "19" },
-        { name: "宜蘭縣", id: "20" },
-        { name: "澎湖縣", id: "21" },
-        { name: "金門縣", id: "22" },
-        { name: "連江縣", id: "23" },
-      ],
+      payWay: 'online',
+      userInfo: {},
+      productList: true,
+      userInfoList: false,
     };
   },
 
   methods: {
+    choicePayWay(method) {
+      this.payWay = method
+
+    },
+    openProductList() {
+      this.productList = !this.productList;
+    },
+    openUserInfoList() {
+      this.userInfoList = !this.userInfoList;
+    },
+    fetchInfo() {
+      this.userInfo = {
+        ...this.userInfo,
+        ...JSON.parse(localStorage.getItem("go_farmmy_user")),
+      };
+    },
     nextStep() {
       this.$router.push({ name: "CheckOut-Info" });
     },
     previousPage() {
-      this.$router.push({ name: "CheckOut-Products" });
+      this.$router.push({ name: "CheckOut-Info" });
     },
 
     sendInfo() {
@@ -248,6 +193,7 @@ export default {
   },
   mounted() {
     this.$store.commit("changeCheckOutStep", 3);
+    this.fetchInfo();
   },
   computed: {
     ...mapState(["isAuthenticated", "cart"]),
@@ -287,67 +233,94 @@ export default {
     }
   }
   &-content {
-    margin-top: 2%;
-    width: 100 vw;
-    &-top {
-      padding: 1%;
-      //border: 4px $color-brown solid;
-      width: 70%;
-      margin: 0 auto 2% auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      //background-color: $color-yellow;
+    width: 70%;
+    margin: 2% auto 2% auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    &-right {
+      border: 4px $color-brown solid;
+      width: 40%;
       h2 {
         width: 100%;
-        border: 4px $color-brown solid;
+        border-bottom: 4px $color-brown solid;
+        background-color: $color-brown;
+        color: white;
+        text-align: center;
+      }
+      &-content {
+        div {
+          display: flex;
+          align-items: center;
+          h3 {
+            display: inline-block;
+            margin: 1% 1%;
+          }
+          .payment-choice {
+            display: inline-block;
+            margin: 0 2%;
+            height: 20px;
+            width: 20px;
+            border: 4px $color-brown solid;
+            border-radius: 50%;
+            cursor: pointer;
+          }
+          .focus{
+            background-color: $color-brown;
+          }
+        }
+      }
+    }
+    &-left {
+      border: 4px $color-brown solid;
+      width: 50%;
+      h2 {
+        width: 100%;
+        border-bottom: 4px $color-brown solid;
         background-color: $color-yellow;
         text-align: center;
       }
-      &-input {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+      &-content {
         width: 100%;
-      }
-      .checkout-input {
-        width: 70%;
-        margin-top: 2%;
-        display: flex;
-        //margin-right: 5%;
-        label {
-          height: 45px;
-          padding: 2%;
-          background-color: $color-brown;
+        &-prodcts {
+          width: 100%;
+        }
+        &-product {
+          width: 100%;
+          display: flex;
+          img {
+            object-fit: cover;
+            height: 100px;
+            padding: 1%;
+          }
+        }
+        &-title {
+          width: 100%;
+          display: flex;
+          border-bottom: 4px $color-brown dashed;
+          padding: 1% 0;
+        }
+        &-totlePrice {
+          border-top: 4px $color-brown dashed;
+          border-bottom: 8px $color-brown solid;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          padding: 3%;
+        }
+        .product-image,
+        .product-name,
+        .product-number,
+        .product-price,
+        .product-totle {
           display: flex;
           justify-content: center;
           align-items: center;
-          h3 {
-            color: white;
-            white-space: nowrap;
-          }
+          width: 20%;
         }
-        input {
-          height: 45px;
-          width: 100%;
-          font-size: 18px;
-          padding-left: 2%;
-          border: 4px $color-brown solid;
-          &:focus {
-            border: 4px $color-yellow solid;
-          }
-        }
-        select {
-          font-size: 18px;
-          padding-left: 2%;
-          border-top: 4px $color-brown solid;
-          border-bottom: 4px $color-brown solid;
-          border-left: 4px $color-brown solid;
-          &:focus {
-            border: 4px $color-yellow solid;
-          }
+        &-orderInfo,
+        &-recieverInfo {
+          padding: 2%;
         }
       }
     }
@@ -372,5 +345,8 @@ export default {
       transform: scale(1, 1);
     }
   }
+}
+.fas {
+  cursor: pointer;
 }
 </style>

@@ -25,7 +25,7 @@
               <label for="name"><h3>訂購人姓名</h3></label>
               <input
                 placeholder="請填寫「訂購人」姓名，如：李喵吉"
-                v-model="orderName"
+                v-model="userInfo.orderName"
                 class="checkout-product-content-top-input-name-input"
                 id="name"
                 type="text"
@@ -40,7 +40,7 @@
               <label for="name"><h3>訂購人電話</h3></label>
               <input
                 placeholder="請填寫「訂購人」電話，如：0910000xxx"
-                v-model="orderPhone"
+                v-model="userInfo.orderPhone"
                 class="checkout-product-content-top-input-phone-input"
                 id="phone"
                 type="tel"
@@ -54,7 +54,7 @@
               <label for="name"><h3>訂購人Email</h3></label>
               <input
                 placeholder="將會寄送訂單資訊至訂購人信箱"
-                v-model="orderEmail"
+                v-model="userInfo.orderEmail"
                 class="checkout-product-content-top-input-email-input"
                 id="email"
                 type="email"
@@ -65,13 +65,17 @@
         </div>
         <div class="checkout-product-content-top">
           <h2>收件人資料</h2>
-          <div><i class="far fa-circle" v-if="!sameInfo" @click="addSameInfo"></i><i v-else class="fas fa-circle" @click="cancelSameInfo"></i>同訂購人資料</div>
+          <div>
+            <i class="far fa-circle" v-if="!sameInfo" @click="addSameInfo"></i
+            ><i v-else class="fas fa-circle" @click="cancelSameInfo"></i
+            >同訂購人資料
+          </div>
 
           <div class="checkout-product-content-top-input">
             <div class="checkout-input checkout-product-content-top-input-name">
               <label for="name"><h3>收件人姓名</h3></label>
               <input
-                v-model="receiverName"
+                v-model="userInfo.receiverName"
                 class="checkout-product-content-top-input-name-input"
                 id="name"
                 type="text"
@@ -85,7 +89,7 @@
             >
               <label for="name"><h3>收件人電話</h3></label>
               <input
-                v-model="receiverPhone"
+                v-model="userInfo.receiverPhone"
                 class="checkout-product-content-top-input-phone-input"
                 id="phone"
                 type="tel"
@@ -97,7 +101,12 @@
               class="checkout-input checkout-product-content-top-input-email"
             >
               <label for="name"><h3>收件人地址</h3></label>
-              <select name="city" id="city" v-model="receiverCity" required>
+              <select
+                name="city"
+                id="city"
+                v-model="userInfo.receiverCity"
+                required
+              >
                 <option value="man" disabled selected>請選擇縣市</option>
                 <option
                   v-for="city in cities"
@@ -109,7 +118,7 @@
               </select>
 
               <input
-                v-model="receiverAddress"
+                v-model="userInfo.receiverAddress"
                 class="checkout-product-content-top-input-email-input"
                 id="email"
                 type="email"
@@ -122,7 +131,7 @@
             >
               <label for="name"><h3>收件人Email</h3></label>
               <input
-                v-model="receiverEmail"
+                v-model="userInfo.receiverEmail"
                 class="checkout-product-content-top-input-email-input"
                 id="email"
                 type="email"
@@ -141,26 +150,22 @@
           上一步
         </button>
         <button
-          v-if="!isProcessing"
           @click.stop.prevent="nextStep"
           type="submit"
           :to="{ name: 'CheckOut-Info' }"
           class="checkout-product-button-next"
           :disabled="
-            !this.orderName ||
-            !this.orderPhone ||
-            !this.orderEmail ||
-            !this.receiverName ||
-            !this.receiverPhone ||
-            !this.receiverEmail ||
-            !this.receiverCity ||
-            !this.receiverAddress
+            !this.userInfo.orderName ||
+            !this.userInfo.orderPhone ||
+            !this.userInfo.orderEmail ||
+            !this.userInfo.receiverName ||
+            !this.userInfo.receiverPhone ||
+            !this.userInfo.receiverEmail ||
+            !this.userInfo.receiverCity ||
+            !this.userInfo.receiverAddress
           "
         >
-          送出訂單
-        </button>
-        <button v-else class="checkout-product-button-next" disabled>
-          確認中
+          前往付款
         </button>
       </div>
     </form>
@@ -188,15 +193,16 @@ export default {
   data() {
     return {
       sameInfo: false,
-      isProcessing: false,
-      orderName: "",
-      orderPhone: "",
-      orderEmail: "",
-      receiverName: "",
-      receiverPhone: "",
-      receiverEmail: "",
-      receiverCity: "",
-      receiverAddress: "",
+      userInfo: {
+        orderName: "",
+        orderPhone: "",
+        orderEmail: "",
+        receiverName: "",
+        receiverPhone: "",
+        receiverEmail: "",
+        receiverCity: "",
+        receiverAddress: "",
+      },
       cities: [
         { name: "基隆市", id: "1" },
         { name: "台北市", id: "2" },
@@ -226,31 +232,45 @@ export default {
 
   methods: {
     addSameInfo() {
-      this.receiverName = this.orderName
-      this.receiverEmail = this.orderEmail
-      this.receiverPhone = this.orderPhone
-      this.sameInfo = true
+      this.userInfo.receiverName = this.userInfo.orderName;
+      this.userInfo.receiverEmail = this.userInfo.orderEmail;
+      this.userInfo.receiverPhone = this.userInfo.orderPhone;
+      this.sameInfo = true;
     },
-       cancelSameInfo() {
-          this.receiverName = ""
-      this.receiverEmail = ""
-      this.receiverPhone = ""
-     this.sameInfo = false
+    cancelSameInfo() {
+      this.userInfo.receiverName = "";
+      this.userInfo.receiverEmail = "";
+      this.userInfo.receiverPhone = "";
+      this.sameInfo = false;
     },
     fetchInfo() {
-      this.orderName=this.currentUser.name
-       this.orderEmail=this.currentUser.email
+      this.userInfo = {
+        ...this.userInfo,
+        orderName: this.currentUser.name,
+        orderEmail: this.currentUser.email,
+        ...JSON.parse(localStorage.getItem("go_farmmy_user"))
+      }
     },
     nextStep() {
+      const {
+        orderName,
+        orderPhone,
+        orderEmail,
+        receiverName,
+        receiverPhone,
+        receiverEmail,
+        receiverCity,
+        receiverAddress,
+      } = this.userInfo;
       if (
-        !this.orderName ||
-        !this.orderPhone ||
-        !this.orderEmail ||
-        !this.receiverName ||
-        !this.receiverPhone ||
-        !this.receiverEmail ||
-        !this.receiverCity ||
-        !this.receiverAddress
+        !orderName ||
+        !orderPhone ||
+        !orderEmail ||
+        !receiverName ||
+        !receiverPhone ||
+        !receiverEmail ||
+        !receiverCity ||
+        !receiverAddress
       ) {
         Swal.fire({
           icon: "warning",
@@ -262,10 +282,10 @@ export default {
         return;
       }
       if (
-        this.orderEmail.indexOf("@") === -1 ||
-        this.orderEmail.indexOf(".com") === -1 ||
-        this.receiverEmail.indexOf("@") === -1 ||
-        this.receiverEmail.indexOf(".com") === -1
+        orderEmail.indexOf("@") === -1 ||
+        orderEmail.indexOf(".com") === -1 ||
+        receiverEmail.indexOf("@") === -1 ||
+        receiverEmail.indexOf(".com") === -1
       ) {
         Swal.fire({
           icon: "warning",
@@ -276,10 +296,11 @@ export default {
         });
         return;
       }
-      this.isProcessing = true
-      this.sendInfo();
-
+      localStorage.setItem("go_farmmy_user", JSON.stringify(this.userInfo));
+     // this.$store.commit('updateUserInfo',this.userInfo)
+      this.$router.push({ name: "CheckOut-Payment" });
     },
+    //**這個打api移到下一個步驟再打
     async sendInfo() {
       try {
         const response = await OrderAPI.postOrder({
@@ -292,7 +313,7 @@ export default {
           recipientPhone: this.receiverPhone,
         });
         if (response.data.message === "Successfully added an order") {
-          this.isProcessing = false
+          this.isProcessing = false;
           Swal.fire({
             icon: "success",
             title: `訂單送出成功！ `,
@@ -300,13 +321,13 @@ export default {
             showConfirmButton: false,
             timer: 2000,
           });
-          this.$router.push({ name: "CheckOut-Payment" })
-          console.log(response)
+          this.$router.push({ name: "CheckOut-Payment" });
+          console.log(response);
         } else {
           throw new Error(response.message);
         }
       } catch (error) {
-        this.isProcessing = false
+        this.isProcessing = false;
         console.log(error);
         Swal.fire({
           icon: "warning",
@@ -323,7 +344,7 @@ export default {
   },
   mounted() {
     this.$store.commit("changeCheckOutStep", 2);
-    this.fetchInfo()
+    this.fetchInfo();
   },
   computed: {
     ...mapState(["isAuthenticated", "cart", "currentUser"]),
@@ -377,18 +398,17 @@ export default {
       //background-color: $color-yellow;
       h2 {
         width: 100%;
-        margin-bottom:1%;
+        margin-bottom: 1%;
         border: 4px $color-brown solid;
         background-color: $color-yellow;
         text-align: center;
       }
       div {
-        
         text-align: center;
         width: 100%;
       }
       .fa-circle {
-        margin-right:1% ;
+        margin-right: 1%;
         &:hover {
           cursor: pointer;
         }

@@ -128,12 +128,8 @@ import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
 import CheckOutStep from "@/components/CheckOutStep.vue";
 import Swal from "sweetalert2";
-//import CartAPI from "./../apis/cart";
 import { mapState } from "vuex";
-//import Swal from "sweetalert2";
-//import CartAPI from "./../apis/cart";
-//import ProductAPI from "./../apis/products";
-//import Swal from "sweetalert2";
+
 
 export default {
   name: "checkout-product",
@@ -151,6 +147,17 @@ export default {
   },
   methods: {
     nextStep() {
+      if(this.cart.shoppingCart.length === 0) {
+         Swal.fire({
+          icon: "warning",
+          title: `購物車內沒有商品唷`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return
+      }
+
       if(this.cart.totalPrice) {
         this.$router.push({ name: 'CheckOut-Info' })
       } else {
@@ -159,7 +166,7 @@ export default {
           title: `購物車發生錯誤，請洽客服`,
           toast: true,
           showConfirmButton: false,
-          timer: 1000,
+          timer: 2000,
         });
 
       }
