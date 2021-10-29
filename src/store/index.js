@@ -16,9 +16,16 @@ export default new Vuex.Store({
     currentUser: [],
     token: '',
     cartModel: false,
-    checkOutStep: 0
+    checkOutStep: 0,
+    filterKeyword: ""
   },
   mutations: {
+    //搜尋關鍵字賦值
+    addFilterKeyword(state, keyword) {
+      state.filterKeyword = keyword
+    },
+
+
     //更改結帳階段
     changeCheckOutStep(state, number) {
       state.checkOutStep = number

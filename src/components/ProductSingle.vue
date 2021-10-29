@@ -1,40 +1,44 @@
 <template>
-
-    
-    <div class="product-items">
-      <div
-        class="product-content-items-card"
-        v-for="item in initialItems"
-        :key="item.id"
-      >
-         <router-link
-            :to="{ name: 'Product-Detail', params: { id: item.id } }"
-          >
-        <div class="product-content-items-card-img">
-          <div
-            v-if="item.quantity > 0"
-            class="product-content-items-card-img-number"
-          >
-            <h5>限量{{ item.quantity }}組</h5>
-          </div>
-          <div
-            v-if="item.quantity === 0"
-            class="product-content-items-card-img-number"
-          >
-            <h5>已售完</h5>
-          </div>
-          <img :src="item.image" />
-           
+  <div class="product-items">
+    <h2 class="title">
+      季節特選。來自{{ item.origin }}的鮮採{{ item.name }}！
+    </h2>
+    <div class="product-content-items-card">
+      <div class="product-content-items-card-img">
+        <div
+          v-if="item.quantity > 0"
+          class="product-content-items-card-img-number"
+        >
+          <h5>限量{{ item.quantity }}組</h5>
         </div>
-         </router-link>
-        <h2>{{ item.name }} | {{ item.origin }}</h2>
-        <div class="product-content-items-card-specification">
-          <i class="fas fa-tag"></i> {{ item.specification }}
+        <div
+          v-if="item.quantity === 0"
+          class="product-content-items-card-img-number"
+        >
+          <h5>已售完</h5>
         </div>
-
+        <img :src="item.image" />
+      </div>
+      <div class="product-content-items-card-text">
+        <h1>{{ item.name }} | {{ item.origin }}</h1>
         <div class="product-content-items-card-price">
-          價格：{{ item.price }}元/箱
+          <h2><i class="fas fa-comment-dollar"></i> 價格：</h2><p class="price-focus">{{ item.price }}元/箱</p>
         </div>
+        <div class="product-content-items-card-specification">
+          <h2><i class="fas fa-tag"></i> 規格：</h2> 
+          <p> {{ item.specification }}</p>
+        </div>
+                <div class="product-content-items-card-specification">
+          <h2><i class="fas fa-archive"></i> 保存方法：</h2>
+          <p>{{ item.storage_method }}</p>
+        </div>
+        <div class="product-content-items-card-description">
+
+          <h4>
+            {{ item.description }}
+          </h4>
+        </div>
+
         <div class="product-content-items-card-panel">
           <div class="product-content-items-card-panel-number">
             <button
@@ -74,26 +78,27 @@
           >
             加入
           </button>
-        </div>
-        <div
-          class="product-content-items-card-warm"
-          v-if="item.number > item.quantity && item.quantity !== 0"
-        >
-          上限 {{ item.quantity }} 組
-        </div>
-        <div
-          class="product-content-items-card-warm"
-          v-if="
-            !Number.isInteger(Number(item.number)) ||
-            Number(item.number) < 0 ||
-            (item.number === '0' && item.quantity !== 0)
-          "
-        >
-          請輸入有效數量
+                <div
+        class="product-content-items-card-warm"
+        v-if="item.number > item.quantity && item.quantity !== 0"
+      >
+        上限 {{ item.quantity }} 組
+      </div>
         </div>
       </div>
-    </div>
 
+      <div
+        class="product-content-items-card-warm"
+        v-if="
+          !Number.isInteger(Number(item.number)) ||
+          Number(item.number) < 0 ||
+          (item.number === '0' && item.quantity !== 0)
+        "
+      >
+        請輸入有效數量
+      </div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -103,57 +108,88 @@
   display: flex;
   justify-content: start;
   flex-wrap: wrap;
-  padding: 5% 0;
+  padding: 5% 2%;
+}
+.title {
+  width: 100%;
+  border: 4px $color-brown solid;
+  background-color: $color-yellow;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .product-content-items-card {
-  //margin-right: 4%;
   position: relative;
-  max-height: 420px;
- width: 33.3%;
-  padding: 0 2%;
-  margin-bottom: 5%;
-  h2 {
-    margin-top: 3%;
-    text-align: center;
+  background-color: white;
+  border: 4px $color-brown solid;
+
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  padding: 2% 2%;
+  margin: 1% 0;
+  h1 {
+    margin-bottom: 3%;
+    color: $color-red;
+  }
+  &-text {
+    width: 40%;
   }
   &-specification,
   &-price {
-    text-align: center;
+    align-items: center;
+    display: flex;
     color: $color-brown;
     font-size: 14px;
+    margin-top: 1%;
+  }
+  h2 {
+     color: #927f62;
+  }
+  p{
+    font-weight: bolder;
+    font-size: 16px
+  }
+  .price-focus {
+    font-weight: bolder;
+    color: $color-red
+  }
+  h4 {
+    color: #927f62;
+    line-height: 160%;
+    margin-top: 4%;
   }
   &-img {
+    border-radius: 10px;
     position: relative;
-    display: flex;
-    height: 60%;
-    white-space: normal;
+   width: 55%;
     overflow: hidden;
-
     &-number {
+      border-radius: 10px;
+      padding: 2%;
+      font-size: 20px;
       position: absolute;
-      bottom: 2%;
-      right: 2%;
+      top: 2%;
+      left: 2%;
+      border: 4px solid white;
       background-color: $color-yellow;
-      transition: 0.5s;
-      opacity: 1;
+      h5 {
+        color: $color-red;
+      }
     }
     img {
-       object-fit: cover;
-      transition: 0.5s;
+      object-fit: cover;
     }
-    &:hover {
-      img {
-        transform: scale(1.1,1.1);
-      }
 
-      .product-content-items-card-img-number {
-        opacity: 0.3;
-      }
-    }
   }
 
   &-panel {
-    margin-top: 5%;
+    position: relative;
+    background-color: $color-yellow;
+    border: 4px $color-brown solid;
+    padding: 2%;
+    margin: 10% 0 5% 0;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -167,14 +203,15 @@
         align-items: center;
         justify-content: center;
         font-weight: bolder;
-        background-color: #edda7e;
-        transition: 0.3s;
-        color: $color-brown;
+        background-color: $color-brown;
+        transition: 0.2s;
         cursor: pointer;
-        padding: 2% 0 0 0;
+        color: white;
+        padding: 1% 0 0 0;
         &:hover {
           background-color: $color-brown;
-          color: white;
+          transform: scale(1.1, 1.1);
+          
         }
       }
 
@@ -197,13 +234,12 @@
       color: white;
       white-space: nowrap;
       font-size: 14px;
+      font-weight: bolder;
       padding: 2%;
-      transition: 0.3s;
+      transition: 0.2s;
       &:hover {
-        background-color: $color-yellow;
-        color: $color-brown;
+        transform: scale(1.1, 1.1);
         cursor: pointer;
-        font-weight: bolder;
       }
       &:disabled {
         opacity: 0.5;
@@ -212,7 +248,8 @@
   }
   &-warm {
     position: absolute;
-    left: 24%;
+    bottom: -50%;
+    left: 20%;
     font-size: 12px;
     color: #ae0000;
   }
@@ -226,7 +263,7 @@ import CartAPI from "./../apis/cart";
 import Swal from "sweetalert2";
 export default {
   props: {
-    initialItems: {
+    item: {
       require: true,
     },
   },

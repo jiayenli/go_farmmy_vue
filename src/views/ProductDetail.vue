@@ -8,14 +8,14 @@
     </div>
     <div class="product-content" @click="controlCartModel">
       <div class="product-content-nav">
-        <ProductNavbar @listPageFilter="filterItem"
-        @refresh ="refresh" />
+        <ProductNavbar @detailPageFilter="productFilter"/>
       </div>
       <div class="product-content-items">
-        <h2 class="title">商品一覽</h2>
+        <h2 class="title">商品介紹</h2>
 
         <!--商品卡片區-->
-        <ProductList :initialItems="showItems" />
+        <ProductSingle :item = "this.item" />
+        
       </div>
     </div>
   </div>
@@ -24,54 +24,41 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
-import ProductList from "@/components/ProductList.vue";
+import ProductSingle from "@/components/ProductSingle.vue";
 import ProductNavbar from "@/components/ProductNavbar.vue";
 import ProductAPI from "./../apis/products";
 import Swal from "sweetalert2";
-import { mapState } from "vuex";
 
 export default {
   name: "Product",
   components: {
     Navbar,
     CartNavbar,
-    ProductList,
+    ProductSingle,
     ProductNavbar,
   },
 
   data() {
     return {
-      items: [],
+      item: {},
       showItems: [],
+      filterName: "",
     };
   },
 
   methods: {
-    refresh() {
-      this.filterItem()
+    productFilter() {
+      this.$router.push({ name: 'Product'})
 
     },
-    filterItem() {
-      this.showItems = this.items.filter(
-        (item) =>
-          item.name.includes(this.filterKeyword) ||
-          item.origin.includes(this.filterKeyword)
-      );
-      this.$store.commit("addFilterKeyword", "");
-    },
-
     controlCartModel() {
       this.$store.commit("closeCartModel");
     },
-    async fetchData({ categoryId }) {
+    async fetchData(Id) {
       try {
-        const response = await ProductAPI.getProducts({ categoryId });
-        this.items = [...response.data];
-        if (this.filterKeyword) {
-          this.filterItem();
-        } else {
-          this.showItems = [...this.items];
-        }
+        const response = await ProductAPI.getProduct({id:Id});
+        console.log(response)
+        this.item = {...response.data};
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -84,16 +71,13 @@ export default {
     },
   },
   created() {
-    const { categoryId = "" } = this.$route.query;
-    this.fetchData({ categoryId });
+    const Id = this.$route.params.id
+    this.fetchData(Id);
   },
   beforeRouteUpdate(to, from, next) {
-    const { categoryId = "" } = to.query;
-    this.fetchData({ categoryId });
+    const {id} = to.params;
+    this.fetchData(id);
     next();
-  },
-  computed: {
-    ...mapState(["filterKeyword"]),
   },
 };
 </script>
@@ -126,6 +110,7 @@ export default {
       padding-left: 10%;
       padding-right: 3%;
       // outline: green 1px solid;
+
     }
     &-items {
       .title {

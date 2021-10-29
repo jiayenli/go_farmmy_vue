@@ -8,5 +8,9 @@ export default {
     return apiHelper.get(`/products?${searchParams.toString()}`)
   },
 
+  getProduct({ id }) {
+    return apiHelper.get(`/products/${id}`)
+  },
+
 
 }

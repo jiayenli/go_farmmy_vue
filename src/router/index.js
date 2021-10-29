@@ -23,10 +23,17 @@ const routes = [
     component: () => import('../views/HomePage.vue')
   },
   {
+    path: "/goFarmmy/product/detail/:id",
+    name: 'Product-Detail',
+    component: () => import('../views/ProductDetail.vue')
+  },
+
+  {
     path: '/goFarmmy/product',
     name: 'Product',
     component: () => import('../views/Product.vue')
   },
+
   {
     path: '/goFarmmy/signin',
     name: 'Sign-in',
@@ -106,7 +113,7 @@ router.beforeEach(async (to, from, next) => {
     getItem = await store.dispatch('fetchSoppingCard') //確定vuex同步後端購物車了
   }
   const shoppingCartinVuex = store.state.cart.shoppingCart
-
+ 
 
   if (getItem && pathsWithoutAuthentication.includes(from.name) &&
     isAuthenticated) {
@@ -144,14 +151,17 @@ router.beforeEach(async (to, from, next) => {
 
     }
   }
-
   
+
+
+  console.log('detail有通過')
 
   if (isAuthenticated && to.name.includes('Sign-up')) {
     console.log('text有到這裡重導向路由')
     next('/goFarmmy')
     return
   }
+  console.log('detail有通過')
   console.log('text通過')
 
   next()
