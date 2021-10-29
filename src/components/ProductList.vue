@@ -95,7 +95,7 @@
 @import "../assets/scss/color.scss";
 .product-items {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   flex-wrap: wrap;
   padding: 5% 0;
 }

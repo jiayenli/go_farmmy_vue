@@ -10,21 +10,35 @@
       <div class="product-content-nav">
         <div class="product-content-nav-search">
           <div>
-            <i class="fas fa-search"></i>
+            <i class="fas fa-search" @click="filterItem"></i>
           </div>
-          <input placeholder="火龍果！" type="text" required />
+          <input placeholder="火龍果！" type="text" required v-model="filterName" @keyup="filterItem"/>
         </div>
         <div class="product-content-nav-category">
           <h2>商品分類</h2>
           <div class="product-content-nav-category-name">
-            <div>
+            <router-link
+              class="product-content-nav-category-link"
+              :to="{ name: 'Product' }"
+            >
               <h3>全部</h3>
+            </router-link>
+
+            <div>
+              <router-link
+                class="product-content-nav-category-link"
+                :to="{ name: 'Product', query: { categoryId: 1 } }"
+              >
+                <h3>果物</h3>
+              </router-link>
             </div>
             <div>
-              <h3>果物</h3>
-            </div>
-            <div>
-              <h3>蔬菜</h3>
+              <router-link
+                class="product-content-nav-category-link cat"
+                :to="{ name: 'Product', query: { categoryId: 11 } }"
+              >
+                <h3>蔬菜</h3>
+              </router-link>
             </div>
           </div>
         </div>
@@ -32,7 +46,7 @@
       <div class="product-content-items">
         <h2>商品一覽</h2>
         <!--商品卡片區-->
-        <ProductList :initialItems="items" />
+        <ProductList :initialItems="showItems" />
       </div>
     </div>
   </div>
@@ -56,20 +70,29 @@ export default {
   data() {
     return {
       items: [],
+      showItems: [],
+      filterName:""
     };
   },
 
   methods: {
-     controlCartModel() {
-       this.$store.commit('closeCartModel')
+    filterItem() {
+      this.showItems = this.items.filter(item => item.name.includes(this.filterName) || item.origin.includes(this.filterName))
 
-     },
-    async fetchData() {
+    },
+
+
+    controlCartModel() {
+      this.$store.commit("closeCartModel");
+    },
+    async fetchData({ categoryId }) {
       try {
-        const response = await ProductAPI.getProducts({ categoryId: "" });
-        this.items = {
+        const response = await ProductAPI.getProducts({ categoryId });
+        this.items = [
           ...response.data,
-        };
+        ];
+        this.showItems = [
+          ...this.items]
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -82,7 +105,13 @@ export default {
     },
   },
   created() {
-    this.fetchData();
+    const { categoryId = "" } = this.$route.query;
+    this.fetchData({ categoryId });
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { categoryId = "" } = to.query;
+    this.fetchData({ categoryId });
+    next();
   },
 };
 </script>
@@ -150,7 +179,10 @@ export default {
           background-image: url("./../assets/home-background.png");
           padding: 2%;
           padding-top: 5%;
+        }
+        &-link {
           h3 {
+            color: $color-brown;
             margin-bottom: 5%;
           }
           h3::before {
@@ -167,6 +199,11 @@ export default {
             &::before {
               background-color: $color-brown;
             }
+          }
+        }
+         .router-link-exact-active {
+          h3::before {
+          background-color: $color-brown;
           }
         }
       }
