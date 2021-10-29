@@ -122,7 +122,7 @@
         上一步
       </button>
       <button
-        @click.stop.prevent="Oderalert"
+        @click.stop.prevent="nextStep"
         class="checkout-product-button-next"
       >
         確認訂單
@@ -187,24 +187,24 @@ export default {
       };
     },
 
-    async Oderalert() {
-      const result = await Swal.fire({
-        title: "確認訂單資訊無誤",
-        text: "訂單確認後即不可修改，請務必確認內容正確喔！",
-        icon: "warning",
-        focusConfirm: true,
-        showCancelButton: true,
-        confirmButtonColor: "#808080",
-        cancelButtonColor: "#2a2a2a",
-        cancelButtonText: "取消",
-        confirmButtonText: "確認",
-      });
+    // async Oderalert() {
+    //   const result = await Swal.fire({
+    //     title: "確認訂單資訊無誤",
+    //     text: "訂單確認後即不可修改，請務必確認內容正確喔！",
+    //     icon: "warning",
+    //     focusConfirm: true,
+    //     showCancelButton: true,
+    //     confirmButtonColor: "#808080",
+    //     cancelButtonColor: "#2a2a2a",
+    //     cancelButtonText: "取消",
+    //     confirmButtonText: "確認",
+    //   });
 
-      if (result.isConfirmed) {
-        console.log("訂單有確認");
-        this.nextStep();
-      }
-    },
+    //   if (result.isConfirmed) {
+    //     console.log("訂單有確認");
+    //     this.nextStep();
+    //   }
+    // },
 
     async nextStep() {
       const checkInfo = await this.sendInfo();

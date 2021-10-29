@@ -79,7 +79,7 @@ export default {
     text: {
       require: true
     }
-  }
+  },
   
 }
 </script>

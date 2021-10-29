@@ -17,7 +17,7 @@
     </div>
 
     <div class="checkout-product-content">
-
+      <h1>訂購完成！</h1>
     </div>
     <div class="checkout-product-button">
       <button
@@ -28,7 +28,8 @@
       </button>
       <button
         @click.stop.prevent="nextStep"
-        class="checkout-product-button-next">
+        class="checkout-product-button-next"
+      >
         查看訂單
       </button>
     </div>
@@ -54,7 +55,7 @@ export default {
   },
   data() {
     return {
-      payWay: 'online',
+      payWay: "online",
       userInfo: {},
       productList: true,
       userInfoList: false,
@@ -62,13 +63,15 @@ export default {
   },
 
   methods: {
-        nextStep() {
+    nextStep() {
       this.$router.push({ name: "Home" });
     },
     previousPage() {
-      this.$router.push({ name: 'Product' });
+      this.$router.push({ name: "Product" });
     },
-    
+    empyItems() {
+      this.$store.dispatch("ChangeShoppingCart", []);
+    },
   },
   mounted() {
     this.$store.commit("changeCheckOutStep", 4);
@@ -80,6 +83,9 @@ export default {
     this.$store.commit("changeCheckOutStep", 0);
   },
 
+  created() {
+    this.empyItems();
+  },
 };
 </script>
 
@@ -102,7 +108,10 @@ export default {
       @extend %cover-img;
     }
   }
-
+  &-content {
+    margin: 3% 0;
+    text-align: center;
+  }
 
   &-button {
     @extend %checkout-button-area;
@@ -122,7 +131,6 @@ export default {
       cursor: not-allowed;
       transform: scale(1, 1);
     }
-
   }
 }
 .fas {

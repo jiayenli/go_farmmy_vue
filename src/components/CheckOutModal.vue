@@ -7,7 +7,7 @@
         <input type="hidden" name="TradeInfo" :value="tradeInfo.TradeInfo" />
         <input type="hidden" name="TradeSha" :value="tradeInfo.TradeSha" />
         <input type="hidden" name="Version" :value="tradeInfo.Version" />
-        <button type="submit">前往付款</button>
+        <button type="submit" >前往付款</button>
       </form>
     </div>
   </div>
@@ -68,5 +68,12 @@ export default {
       require: true,
     },
   },
+
+  method: {
+    empyItems() {
+      this.$store.dispatch('ChangeShoppingCart', [])
+    }
+  },
+
 };
 </script>
