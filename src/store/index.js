@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import UserAPI from "./../apis/users";
 import cart from './modules/cart'
 import order from './modules/order'
+import authenticated from './modules/authenticated'
 
 
 Vue.use(Vuex)
@@ -21,6 +22,10 @@ export default new Vuex.Store({
     //更改結帳階段
     changeCheckOutStep(state, number) {
       state.checkOutStep = number
+    },
+
+    changeFacebookConnect(state) {
+      state.facebookConnect = true
     },
 
 
@@ -41,7 +46,6 @@ export default new Vuex.Store({
         ...state.currentUser,
         ...currentUser,
       };
-
       state.isAuthenticated = true
       state.token = localStorage.getItem('gofarmmy_token')
     },
@@ -54,11 +58,9 @@ export default new Vuex.Store({
       state.currentUser = []
       state.token = ''
       state.isAuthenticated = false
-
+      localStorage.removeItem("go_farmmy_user")
+      localStorage.removeItem("gofarmmy_facebook_connect")
     }
-
-
-
 
   },
   actions: {
@@ -83,6 +85,7 @@ export default new Vuex.Store({
   },
   modules: {
     cart,
-    order
+    order,
+    authenticated
   }
 })

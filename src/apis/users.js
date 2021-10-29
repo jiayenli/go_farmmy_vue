@@ -2,12 +2,45 @@ import { apiHelper } from '../utils/helpers'
 const getToken = () => localStorage.getItem("gofarmmy_token")
 
 export default {
-  PostSignIn({email, password}) {
+  getFacebook() {
+    return apiHelper.get('/auth/facebook')
+  },
+  getFacebookCallback() {
+    return apiHelper.get('/auth/facebook/status')
+  },
+
+
+  getGoogle() {
+    return apiHelper.get('/auth/google')
+  },
+
+  PostSignIn({ email, password }) {
     return apiHelper.post('/users/signin', {
       email,
       password
+    }, {
+      validateStatus: function (status) {
+        return status <= 500
+      }
     })
   },
+
+  PostSignUp({ name,
+    email,
+    password,
+    checkPassword }) {
+    return apiHelper.post('/users', {
+      name,
+      email,
+      password,
+      checkPassword
+    }, {
+      validateStatus: function (status) {
+        return status <= 500
+      }
+    })
+  },
+
   getCurrentUser() {
     return apiHelper.get('/users/currentUser', {
       headers: {
@@ -15,6 +48,10 @@ export default {
       }
     })
   },
+
+  
+
+
 
 
 

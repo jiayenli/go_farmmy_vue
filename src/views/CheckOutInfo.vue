@@ -297,7 +297,6 @@ export default {
         return;
       }
       localStorage.setItem("go_farmmy_user", JSON.stringify(this.userInfo));
-     // this.$store.commit('updateUserInfo',this.userInfo)
       this.$router.push({ name: "CheckOut-Payment" });
     },
     //**這個打api移到下一個步驟再打

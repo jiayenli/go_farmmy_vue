@@ -87,18 +87,33 @@ const actions = {
     console.log('有在fetch')
     try {
       const { data } = await CartAPI.getCart()
-      const { items } = data.cart
-      const CartItems = items.map(item => ({
-        ...item,
-        number: item.CartItem.quantity,
-      }))
-      
+      console.log('getCar', data)
+      const  {cart}  = data
+      console.log(cart)
+      let CartItems = []
+      if (cart !== 'empty') {
+        CartItems = cart.items.map(item => ({
+          ...item,
+          number: item.CartItem.quantity,
+        }))
+      }
+
+      console.log('fetchSoppingCarddata', CartItems)
+
       commit('updateDelivery', data.shippingInfo)
       commit('updateTotlePrice', data.totalPrice)
       commit('updateProducts', CartItems)
       commit('effectButton')
+      console.log(data)
       return true
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "購物車載入失敗，請稍後再試！",
+        toast: true,
+        showConfirmButton: false,
+        timer: 2000,
+      });
       console.log(error)
     }
   },
@@ -120,6 +135,7 @@ const actions = {
       }
 
     } catch (error) {
+
       console.log(error)
 
     }
@@ -128,19 +144,22 @@ const actions = {
   async ChangeShoppingCart({ dispatch }, items) {
     try {
       const response = await CartAPI.deleteAllCartItem()
-      if (response.data.status === 'success') {
+      if (response.data.status === 'success' && items.length != 0) {
         dispatch('addEmptyShoppingCart', items)
+      }
+      if (response.data.status === 'success' && items.length === 0) {
+        dispatch('fetchSoppingCard')
       }
     } catch (error) {
       console.log(error)
     }
   },
 
-  async increaseItemNumber({ commit,dispatch }, item) {
+  async increaseItemNumber({ commit, dispatch }, item) {
     try {
       commit('blockButton')
       commit('increaseItem', item)
-      const response = await CartAPI.postAddCartItem({Id: item.id})
+      const response = await CartAPI.postAddCartItem({ Id: item.id })
       if (response.status === 200) {
         dispatch('fetchSoppingCard')
       } else {
@@ -158,7 +177,7 @@ const actions = {
     }
   },
 
-  async decreaseItemNumber({commit, dispatch }, item) {
+  async decreaseItemNumber({ commit, dispatch }, item) {
     try {
       commit('blockButton')
       commit('decreaseItem', item)

@@ -12,8 +12,31 @@
       <img src="./../assets/vegetable-2.png" />
     </div>
     <form class="form">
-      <h2>登入</h2>
+      <h2>註冊</h2>
+
       <div class="signin-form-content">
+        <div class="signin-form-content-fast">
+          <h3>快速登入</h3>
+          <h5>您可以透過Facebook和Google免註冊登入</h5>
+          <div class="signin-form-content-fast-icon">
+            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-google"></i>
+          </div>
+        </div>
+        <div><h3>會員註冊</h3></div>
+        <div class="signin-form-content-name">
+          <label class="signin-form-content-name-lebel" for="name"
+            ><h3>姓名</h3></label
+          >
+          <input
+            v-model="name"
+            class="signin-form-content-name-input"
+            id="name"
+            type="name"
+            autofocus
+            required
+          />
+        </div>
         <div class="signin-form-content-email">
           <label class="signin-form-content-email-lebel" for="email"
             ><h3>Email</h3></label
@@ -24,7 +47,6 @@
             placeholder="請含有@、com等字元"
             id="email"
             type="email"
-            autofocus
             required
           />
         </div>
@@ -53,31 +75,38 @@
             ></i>
           </div>
         </div>
+
+        <div class="signin-form-content-checkPassword">
+          <label
+            class="signin-form-content-checkPassword-lebel"
+            for="checkPassword"
+            ><h3>密碼確認</h3></label
+          >
+          <input
+            v-model="checkPassword"
+            class="signin-form-content-checkPassword-input"
+            id="checkPassword"
+            type="password"
+            autofocus
+            required
+          />
+        </div>
+
         <div class="signin-form-content-buttonarea">
-          <div class="signin-form-content-signup" @click.stop.prevent="signUp">
-            <h3>註冊</h3>
+          <div class="signin-form-content-signin" @click.stop.prevent="signIn">
+            <h3>返回登入</h3>
           </div>
           <div
             v-if="!processing"
             class="signin-form-content-button"
-            @click.stop.prevent="signIn"
-            :class="{ block: !email || !password }"
+            @click.stop.prevent="signUp"
+            :class="{ block: !email || !password || !name || !checkPassword }"
           >
-            <h3>登入</h3>
+            <h3>註冊</h3>
           </div>
-          <div
-            v-else
-            class="block signin-form-content-button"
-            @click.stop.prevent="signIn"
-          >
-            <h3>登入中</h3>
-          </div>
-        </div>
-        <div class="signin-form-content-fast">
-          <h3>快速登入</h3>
-          <div class="signin-form-content-fast-icon">
-            <i class="fab fa-facebook-f" @click="facebookSignIn"></i>
-            <i class="fab fa-google" @click="googleSignIn"></i>
+
+          <div v-else class="signin-form-content-button block">
+            <h3>註冊中...</h3>
           </div>
         </div>
       </div>
@@ -89,7 +118,7 @@
 @import "../assets/scss/color.scss";
 .signin-form {
   width: 100%;
-  padding: 5% 0;
+  padding: 5% 0 2% 0;
   position: relative;
   overflow: hidden;
   &-img-1 {
@@ -126,11 +155,13 @@
     padding: 2% 0 2% 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     border-radius: 5px;
 
     &-email,
-    &-password {
+    &-password,
+    &-name,
+    &-checkPassword {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -174,12 +205,12 @@
         color: white;
       }
     }
-    &-signup {
+    &-signin {
       border: 4px $color-brown dashed;
     }
 
     &-button,
-    &-signup {
+    &-signin {
       width: 20%;
       margin: 2% 5% 0 0;
       height: 35px;
@@ -203,9 +234,9 @@
     }
     &-fast {
       width: 100%;
-      margin-top: 5%;
-      border-top: 4px $color-brown dashed;
-      padding-top: 2%;
+      margin: 1% 0 2% 0;
+      border-bottom: 4px $color-brown dashed;
+      padding-bottom: 1%;
 
       &-icon {
         display: flex;
@@ -233,20 +264,20 @@
 }
 @keyframes vegatable-move-1 {
   0% {
-    opacity: 0.4;
+     opacity: 0.3;
     transform: rotate(180deg);
   }
   50% {
-    opacity: 0.6;
+     opacity: 0.6;
     transform: rotate(120deg);
   }
   80% {
-    opacity: 0.8;
+     opacity: 0.8;
     transform: rotate(-10deg);
   }
 
   100% {
-    opacity: 1;
+     opacity: 1;
     transform: rotate(0deg);
   }
 }
@@ -277,28 +308,86 @@ export default {
       showPassword: "password",
       email: "",
       password: "",
+      name: "",
+      checkPassword: "",
       processing: false,
     };
   },
   methods: {
-    facebookSignIn() {
-      localStorage.setItem("gofarmmy_facebook_connect", true);
-      window.location.href =
-        "https://go-farmmy-demo.herokuapp.com/api/auth/facebook";
-    },
+    async signUp() {
+      this.$store.commit("closeCartModel");
+      //確認缺格
+      const emptyInput = await this.$store.dispatch("checkEmptyInput", [
+        this.email,
+        this.name,
+        this.password,
+        this.checkPassword,
+      ]);
+      if (emptyInput) {
+        return;
+      }
+      //確認信箱
+      const checkEmail = await this.$store.dispatch("checkEmail", this.email);
+      if (checkEmail) {
+        return;
+      }
+      //確認密碼相同
+      const checkPasswordCorrect = await this.$store.dispatch("checkPassword", {
+        password: this.password,
+        checkPassword: this.checkPassword,
+      });
+      if (checkPasswordCorrect) {
+        return;
+      }
 
-    async getFacebookStatus() {
-      console.log('有重新導回頁面')
-      const signinWayIsFacebook = localStorage.getItem('gofarmmy_facebook_connect') || ""
-      // const response = await UsersAPI.getFacebookCallback();
-      // console.log(response);
-      if(signinWayIsFacebook) {
-        console.log('有判斷是從facebook來的')
+      try {
+        this.processing = true;
+        const response = await UsersAPI.PostSignUp({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.checkPassword,
+        });
+        const { data } = response;
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        Swal.fire({
+          icon: "success",
+          title: `歡迎加入Go Farmmy！`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        this.processing = false;
+        this.$router.push({ name: "Sign-in" });
+      } catch (error) {
+        this.processing = false;
+        this.password = "";
+        this.checkPassword = "";
+        if (error.message === "This email has been registered") {
+          Swal.fire({
+            icon: "warning",
+            title: "email已重複註冊",
+            toast: true,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "註冊失敗，請聯繫客服",
+            toast: true,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
     },
-    googleSignIn() {
-      window.location.href =
-        "https://go-farmmy-demo.herokuapp.com/api/auth/google ";
+    signIn() {
+      this.$router.push({ name: "Sign-in" });
     },
     controlCartModel() {
       this.$store.commit("closeCartModel");
@@ -309,82 +398,6 @@ export default {
     clickHidePassword() {
       this.showPassword = "password";
     },
-    signUp() {
-      this.$router.push({ name: "Sign-up" });
-    },
-    async signIn() {
-      this.$store.commit("closeCartModel");
-      const emptyInput = await this.$store.dispatch("checkEmptyInput", [
-        this.email,
-        this.password,
-      ]);
-      if (emptyInput) {
-        return;
-      }
-      const checkEmail = await this.$store.dispatch("checkEmail", this.email);
-      if (checkEmail) {
-        return;
-      }
-      
-
-      try {
-        this.processing = true;
-        const response = await UsersAPI.PostSignIn({
-          email: this.email,
-          password: this.password,
-        });
-        const { data } = response;
-        if (data.status !== "success") {
-          throw new Error(data.message);
-        }
-        Swal.fire({
-          icon: "success",
-          title: `歡迎 ${data.user.name}回來！`,
-          toast: true,
-          showConfirmButton: false,
-          timer: 3000,
-        });
-        localStorage.setItem("gofarmmy_token", data.token);
-        this.$store.commit("setCurrentUser", data.user);
-        this.processing = false;
-
-        if (this.$route.name === "Sign-in") {
-          this.$router.back();
-        }
-        if (this.$route.name === "CheckOut-Sign-in") {
-          this.$router.push({ name: "CheckOut-Products" });
-        }
-      } catch (error) {
-        this.password = "";
-        this.processing = false;
-
-        if (error.message === "User does not exist") {
-          Swal.fire({
-            icon: "warning",
-            title: "此email尚未註冊",
-            toast: true,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else if (error.message === "Wrong password") {
-          Swal.fire({
-            icon: "warning",
-            title: "密碼錯誤",
-            toast: true,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "登入錯誤，請洽客服",
-            toast: true,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      }
-    },
   },
 
   mounted() {
@@ -392,7 +405,6 @@ export default {
       block: "end",
       inline: "nearest",
     });
-    this.getFacebookStatus()
   },
 };
 </script>

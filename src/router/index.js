@@ -33,10 +33,16 @@ const routes = [
     component: () => import('../views/Signin.vue')
   },
   {
+    path: '/goFarmmy/signup',
+    name: 'Sign-up',
+    component: () => import('../views/Signup.vue')
+  },
+  {
     path: '/goFarmmy/checkout/signin',
     name: 'CheckOut-Sign-in',
     component: () => import('../views/CheckoutSignin.vue')
   },
+
   {
     path: '/goFarmmy/checkout/product',
     name: 'CheckOut-Products',
@@ -47,11 +53,17 @@ const routes = [
     name: 'CheckOut-Info',
     component: () => import('../views/CheckOutInfo'),
   },
- 
-    {
+
+  {
     path: '/goFarmmy/checkout/payment',
-      name: 'CheckOut-Payment',
-      component: () => import('../views/CheckOutPayment'),
+    name: 'CheckOut-Payment',
+    component: () => import('../views/CheckOutPayment'),
+  },
+
+  {
+    path: '/goFarmmy/checkout/complete',
+    name: 'CheckOut-Complete',
+    component: () => import('../views/CheckOutComplete'),
   },
 
 
@@ -67,22 +79,16 @@ router.beforeEach(async (to, from, next) => {
   const productInLocalStorage = JSON.parse(localStorage.getItem("go_farmmy_products")) || []
   let getItem = false
   let isAuthenticated = store.state.isAuthenticated
-  const pathsWithoutAuthentication = ['Sign-in', 'CheckOut-Sign-in',]
+  const pathsWithoutAuthentication = ['Sign-in', 'CheckOut-Sign-in']
+  //const WithoutAuthenticationPage = ['Sign-in', 'CheckOut-Sign-in', 'Sign-up']
 
   //要再加入去會員中心會導到登入
 
   //如果vuex會員資料被清空，用local storage token抓
   //等使用者資料api用好 要在這裡多打一次，要用await 拿isAuthenticate
 
+  //登入中不能去註冊跟登入頁面
 
-  ////////////這裡是非登入狀態////////////////////////////////
-  //非登入如果要去結帳葉面
-  if (!isAuthenticated && !tokenInLocalStorage && store.state.cart.shoppingCart !== productInLocalStorage) {
-    store.commit('updateProducts', productInLocalStorage)
-    next()
-    return
-
-  }
 
   if (!isAuthenticated && tokenInLocalStorage) {
     store.dispatch('fetchSoppingCard')
@@ -125,9 +131,9 @@ router.beforeEach(async (to, from, next) => {
         await store.dispatch('ChangeShoppingCart', productInLocalStorage)
       }
       localStorage.removeItem("go_farmmy_products")
-      next()
-      return
+
     }
+
 
     //local storage有資料，但vuex沒有，將local storage存到vuex和後端
     if (
@@ -135,44 +141,18 @@ router.beforeEach(async (to, from, next) => {
       shoppingCartinVuex.length === 0) {
       store.dispatch('addEmptyShoppingCart', productInLocalStorage)
       localStorage.removeItem("go_farmmy_products")
-      next()
-      return
+
     }
-
-    // //如果local storage沒資料，但vuex有(後端有)，將資料存到local storage
-    // if (
-    //   productInLocalStorage.length === 0) {
-    //   localStorage.setItem(
-    //     "go_farmmy_products",
-    //     JSON.stringify(store.state.cart.shoppingCart)
-    //   );
-    //   next()
-    //   return
-    // }
-
   }
 
-  ////////////這裡是操作中狀態////////////////////////////////
+  
 
-
-  //(保險起見)非剛登入的情況下，如果vuex跟local storage的商品不一樣，都重新打api
-  // if (
-  //   isAuthenticated &&
-  //   productInLocalStorage.length !== 0 &&
-  //   shoppingCartinVuex !== productInLocalStorage) {
-  //   console.log('其實有到')
-  //   await store.dispatch('fetchSoppingCard')
-  //   localStorage.setItem(
-  //     "go_farmmy_products",
-  //     JSON.stringify(store.state.cart.shoppingCart)
-  //   );
-
-  //   next()
-  //   return
-  // }
-
-
-
+  if (isAuthenticated && to.name.includes('Sign-up')) {
+    console.log('text有到這裡重導向路由')
+    next('/goFarmmy')
+    return
+  }
+  console.log('text通過')
 
   next()
 

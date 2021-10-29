@@ -1,5 +1,14 @@
 <template>
   <div class="checkout-product">
+    <CheckOutModal
+      v-if="PaymentStage"
+      :tradeInfo="tradeInfo"
+      :totalCost="totalCost"
+    />
+    <CheckOrderSpinner
+      v-if="checkOrderProccessing"
+      :text="checkOrderProccessingWord"
+    />
     <Navbar />
     <CartNavbar />
     <div class="checkout-product-cover">
@@ -87,15 +96,19 @@
         <h2>付款方式</h2>
         <div class="checkout-product-content-right-content">
           <div>
-            <spn class="payment-choice" :class="{'focus':payWay === 'online'}" @click="choicePayWay('online')"></spn>
+            <span
+              class="payment-choice"
+              :class="{ focus: payWay === 'online' }"
+              @click="choicePayWay('online')"
+            ></span>
             <h3>線上付款</h3>
           </div>
           <div>
-            <spn class="payment-choice"></spn>
+            <span class="payment-choice"></span>
             <h3>轉帳(即將開放)</h3>
           </div>
           <div>
-            <spn class="payment-choice"></spn>
+            <span class="payment-choice"></span>
             <h3>貨到付款(即將開放)</h3>
           </div>
         </div>
@@ -104,16 +117,15 @@
     <div class="checkout-product-button">
       <button
         @click.stop.prevent="previousPage"
-        :to="{ name: 'CheckOut-Products' }"
         class="checkout-product-button-previous"
       >
         上一步
       </button>
       <button
-        type="submit"
-        :to="{ name: 'CheckOut-Info' }"
-        class="checkout-product-button-next">
-        確認付款
+        @click.stop.prevent="Oderalert"
+        class="checkout-product-button-next"
+      >
+        確認訂單
       </button>
     </div>
   </div>
@@ -124,8 +136,13 @@
 import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
 import CheckOutStep from "@/components/CheckOutStep.vue";
+import CheckOrderSpinner from "@/components/CheckOrderSpinner.vue";
+import CheckOutModal from "@/components/CheckOutModal.vue";
+
 import { mapState } from "vuex";
 import Swal from "sweetalert2";
+import OrderAPI from "./../apis/order";
+//import axios from "axios";
 //import Swal from "sweetalert2";
 //import CartAPI from "./../apis/cart";
 //import ProductAPI from "./../apis/products";
@@ -136,20 +153,26 @@ export default {
     Navbar,
     CartNavbar,
     CheckOutStep,
+    CheckOrderSpinner,
+    CheckOutModal,
   },
   data() {
     return {
-      payWay: 'online',
+      payWay: "online",
       userInfo: {},
       productList: true,
       userInfoList: false,
+      checkOrderProccessing: false,
+      checkOrderProccessingWord: "訂單確認中，請不要關閉視窗",
+      tradeInfo: {},
+      totalCost: 0,
+      PaymentStage: false,
     };
   },
 
   methods: {
     choicePayWay(method) {
-      this.payWay = method
-
+      this.payWay = method;
     },
     openProductList() {
       this.productList = !this.productList;
@@ -163,23 +186,105 @@ export default {
         ...JSON.parse(localStorage.getItem("go_farmmy_user")),
       };
     },
-    nextStep() {
-      this.$router.push({ name: "CheckOut-Info" });
+
+    async Oderalert() {
+      const result = await Swal.fire({
+        title: "確認訂單資訊無誤",
+        text: "訂單確認後即不可修改，請務必確認內容正確喔！",
+        icon: "warning",
+        focusConfirm: true,
+        showCancelButton: true,
+        confirmButtonColor: "#808080",
+        cancelButtonColor: "#2a2a2a",
+        cancelButtonText: "取消",
+        confirmButtonText: "確認",
+      });
+
+      if (result.isConfirmed) {
+        console.log("訂單有確認");
+        this.nextStep();
+      }
     },
+
+    async nextStep() {
+      const checkInfo = await this.sendInfo();
+      if (checkInfo) {
+        return;
+      }
+      try {
+        this.checkOrderProccessing = true;
+        const {
+          orderName,
+          orderEmail,
+          orderPhone,
+          receiverEmail,
+          receiverName,
+          receiverCity,
+          receiverAddress,
+          receiverPhone,
+        } = this.userInfo;
+        const response = await OrderAPI.postOrder({
+          customerName: orderName,
+          customerEmail: orderEmail,
+          customerPhone: orderPhone,
+          recipientEmail: receiverEmail,
+          recipientName: receiverName,
+          recipientAddress: receiverCity + receiverAddress,
+          recipientPhone: receiverPhone,
+        });
+        if (response.data.message === "Successfully added an order") {
+          this.pay(response.data.orderId);
+        } else {
+          throw new Error(response.message);
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "warning",
+          title: `訂單送出失敗，請與客服聯繫 `,
+          toast: true,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    },
+
+    async pay(Id) {
+      try {
+        this.checkOrderProccessingWord = "付款方式確認中，請不要關閉視窗";
+        const response = await OrderAPI.getOrder({ Id });
+        console.log("payresponse", response);
+        if (response.statusText === "OK") {
+          this.totalCost = this.cart.totalPrice + this.cart.shippingInfo.fee;
+          this.tradeInfo = response.data.tradeInfo;
+          this.checkOrderProccessing = false;
+          this.PaymentStage = true;
+        }
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
+          icon: "warning",
+          title: `付款失敗，請與客服聯繫 `,
+          toast: true,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    },
+
     previousPage() {
       this.$router.push({ name: "CheckOut-Info" });
     },
 
     sendInfo() {
       if (
-        !this.orderName ||
-        !this.orderPhone ||
-        !this.orderEmail ||
-        !this.receiverName ||
-        !this.receiverPhone ||
-        !this.receiverEmail ||
-        !this.receiverCity ||
-        !this.receiverAddress
+        !this.userInfo.orderName ||
+        !this.userInfo.orderPhone ||
+        !this.userInfo.orderEmail ||
+        !this.userInfo.receiverName ||
+        !this.userInfo.receiverPhone ||
+        !this.userInfo.receiverEmail ||
+        !this.userInfo.receiverCity ||
+        !this.userInfo.receiverAddress
       ) {
         Swal.fire({
           icon: "warning",
@@ -188,6 +293,7 @@ export default {
           showConfirmButton: false,
           timer: 1000,
         });
+        return true;
       }
     },
   },
@@ -265,7 +371,7 @@ export default {
             border-radius: 50%;
             cursor: pointer;
           }
-          .focus{
+          .focus {
             background-color: $color-brown;
           }
         }
