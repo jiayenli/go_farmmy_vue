@@ -1,5 +1,9 @@
 <template>
   <div class="checkout-product">
+    <CheckOrderSpinner
+      v-if="checkOrderProccessing"
+      :text="checkOrderProccessingWord"
+    />
     <Navbar />
     <CartNavbar />
     <div class="checkout-product-cover">
@@ -165,7 +169,7 @@
             !this.userInfo.receiverAddress
           "
         >
-          前往付款
+          訂單確認
         </button>
       </div>
     </form>
@@ -181,6 +185,7 @@ import { mapState } from "vuex";
 import Swal from "sweetalert2";
 //import Swal from "sweetalert2";
 import OrderAPI from "./../apis/order";
+import CheckOrderSpinner from "@/components/CheckOrderSpinner.vue";
 //import ProductAPI from "./../apis/products";
 
 export default {
@@ -189,6 +194,7 @@ export default {
     Navbar,
     CartNavbar,
     CheckOutStep,
+    CheckOrderSpinner,
   },
   data() {
     return {
@@ -227,6 +233,10 @@ export default {
         { name: "金門縣", id: "22" },
         { name: "連江縣", id: "23" },
       ],
+      checkOrderProccessing: false,
+      checkOrderProccessingWord: "訂單建立中",
+      tradeInfo: {},
+      orderId: 0,
     };
   },
 
@@ -248,10 +258,17 @@ export default {
         ...this.userInfo,
         orderName: this.currentUser.name,
         orderEmail: this.currentUser.email,
-        ...JSON.parse(localStorage.getItem("go_farmmy_user"))
-      }
+        ...JSON.parse(localStorage.getItem("go_farmmy_user")),
+      };
     },
     nextStep() {
+      if(this.cart.shoppingCart.length === 0) {
+                this.checkOrderProccessingWord = "購物車內無商品，請添加商品";
+        this.checkOrderProccessing = true;
+        setTimeout(this.previousPage, 1500);
+        return
+        
+      }
       const {
         orderName,
         orderPhone,
@@ -297,46 +314,52 @@ export default {
         return;
       }
       localStorage.setItem("go_farmmy_user", JSON.stringify(this.userInfo));
-      this.$router.push({ name: "CheckOut-Payment" });
+      this.postOrder()
     },
-    //**這個打api移到下一個步驟再打
-    async sendInfo() {
+
+    async postOrder() {
       try {
+        this.checkOrderProccessing = true;
+        const {
+          orderName,
+          orderEmail,
+          orderPhone,
+          receiverEmail,
+          receiverName,
+          receiverCity,
+          receiverAddress,
+          receiverPhone,
+        } = this.userInfo;
         const response = await OrderAPI.postOrder({
-          customerName: this.orderName,
-          customerEmail: this.orderEmail,
-          customerPhone: this.orderPhone,
-          recipientEmail: this.receiverEmail,
-          recipientName: this.receiverName,
-          recipientAddress: this.receiverCity + this.receiverAddress,
-          recipientPhone: this.receiverPhone,
+          customerName: orderName,
+          customerEmail: orderEmail,
+          customerPhone: orderPhone,
+          recipientEmail: receiverEmail,
+          recipientName: receiverName,
+          recipientAddress: receiverCity + receiverAddress,
+          recipientPhone: receiverPhone,
         });
         if (response.data.message === "Successfully added an order") {
-          this.isProcessing = false;
-          Swal.fire({
-            icon: "success",
-            title: `訂單送出成功！ `,
-            toast: true,
-            showConfirmButton: false,
-            timer: 2000,
-          });
+          this.orderId = response.data.orderId;
+          localStorage.setItem("go_farmmy_orderId", this.orderId);
+          this.checkOrderProccessing = false;
           this.$router.push({ name: "CheckOut-Payment" });
-          console.log(response);
         } else {
           throw new Error(response.message);
         }
       } catch (error) {
-        this.isProcessing = false;
-        console.log(error);
+        this.checkOrderProccessing = false;
         Swal.fire({
           icon: "warning",
-          title: `訂單送出失敗，請與客服聯繫 `,
+          title: `訂單建立失敗，請與客服聯繫 `,
           toast: true,
           showConfirmButton: false,
           timer: 2000,
         });
       }
     },
+
+
     previousPage() {
       this.$router.push({ name: "CheckOut-Products" });
     },

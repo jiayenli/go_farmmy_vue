@@ -70,6 +70,7 @@ export default {
       this.$router.push({ name: "Product" });
     },
     empyItems() {
+          localStorage.removeItem("go_farmmy_orderId")
       this.$store.dispatch("ChangeShoppingCart", []);
     },
   },

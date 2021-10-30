@@ -52,6 +52,14 @@ export default {
     })
   },
 
+  deleteOrder({ Id }) {
+    return apiHelper.delete(`/orders/${Id}`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    })
+  },
+
 
 
 

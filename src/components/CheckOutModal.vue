@@ -2,12 +2,13 @@
   <div class="loader-area">
     <div class="loader-area-hightlight">
       <form name="Spgateway" :action="tradeInfo.PayGateWay" method="POST">
+        <h1>訂單已建立</h1>
         <h3>訂單金額為：{{totalCost}} 元</h3>
         <input type="hidden" name="MerchantID" :value="tradeInfo.MerchantID" />
         <input type="hidden" name="TradeInfo" :value="tradeInfo.TradeInfo" />
         <input type="hidden" name="TradeSha" :value="tradeInfo.TradeSha" />
         <input type="hidden" name="Version" :value="tradeInfo.Version" />
-        <button type="submit" >前往付款</button>
+        <button type="submit">前往付款</button>
       </form>
     </div>
   </div>
@@ -74,6 +75,9 @@ export default {
       this.$store.dispatch('ChangeShoppingCart', [])
     }
   },
-
+  beforeDestroy() {
+    console.log('有觸發')
+this.empyItems()
+  }
 };
 </script>
