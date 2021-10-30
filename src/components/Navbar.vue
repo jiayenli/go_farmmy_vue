@@ -3,11 +3,11 @@
     <div class="home-nav-icon">
       <img src="./../assets/home-nav-icon-08.png" />
     </div>
-    <div class="home-nav-icon">
-      <router-link :to="{ name: 'Product' }">
-        <img src="./../assets/home-nav-icon-06.png" />
-      </router-link>
-    </div>
+
+    <router-link :to="{ name: 'Product' }" class="home-nav-icon">
+      <img src="./../assets/home-nav-icon-06.png" />
+    </router-link>
+
     <div class="home-nav-logo">
       <router-link :to="{ name: 'Home' }">
         <img src="./../assets/home-logo.png" />
@@ -16,21 +16,20 @@
     <div class="home-nav-icon">
       <img src="./../assets/home-nav-icon-09.png" />
     </div>
-    <div class="home-nav-icon">
+    <router-link :to="{ name: 'User-Profile' }" class="home-nav-icon">
       <img src="./../assets/home-nav-icon-07.png" />
-    </div>
+    </router-link>
   </div>
 </template>
 
 <script>
 export default {
   methods: {
-        controlCartModel() {
-       this.$store.commit('closeCartModel')
-
-     },
-  }
-}
+    controlCartModel() {
+      this.$store.commit("closeCartModel");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -88,6 +87,11 @@ export default {
       &::after {
         background-color: #9ac167;
       }
+    }
+  }
+  .router-link-active {
+    &::after {
+      background-color: #9ac167;
     }
   }
 }

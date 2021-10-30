@@ -30,7 +30,7 @@ import ProductAPI from "./../apis/products";
 import Swal from "sweetalert2";
 
 export default {
-  name: "Product",
+  name: "Product-Detail",
   components: {
     Navbar,
     CartNavbar,

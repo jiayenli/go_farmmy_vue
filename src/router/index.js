@@ -33,6 +33,16 @@ const routes = [
     name: 'Product',
     component: () => import('../views/Product.vue')
   },
+  {
+    path: '/goFarmmy/user',
+    name: 'User-Profile',
+    component: () => import('../views/User.vue')
+  },
+  {
+    path: '/goFarmmy/user/order',
+    name: 'User-Order',
+    component: () => import('../views/UserOrder.vue')
+  },
 
   {
     path: '/goFarmmy/signin',
