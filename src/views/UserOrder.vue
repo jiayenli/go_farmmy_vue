@@ -13,7 +13,7 @@
       <div class="user-content-items">
 
         <!--商品卡片區-->
-        <UserEdit />
+        <UserOrderList />
         
       </div>
     </div>
@@ -24,7 +24,7 @@
 import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
 import UserNavbar from "@/components/UserNavbar.vue";
-import UserEdit from "@/components/UserEdit.vue";
+import UserOrderList from "@/components/UserOrderList.vue";
 
 
 
@@ -33,7 +33,7 @@ export default {
   components: {
     Navbar,
     UserNavbar,
-    UserEdit,
+    UserOrderList,
     CartNavbar
 
   },

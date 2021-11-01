@@ -164,15 +164,12 @@ router.beforeEach(async (to, from, next) => {
   
 
 
-  console.log('detail有通過')
 
   if (isAuthenticated && to.name.includes('Sign-up')) {
     console.log('text有到這裡重導向路由')
     next('/goFarmmy')
     return
   }
-  console.log('detail有通過')
-  console.log('text通過')
 
   next()
 

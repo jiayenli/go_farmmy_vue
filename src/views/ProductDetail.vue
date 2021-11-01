@@ -58,7 +58,7 @@ export default {
       try {
         const response = await ProductAPI.getProduct({id:Id});
         console.log(response)
-        this.item = {...response.data};
+        this.item = {...response.data.product};
       } catch (error) {
         Swal.fire({
           icon: "error",

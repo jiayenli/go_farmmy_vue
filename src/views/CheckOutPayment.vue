@@ -46,20 +46,22 @@
                 <div class="product-totle">小計</div>
               </div>
               <div
-                v-for="product in cart.shoppingCart"
+                v-for="product in orderList.items"
                 :key="product.id"
                 class="checkout-product-content-left-content-product"
               >
                 <img class="product-image" :src="product.image" />
                 <div class="product-name">{{ product.name }}</div>
-                <div class="product-number">{{ product.number }} 箱</div>
+                <div class="product-number">{{ product.OrderItem.quantity}} 箱</div>
                 <div class="product-price">{{ product.price }} 元</div>
-                <div class="product-totle">{{ product.totalPrice }} 元</div>
+                <div class="product-totle">
+                  {{ product.OrderItem.price }} 元
+                </div>
               </div>
               <div class="checkout-product-content-left-content-totlePrice">
-                <h4>小計：{{ cart.totalPrice }}元</h4>
-                <h4>運費：{{ cart.shippingInfo.fee }}元</h4>
-                <h3>總計：{{ cart.totalPrice + cart.shippingInfo.fee }}元</h3>
+                <h4>小計：{{  orderList.amount - orderList.shipping_fee }}元</h4>
+                <h4>運費：{{ orderList.shipping_fee }}元</h4>
+                <h3>總計：{{ orderList.amount }}元</h3>
               </div>
             </div>
           </div>
@@ -82,20 +84,16 @@
           >
             <div class="checkout-product-content-left-content-orderInfo">
               <h3>訂購人資料</h3>
-              <div>姓名：{{ this.userInfo.orderName }}</div>
-              <div>電話：{{ this.userInfo.orderPhone }}</div>
-              <div>Email：{{ this.userInfo.orderEmail }}</div>
+              <div>姓名：{{ orderList.customerName }}</div>
+              <div>電話：{{ orderList.customerPhone }}</div>
+              <div>Email：{{ orderList.customerEmail }}</div>
             </div>
             <div class="checkout-product-content-left-content-recieverInfo">
               <h3>收件人資料</h3>
-              <div>姓名：{{ this.userInfo.receiverName }}</div>
-              <div>電話：{{ this.userInfo.receiverPhone }}</div>
-              <div>
-                地址：{{
-                  this.userInfo.receiverCity + this.userInfo.receiverAddress
-                }}
-              </div>
-              <div>Email：{{ this.userInfo.receiverEmail }}</div>
+              <div>姓名：{{ orderList.recipientName }}</div>
+              <div>電話：{{ orderList.recipientPhone }}</div>
+              <div>地址：{{ orderList.recipientAddress }}</div>
+              <div>Email：{{ orderList.recipientEmail }}</div>
             </div>
           </div>
         </div>
@@ -177,6 +175,7 @@ export default {
       totalCost: 0,
       PaymentStage: false,
       orderId: 0,
+      orderList: [],
     };
   },
 
@@ -204,12 +203,9 @@ export default {
         setTimeout(this.previousPage, 2000);
         return;
       }
-
       try {
-        const response = await OrderAPI.getOrder({ Id });
-        console.log("payresponse", response);
+        const response = await OrderAPI.getPayment({ Id });
         if (response.statusText === "OK") {
-          this.totalCost = this.cart.totalPrice + this.cart.shippingInfo.fee;
           this.tradeInfo = response.data.tradeInfo;
           this.checkOrderProccessing = false;
         }
@@ -225,20 +221,40 @@ export default {
       }
     },
 
+    async getOrder(Id) {
+      try {
+        const response = await OrderAPI.getOrder({ Id });
+        console.log("orderresponse", response);
+        if( response.data.order.payment_status === "1") {
+          this.$router.push({ name: 'CheckOut-Complete' });
+          return
+        }
+        if (response.statusText === "OK") {
+          this.orderList = response.data.order;
+          this.checkOrderProccessing = false;
+        }
+  
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
+          icon: "warning",
+          title: `系統顯示錯誤，請重新整理 `,
+          toast: true,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    },
+
     async previousPage() {
       const Id = localStorage.getItem("go_farmmy_orderId") || "";
       if (Id === "") {
         this.$router.push({ name: "CheckOut-Info" });
-        return
+        return;
       }
       try {
-        const Id = localStorage.getItem("go_farmmy_orderId") || "";
-        if (Id === "") {
-          this.$router.push({ name: "CheckOut-Info" });
-        }
         this.checkOrderProccessingWord = "返回訂單中";
         this.checkOrderProccessing = true;
-
         const response = await OrderAPI.deleteOrder({ Id });
         console.log("deleteresponse", response);
         if (response.data.status === "success") {
@@ -264,8 +280,11 @@ export default {
   },
   created() {
     const Id = localStorage.getItem("go_farmmy_orderId") || "";
+    this.checkOrderProccessingWord = "資料核對中";
+    this.checkOrderProccessing = true;
     this.pay(Id);
     this.fetchInfo();
+    this.getOrder(Id);
     //this.postOrder();
   },
 
@@ -275,15 +294,7 @@ export default {
   beforeDestroy() {
     this.$store.commit("changeCheckOutStep", 0);
   },
-  watch: {
-    //監聽使用者資料有沒有改變
-    cart: {
-      handler: function () {
-        this.calculateTotal();
-      },
-      deep: true,
-    },
-  },
+
 };
 </script>
 

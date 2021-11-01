@@ -87,9 +87,8 @@ const actions = {
     console.log('有在fetch')
     try {
       const { data } = await CartAPI.getCart()
-      console.log('getCar', data)
       const  {cart}  = data
-      console.log(cart)
+
       let CartItems = []
       if (cart !== 'empty') {
         CartItems = cart.items.map(item => ({
@@ -98,13 +97,10 @@ const actions = {
         }))
       }
 
-      console.log('fetchSoppingCarddata', CartItems)
-
       commit('updateDelivery', data.shippingInfo)
       commit('updateTotlePrice', data.totalPrice)
       commit('updateProducts', CartItems)
       commit('effectButton')
-      console.log(data)
       return true
     } catch (error) {
       Swal.fire({

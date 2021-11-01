@@ -4,8 +4,9 @@
     @scroll.capture="scrollChange"
     @click="controlCartModel"
   >
+    <h2>個人資料</h2>
     <form class="form">
-      <h2>個人資料</h2>
+    
 
       <div class="signin-form-content">
         <div class="signin-form-content-name">
@@ -132,6 +133,19 @@
   position: relative;
   overflow: hidden;
   margin-bottom: 5%;
+      h2 {
+        text-align: center;
+border-radius: 5px;
+        margin: 0 auto;
+        width: 80%;
+      margin-bottom: 3%;
+      background-color: $color-brown;
+     
+      border-bottom: 6px $color-brown dashed;
+
+      padding: 1% 0;
+      color: white;
+    }
 
   form {
     //background-color: $color-yellow;
@@ -141,14 +155,7 @@
     margin: 0 auto;
     text-align: center;
     border: 6px $color-brown solid;
-    h2 {
-      margin: 5%;
-     
-      border-bottom: 6px $color-brown dashed;
 
-      padding: 2% 0;
-      color: $color-brown;
-    }
   }
   &-content {
     //background-image: url("./../assets/home-background.png");

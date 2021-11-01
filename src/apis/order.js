@@ -28,8 +28,16 @@ export default {
     })
   },
 
-  getOrder({ Id }) {
+  getPayment({ Id }) {
     return apiHelper.get(`/orders/${Id}/payment`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    })
+  },
+
+  getOrder({ Id }) {
+    return apiHelper.get(`/orders/${Id}`, {
       headers: {
         Authorization: `Bearer ${getToken()}`
       }

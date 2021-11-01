@@ -67,6 +67,7 @@ export default new Vuex.Store({
       state.isAuthenticated = false
       localStorage.removeItem("go_farmmy_user")
       localStorage.removeItem("gofarmmy_facebook_connect")
+      localStorage.removeItem("go_farmmy_orderId")
     }
 
   },

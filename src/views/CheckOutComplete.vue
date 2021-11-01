@@ -64,7 +64,7 @@ export default {
 
   methods: {
     nextStep() {
-      this.$router.push({ name: "Home" });
+      this.$router.push({ name: 'User-Order' });
     },
     previousPage() {
       this.$router.push({ name: "Product" });

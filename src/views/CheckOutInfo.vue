@@ -29,7 +29,7 @@
               <label for="name"><h3>訂購人姓名</h3></label>
               <input
                 placeholder="請填寫「訂購人」姓名，如：李喵吉"
-                v-model="userInfo.orderName"
+                v-model="userInfo.customerName"
                 class="checkout-product-content-top-input-name-input"
                 id="name"
                 type="text"
@@ -44,7 +44,7 @@
               <label for="name"><h3>訂購人電話</h3></label>
               <input
                 placeholder="請填寫「訂購人」電話，如：0910000xxx"
-                v-model="userInfo.orderPhone"
+                v-model="userInfo.customerPhone"
                 class="checkout-product-content-top-input-phone-input"
                 id="phone"
                 type="tel"
@@ -58,7 +58,7 @@
               <label for="name"><h3>訂購人Email</h3></label>
               <input
                 placeholder="將會寄送訂單資訊至訂購人信箱"
-                v-model="userInfo.orderEmail"
+                v-model="userInfo.customerEmail"
                 class="checkout-product-content-top-input-email-input"
                 id="email"
                 type="email"
@@ -79,7 +79,7 @@
             <div class="checkout-input checkout-product-content-top-input-name">
               <label for="name"><h3>收件人姓名</h3></label>
               <input
-                v-model="userInfo.receiverName"
+                v-model="userInfo.recipientName"
                 class="checkout-product-content-top-input-name-input"
                 id="name"
                 type="text"
@@ -93,7 +93,7 @@
             >
               <label for="name"><h3>收件人電話</h3></label>
               <input
-                v-model="userInfo.receiverPhone"
+                v-model="userInfo.recipientPhone"
                 class="checkout-product-content-top-input-phone-input"
                 id="phone"
                 type="tel"
@@ -108,7 +108,7 @@
               <select
                 name="city"
                 id="city"
-                v-model="userInfo.receiverCity"
+                v-model="userInfo.recipientCity"
                 required
               >
                 <option value="man" disabled selected>請選擇縣市</option>
@@ -122,7 +122,7 @@
               </select>
 
               <input
-                v-model="userInfo.receiverAddress"
+                v-model="userInfo.recipientAddress"
                 class="checkout-product-content-top-input-email-input"
                 id="email"
                 type="email"
@@ -135,7 +135,7 @@
             >
               <label for="name"><h3>收件人Email</h3></label>
               <input
-                v-model="userInfo.receiverEmail"
+                v-model="userInfo.recipientEmail"
                 class="checkout-product-content-top-input-email-input"
                 id="email"
                 type="email"
@@ -159,14 +159,14 @@
           :to="{ name: 'CheckOut-Info' }"
           class="checkout-product-button-next"
           :disabled="
-            !this.userInfo.orderName ||
-            !this.userInfo.orderPhone ||
-            !this.userInfo.orderEmail ||
-            !this.userInfo.receiverName ||
-            !this.userInfo.receiverPhone ||
-            !this.userInfo.receiverEmail ||
-            !this.userInfo.receiverCity ||
-            !this.userInfo.receiverAddress
+            !this.userInfo.customerName ||
+            !this.userInfo.customerPhone ||
+            !this.userInfo.customerEmail ||
+            !this.userInfo.customerName ||
+            !this.userInfo.recipientPhone ||
+            !this.userInfo.recipientEmail ||
+            !this.userInfo.recipientCity ||
+            !this.userInfo.recipientAddress
           "
         >
           訂單確認
@@ -200,15 +200,16 @@ export default {
     return {
       sameInfo: false,
       userInfo: {
-        orderName: "",
-        orderPhone: "",
-        orderEmail: "",
-        receiverName: "",
-        receiverPhone: "",
-        receiverEmail: "",
-        receiverCity: "",
-        receiverAddress: "",
+        customerName: "",
+        customerPhone: "",
+        customerEmail: "",
+        recipientName: "",
+        recipientPhone: "",
+        recipientEmail: "",
+        recipientCity: "",
+        recipientAddress: "",
       },
+
       cities: [
         { name: "基隆市", id: "1" },
         { name: "台北市", id: "2" },
@@ -242,52 +243,51 @@ export default {
 
   methods: {
     addSameInfo() {
-      this.userInfo.receiverName = this.userInfo.orderName;
-      this.userInfo.receiverEmail = this.userInfo.orderEmail;
-      this.userInfo.receiverPhone = this.userInfo.orderPhone;
+      this.userInfo.recipientName = this.userInfo.customerName;
+      this.userInfo.recipientEmail = this.userInfo.customerEmail;
+      this.userInfo.recipientPhone = this.userInfo.customerPhone;
       this.sameInfo = true;
     },
     cancelSameInfo() {
-      this.userInfo.receiverName = "";
-      this.userInfo.receiverEmail = "";
-      this.userInfo.receiverPhone = "";
+      this.userInfo.recipientName = "";
+      this.userInfo.recipientEmail = "";
+      this.userInfo.recipientPhone = "";
       this.sameInfo = false;
     },
     fetchInfo() {
       this.userInfo = {
         ...this.userInfo,
-        orderName: this.currentUser.name,
-        orderEmail: this.currentUser.email,
+        customerName: this.currentUser.name,
+        customerEmail: this.currentUser.email,
         ...JSON.parse(localStorage.getItem("go_farmmy_user")),
       };
     },
     nextStep() {
-      if(this.cart.shoppingCart.length === 0) {
-                this.checkOrderProccessingWord = "購物車內無商品，請添加商品";
+      if (this.cart.shoppingCart.length === 0) {
+        this.checkOrderProccessingWord = "購物車內無商品，請添加商品";
         this.checkOrderProccessing = true;
         setTimeout(this.previousPage, 1500);
-        return
-        
+        return;
       }
       const {
-        orderName,
-        orderPhone,
-        orderEmail,
-        receiverName,
-        receiverPhone,
-        receiverEmail,
-        receiverCity,
-        receiverAddress,
+        customerName,
+        customerPhone,
+        customerEmail,
+        recipientName,
+        recipientPhone,
+        recipientEmail,
+        recipientCity,
+        recipientAddress,
       } = this.userInfo;
       if (
-        !orderName ||
-        !orderPhone ||
-        !orderEmail ||
-        !receiverName ||
-        !receiverPhone ||
-        !receiverEmail ||
-        !receiverCity ||
-        !receiverAddress
+        !customerName ||
+        !customerPhone ||
+        !customerEmail ||
+        !recipientName ||
+        !recipientPhone ||
+        !recipientEmail ||
+        !recipientCity ||
+        !recipientAddress
       ) {
         Swal.fire({
           icon: "warning",
@@ -299,10 +299,10 @@ export default {
         return;
       }
       if (
-        orderEmail.indexOf("@") === -1 ||
-        orderEmail.indexOf(".com") === -1 ||
-        receiverEmail.indexOf("@") === -1 ||
-        receiverEmail.indexOf(".com") === -1
+        customerEmail.indexOf("@") === -1 ||
+        customerEmail.indexOf(".com") === -1 ||
+        recipientEmail.indexOf("@") === -1 ||
+        recipientEmail.indexOf(".com") === -1
       ) {
         Swal.fire({
           icon: "warning",
@@ -314,30 +314,31 @@ export default {
         return;
       }
       localStorage.setItem("go_farmmy_user", JSON.stringify(this.userInfo));
-      this.postOrder()
+      this.postOrder();
     },
 
     async postOrder() {
       try {
         this.checkOrderProccessing = true;
         const {
-          orderName,
-          orderEmail,
-          orderPhone,
-          receiverEmail,
-          receiverName,
-          receiverCity,
-          receiverAddress,
-          receiverPhone,
+          customerName,
+          customerPhone,
+          customerEmail,
+          recipientName,
+          recipientPhone,
+          recipientEmail,
+          recipientCity,
+          recipientAddress,
         } = this.userInfo;
         const response = await OrderAPI.postOrder({
-          customerName: orderName,
-          customerEmail: orderEmail,
-          customerPhone: orderPhone,
-          recipientEmail: receiverEmail,
-          recipientName: receiverName,
-          recipientAddress: receiverCity + receiverAddress,
-          recipientPhone: receiverPhone,
+          customerName,
+          customerPhone,
+          customerEmail,
+          recipientName,
+          recipientPhone,
+          recipientEmail,
+          recipientCity,
+          recipientAddress: recipientCity + recipientAddress,
         });
         if (response.data.message === "Successfully added an order") {
           this.orderId = response.data.orderId;
@@ -358,7 +359,6 @@ export default {
         });
       }
     },
-
 
     previousPage() {
       this.$router.push({ name: "CheckOut-Products" });
