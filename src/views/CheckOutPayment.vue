@@ -52,14 +52,16 @@
               >
                 <img class="product-image" :src="product.image" />
                 <div class="product-name">{{ product.name }}</div>
-                <div class="product-number">{{ product.OrderItem.quantity}} 箱</div>
+                <div class="product-number">
+                  {{ product.OrderItem.quantity }} 箱
+                </div>
                 <div class="product-price">{{ product.price }} 元</div>
                 <div class="product-totle">
                   {{ product.OrderItem.price }} 元
                 </div>
               </div>
               <div class="checkout-product-content-left-content-totlePrice">
-                <h4>小計：{{  orderList.amount - orderList.shipping_fee }}元</h4>
+                <h4>小計：{{ orderList.amount - orderList.shipping_fee }}元</h4>
                 <h4>運費：{{ orderList.shipping_fee }}元</h4>
                 <h3>總計：{{ orderList.amount }}元</h3>
               </div>
@@ -127,10 +129,15 @@
         <button
           @click.stop.prevent="previousPage"
           class="checkout-product-button-previous"
+          v-if="editbutton === 'true'"
         >
           修改訂單
         </button>
-        <button type="submit" class="checkout-product-button-next">
+        <button
+          type="submit"
+          class="checkout-product-button-next"
+          
+        >
           前往付款
         </button>
       </div>
@@ -176,6 +183,7 @@ export default {
       PaymentStage: false,
       orderId: 0,
       orderList: [],
+      editbutton: true,
     };
   },
 
@@ -225,15 +233,14 @@ export default {
       try {
         const response = await OrderAPI.getOrder({ Id });
         console.log("orderresponse", response);
-        if( response.data.order.payment_status === "1") {
-          this.$router.push({ name: 'CheckOut-Complete' });
-          return
+        if (response.data.order.payment_status === "1") {
+          this.$router.push({ name: "CheckOut-Complete" });
+          return;
         }
         if (response.statusText === "OK") {
           this.orderList = response.data.order;
           this.checkOrderProccessing = false;
         }
-  
       } catch (error) {
         console.log(error);
         Swal.fire({
@@ -273,6 +280,10 @@ export default {
         });
       }
     },
+
+    controlEditButton() {
+      this.editbutton = localStorage.getItem("go_farmmy_order");
+    },
   },
   mounted() {
     this.$store.commit("changeCheckOutStep", 3);
@@ -282,9 +293,11 @@ export default {
     const Id = localStorage.getItem("go_farmmy_orderId") || "";
     this.checkOrderProccessingWord = "資料核對中";
     this.checkOrderProccessing = true;
+
     this.pay(Id);
     this.fetchInfo();
     this.getOrder(Id);
+    this.controlEditButton();
     //this.postOrder();
   },
 
@@ -294,7 +307,6 @@ export default {
   beforeDestroy() {
     this.$store.commit("changeCheckOutStep", 0);
   },
-
 };
 </script>
 

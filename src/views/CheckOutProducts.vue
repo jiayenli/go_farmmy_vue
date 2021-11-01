@@ -159,6 +159,7 @@ export default {
       }
 
       if(this.cart.totalPrice) {
+         localStorage.setItem("go_farmmy_order", true)
         this.$router.push({ name: 'CheckOut-Info' })
       } else {
             Swal.fire({

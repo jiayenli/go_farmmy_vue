@@ -296,7 +296,7 @@
 <script>
 import { mapState } from "vuex";
 import UserAPI from "./../apis/users";
-import Swal from "sweetalert2";
+//import Swal from "sweetalert2";
 import moment from "moment";
 //import order from '../apis/order';
 export default {
@@ -366,53 +366,53 @@ export default {
     },
 
     async gotoPay(order) {
-      if (this.cart.shoppingCart.length !== 0) {
-        const result = await Swal.fire({
-          title: "購物車已有商品",
-          text: "前往付款後，現有購物車商品將自動改為訂單內商品唷！",
-          icon: "warning",
-          focusConfirm: true,
-          showCancelButton: true,
-          confirmButtonColor: "#808080",
-          cancelButtonColor: "#2a2a2a",
-          cancelButtonText: "取消",
-          confirmButtonText: "前往付款",
-        });
+      // if (this.cart.shoppingCart.length !== 0) {
+      //   const result = await Swal.fire({
+      //     title: "購物車已有商品",
+      //     text: "前往付款後，現有購物車商品將自動改為訂單內商品唷！",
+      //     icon: "warning",
+      //     focusConfirm: true,
+      //     showCancelButton: true,
+      //     confirmButtonColor: "#808080",
+      //     cancelButtonColor: "#2a2a2a",
+      //     cancelButtonText: "取消",
+      //     confirmButtonText: "前往付款",
+      //   });
 
-        if (!result.isConfirmed) {
-          return;
-        }
-      }
-      const {
-        customerName,
-        customerPhone,
-        customerEmail,
-        recipientName,
-        recipientPhone,
-        recipientEmail,
-      } = order;
-      console.log(
-        customerName,
-        customerPhone,
-        customerEmail,
-        recipientName,
-        recipientPhone,
-        recipientEmail
-      );
+      //   if (!result.isConfirmed) {
+      //     return;
+      //   }
+      // }
+      // const {
+      //   customerName,
+      //   customerPhone,
+      //   customerEmail,
+      //   recipientName,
+      //   recipientPhone,
+      //   recipientEmail,
+      // } = order;
+      // console.log(
+      //   customerName,
+      //   customerPhone,
+      //   customerEmail,
+      //   recipientName,
+      //   recipientPhone,
+      //   recipientEmail
+      // );
 
-      localStorage.setItem(
-        "go_farmmy_user",
-        JSON.stringify({
-          customerName,
-          customerPhone,
-          customerEmail,
-          recipientName,
-          recipientPhone,
-          recipientEmail,
-        })
-      );
+      // localStorage.setItem(
+      //   "go_farmmy_user",
+      //   JSON.stringify({
+      //     customerName,
+      //     customerPhone,
+      //     customerEmail,
+      //     recipientName,
+      //     recipientPhone,
+      //     recipientEmail,
+      //   })
+      // );
+      localStorage.setItem("go_farmmy_order", false);
       localStorage.setItem("go_farmmy_orderId", order.id);
-      await this.$store.dispatch("ChangeShoppingCart", order.items);
       this.$router.push({ name: "CheckOut-Payment" });
     },
   },

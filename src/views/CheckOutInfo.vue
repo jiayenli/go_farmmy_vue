@@ -343,6 +343,7 @@ export default {
         if (response.data.message === "Successfully added an order") {
           this.orderId = response.data.orderId;
           localStorage.setItem("go_farmmy_orderId", this.orderId);
+          localStorage.setItem("go_farmmy_order", true)
           this.checkOrderProccessing = false;
           this.$router.push({ name: "CheckOut-Payment" });
         } else {
