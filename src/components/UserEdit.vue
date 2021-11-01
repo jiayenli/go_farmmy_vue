@@ -4,10 +4,8 @@
     @scroll.capture="scrollChange"
     @click="controlCartModel"
   >
-    <h2>個人資料</h2>
+    <h2>修改個人資料</h2>
     <form class="form">
-    
-
       <div class="signin-form-content">
         <div class="signin-form-content-name">
           <label class="signin-form-content-name-lebel" for="name"
@@ -42,7 +40,7 @@
             ><h3>舊密碼</h3></label
           >
           <input
-          placeholder="密碼更動時才需要填寫"
+            placeholder="密碼更動時才需要填寫"
             v-model="initialPassword"
             class="signin-form-content-initialPassword-input"
             id="initialPassword"
@@ -68,7 +66,7 @@
             ><h3>新密碼</h3></label
           >
           <input
-          placeholder="密碼更動時才需要填寫"
+            placeholder="密碼更動時才需要填寫"
             v-model="password"
             class="signin-form-content-password-input"
             id="password"
@@ -97,7 +95,7 @@
             ><h3>新密碼確認</h3></label
           >
           <input
-          placeholder="密碼更動時才需要填寫"
+            placeholder="密碼更動時才需要填寫"
             v-model="checkPassword"
             class="signin-form-content-checkPassword-input"
             id="checkPassword"
@@ -111,8 +109,8 @@
           <div
             v-if="!processing"
             class="signin-form-content-button"
-            @click.stop.prevent="signUp"
-            :class="{ block: !email || !name  }"
+            @click.stop.prevent="editUser"
+            :class="{ block: !email || !name }"
           >
             <h3>修改</h3>
           </div>
@@ -133,19 +131,19 @@
   position: relative;
   overflow: hidden;
   margin-bottom: 5%;
-      h2 {
-        text-align: center;
-border-radius: 5px;
-        margin: 0 auto;
-        width: 80%;
-      margin-bottom: 3%;
-      background-color: $color-brown;
-     
-      border-bottom: 6px $color-brown dashed;
+  h2 {
+    text-align: center;
+    border-radius: 5px;
+    margin: 0 auto;
+    width: 80%;
+    margin-bottom: 3%;
+    background-color: $color-brown;
 
-      padding: 1% 0;
-      color: white;
-    }
+    border-bottom: 6px $color-brown dashed;
+
+    padding: 1% 0;
+    color: white;
+  }
 
   form {
     //background-color: $color-yellow;
@@ -155,7 +153,6 @@ border-radius: 5px;
     margin: 0 auto;
     text-align: center;
     border: 6px $color-brown solid;
-
   }
   &-content {
     //background-image: url("./../assets/home-background.png");
@@ -210,9 +207,8 @@ border-radius: 5px;
       justify-content: flex-end;
     }
 
-
     &-button {
-       border: 4px $color-brown solid;
+      border: 4px $color-brown solid;
       background-color: $color-yellow;
       width: 20%;
       margin: 2% 5% 0 0;
@@ -240,7 +236,7 @@ border-radius: 5px;
 </style>
 
 <script>
-import UsersAPI from "./../apis/users";
+import UserAPI from "./../apis/users";
 import Swal from "sweetalert2";
 import { mapState } from "vuex";
 export default {
@@ -258,14 +254,12 @@ export default {
     };
   },
   methods: {
-    async signUp() {
+    async editUser() {
       this.$store.commit("closeCartModel");
       //確認缺格
       const emptyInput = await this.$store.dispatch("checkEmptyInput", [
         this.email,
         this.name,
-        this.password,
-        this.checkPassword,
       ]);
       if (emptyInput) {
         return;
@@ -275,6 +269,31 @@ export default {
       if (checkEmail) {
         return;
       }
+
+      //確認舊密碼新密碼跟密碼確認都是同個狀態
+      if (this.password || this.initialPassword) {
+        if (!this.initialPassword) {
+          Swal.fire({
+            icon: "warning",
+            title: "未填舊密碼",
+            toast: true,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          return;
+        }
+        if (!this.password) {
+          Swal.fire({
+            icon: "warning",
+            title: "未填新密碼",
+            toast: true,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          return;
+        }
+      }
+
       //確認密碼相同
       const checkPasswordCorrect = await this.$store.dispatch("checkPassword", {
         password: this.password,
@@ -286,13 +305,15 @@ export default {
 
       try {
         this.processing = true;
-        const response = await UsersAPI.PostSignUp({
+        const response = await UserAPI.PutUser({
+          id: this.currentUser.id,
           name: this.name,
           email: this.email,
           password: this.password,
           checkPassword: this.checkPassword,
         });
         const { data } = response;
+        console.log('putUser', data)
 
         if (data.status !== "success") {
           throw new Error(data.message);
@@ -300,14 +321,16 @@ export default {
 
         Swal.fire({
           icon: "success",
-          title: `歡迎加入Go Farmmy！`,
+          title: `修改成功！`,
           toast: true,
           showConfirmButton: false,
           timer: 2000,
         });
         this.processing = false;
-        this.$router.push({ name: "Sign-in" });
+        this.$store.dispatch('fetchCurrentUser')
       } catch (error) {
+        this.$store.dispatch('fetchCurrentUser')
+        this.fetchUser()
         this.processing = false;
         this.password = "";
         this.checkPassword = "";
@@ -322,7 +345,7 @@ export default {
         } else {
           Swal.fire({
             icon: "error",
-            title: "註冊失敗，請聯繫客服",
+            title: "修改失敗，請聯繫客服",
             toast: true,
             showConfirmButton: false,
             timer: 2000,
@@ -331,9 +354,8 @@ export default {
       }
     },
     fetchUser() {
-      this.email = this.currentUser.email
-      this.name = this.currentUser.name
-
+      this.email = this.currentUser.email;
+      this.name = this.currentUser.name;
     },
 
     controlCartModel() {
@@ -357,10 +379,9 @@ export default {
     },
   },
   created() {
-    this.fetchUser()
-
+    this.fetchUser();
   },
-    computed: {
+  computed: {
     ...mapState(["currentUser"]),
   },
 };

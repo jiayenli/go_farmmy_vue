@@ -38,7 +38,7 @@
         >
           <h2>{{ currentUser.name }} 您好！</h2>
           <h4>
-            目前已經訂購
+            目前已經建立
             <span @click="showAllOrders">{{ orders.length }} </span>筆訂單囉！
           </h4>
           <h4>
@@ -77,7 +77,7 @@
           </div>
         </div>
         <div class="orderList-list-card-button">
-          <button><h4>訂單詳情</h4></button>
+          <button @click="orderDetailPage(order.id)"><h4>訂單詳情</h4></button>
           <button @click="gotoPay(order)" v-if="order.payment_status === '0'"><h4>前往付款</h4></button>
         </div>
       </div>
@@ -311,12 +311,18 @@ export default {
       showOrders: [],
     };
   },
+
+
   filters: {
     newTime(datetime) {
       return moment(datetime).format("YYYY-MM-DD");
     },
   },
   methods: {
+    orderDetailPage(id) {
+      this.$router.push({ name: 'User-Order-Page',  params: { id } });
+
+    },
     addSearchActive() {
       this.listActive = false;
       this.searchActive = true;
@@ -337,7 +343,6 @@ export default {
           (order) => order.payment_status === "0"
         );
         this.showOrders = this.orders;
-
         if (data.status === "error") {
           throw new Error(data.message);
         }

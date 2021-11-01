@@ -35,7 +35,9 @@
               v-if="!productList"
             ></i
             ><i class="fas fa-minus-circle" v-else @click="openProductList"></i>
+            <h6>訂單編號：{{orderList.id}}</h6>
           </h2>
+          
           <div class="checkout-product-content-left-content" v-if="productList">
             <div class="checkout-product-content-left-content-products">
               <div class="checkout-product-content-left-content-title">
@@ -129,10 +131,9 @@
 
         <button
           type="submit"
-          class="checkout-product-button-next"
-          
+          class="checkout-product-button-next"  
         >
-          前往付款
+          付款
         </button>
       </div>
     </form>
@@ -198,7 +199,7 @@ export default {
 
     async pay(Id) {
       if (Id === "") {
-        this.checkOrderProccessingWord = "訂單建立失敗，請至會員中心重新付款";
+        this.checkOrderProccessingWord = "訂單建立失敗，請至會員中心確認";
         this.checkOrderProccessing = true;
         setTimeout(this.previousPage, 2000);
         return;
@@ -234,13 +235,6 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        Swal.fire({
-          icon: "warning",
-          title: `系統顯示錯誤，請重新整理 `,
-          toast: true,
-          showConfirmButton: false,
-          timer: 2000,
-        });
       }
     },
 
@@ -269,6 +263,7 @@ export default {
     ...mapState(["isAuthenticated", "cart"]),
   },
   beforeDestroy() {
+    localStorage.removeItem("go_farmmy_orderId")
     this.$store.commit("changeCheckOutStep", 0);
   },
 };

@@ -316,7 +316,7 @@ export default {
 
       const result = await Swal.fire({
         title: "訂單即將送出",
-        text: "訂單資訊送出後即不可修改，將保留至會員中心",
+        text: "訂單確認後即不可修改，可至會員中心查看",
         icon: "warning",
         focusConfirm: true,
         showCancelButton: true,

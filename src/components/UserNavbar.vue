@@ -143,7 +143,7 @@ export default {
       }
     }
   }
-  .router-link-exact-active {
+  .router-link-active {
     h3::before {
       background-color: $color-brown;
     }

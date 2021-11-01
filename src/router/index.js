@@ -34,7 +34,7 @@ const routes = [
     component: () => import('../views/Product.vue')
   },
   {
-    path: '/goFarmmy/user',
+    path: '/goFarmmy/user/profile',
     name: 'User-Profile',
     component: () => import('../views/User.vue')
   },
@@ -42,6 +42,11 @@ const routes = [
     path: '/goFarmmy/user/order',
     name: 'User-Order',
     component: () => import('../views/UserOrder.vue')
+  },
+  {
+    path: '/goFarmmy/user/order/:id',
+    name: 'User-Order-Page',
+    component: () => import('../views/UserOrderPage.vue')
   },
 
   {

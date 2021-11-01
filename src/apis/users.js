@@ -41,6 +41,23 @@ export default {
     })
   },
 
+  PutUser({name, email, password, newPassword, checkPassword }) {
+    return apiHelper.put('/users', {
+      name,
+      email,
+      password,
+      newPassword,
+      checkPassword
+    }, {
+      validateStatus: function (status) {
+        return status <= 500
+      },
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    })
+  },
+
   getCurrentUser() {
     return apiHelper.get('/users/currentUser', {
       headers: {
