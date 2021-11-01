@@ -309,11 +309,12 @@ export default {
           id: this.currentUser.id,
           name: this.name,
           email: this.email,
-          password: this.password,
+          password: this.initialPassword,
+          newPassword: this.password,
           checkPassword: this.checkPassword,
         });
         const { data } = response;
-        console.log('putUser', data)
+        console.log("putUser", data);
 
         if (data.status !== "success") {
           throw new Error(data.message);
@@ -327,11 +328,15 @@ export default {
           timer: 2000,
         });
         this.processing = false;
-        this.$store.dispatch('fetchCurrentUser')
+        this.initialPassword= ""
+        this.password = "";
+        this.checkPassword = "";
+        this.$store.dispatch("fetchCurrentUser");
       } catch (error) {
-        this.$store.dispatch('fetchCurrentUser')
-        this.fetchUser()
+        this.$store.dispatch("fetchCurrentUser");
+        this.fetchUser();
         this.processing = false;
+        this.initialPassword= ""
         this.password = "";
         this.checkPassword = "";
         if (error.message === "This email has been registered") {
@@ -342,15 +347,26 @@ export default {
             showConfirmButton: false,
             timer: 2000,
           });
-        } else {
+          return;
+        }
+        if (error.message === "Wrong password") {
           Swal.fire({
-            icon: "error",
-            title: "修改失敗，請聯繫客服",
+            icon: "warning",
+            title: "密碼輸入錯誤",
             toast: true,
             showConfirmButton: false,
             timer: 2000,
           });
+          return;
         }
+
+        Swal.fire({
+          icon: "error",
+          title: "修改失敗，請聯繫客服",
+          toast: true,
+          showConfirmButton: false,
+          timer: 2000,
+        });
       }
     },
     fetchUser() {
