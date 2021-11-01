@@ -126,13 +126,7 @@
       <input type="hidden" name="TradeSha" :value="tradeInfo.TradeSha" />
       <input type="hidden" name="Version" :value="tradeInfo.Version" />
       <div class="checkout-product-button">
-        <button
-          @click.stop.prevent="previousPage"
-          class="checkout-product-button-previous"
-          v-if="editbutton === 'true'"
-        >
-          修改訂單
-        </button>
+
         <button
           type="submit"
           class="checkout-product-button-next"
@@ -173,7 +167,6 @@ export default {
   data() {
     return {
       payWay: "online",
-      userInfo: {},
       productList: true,
       userInfoList: false,
       checkOrderProccessing: false,
@@ -183,7 +176,6 @@ export default {
       PaymentStage: false,
       orderId: 0,
       orderList: [],
-      editbutton: true,
     };
   },
 
@@ -206,7 +198,7 @@ export default {
 
     async pay(Id) {
       if (Id === "") {
-        this.checkOrderProccessingWord = "訂單建立失敗，將返回重新確認";
+        this.checkOrderProccessingWord = "訂單建立失敗，請至會員中心重新付款";
         this.checkOrderProccessing = true;
         setTimeout(this.previousPage, 2000);
         return;
@@ -232,7 +224,6 @@ export default {
     async getOrder(Id) {
       try {
         const response = await OrderAPI.getOrder({ Id });
-        console.log("orderresponse", response);
         if (response.data.order.payment_status === "1") {
           this.$router.push({ name: "CheckOut-Complete" });
           return;
@@ -256,49 +247,22 @@ export default {
     async previousPage() {
       const Id = localStorage.getItem("go_farmmy_orderId") || "";
       if (Id === "") {
-        this.$router.push({ name: "CheckOut-Info" });
+        this.$router.push({ name: "User-Order" });
         return;
-      }
-      try {
-        this.checkOrderProccessingWord = "返回訂單中";
-        this.checkOrderProccessing = true;
-        const response = await OrderAPI.deleteOrder({ Id });
-        console.log("deleteresponse", response);
-        if (response.data.status === "success") {
-          localStorage.removeItem("go_farmmy_orderId");
-          this.checkOrderProccessing - false;
-          this.$router.push({ name: "CheckOut-Info" });
-        }
-      } catch (error) {
-        console.log(error);
-        Swal.fire({
-          icon: "warning",
-          title: `系統錯誤，請與客服聯繫 `,
-          toast: true,
-          showConfirmButton: false,
-          timer: 2000,
-        });
       }
     },
 
-    controlEditButton() {
-      this.editbutton = localStorage.getItem("go_farmmy_order");
-    },
   },
   mounted() {
     this.$store.commit("changeCheckOutStep", 3);
-    this.fetchInfo();
   },
   created() {
     const Id = localStorage.getItem("go_farmmy_orderId") || "";
     this.checkOrderProccessingWord = "資料核對中";
     this.checkOrderProccessing = true;
-
     this.pay(Id);
-    this.fetchInfo();
     this.getOrder(Id);
-    this.controlEditButton();
-    //this.postOrder();
+
   },
 
   computed: {

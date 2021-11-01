@@ -262,7 +262,7 @@ export default {
         ...JSON.parse(localStorage.getItem("go_farmmy_user")),
       };
     },
-    nextStep() {
+    async nextStep() {
       if (this.cart.shoppingCart.length === 0) {
         this.checkOrderProccessingWord = "購物車內無商品，請添加商品";
         this.checkOrderProccessing = true;
@@ -313,6 +313,22 @@ export default {
         });
         return;
       }
+
+      const result = await Swal.fire({
+        title: "訂單即將送出",
+        text: "訂單資訊送出後即不可修改，將保留至會員中心",
+        icon: "warning",
+        focusConfirm: true,
+        showCancelButton: true,
+        confirmButtonColor: "#808080",
+        cancelButtonColor: "#2a2a2a",
+        cancelButtonText: "取消",
+        confirmButtonText: "訂單確認",
+      });
+      if (!result.isConfirmed) {
+        return;
+      }
+
       localStorage.setItem("go_farmmy_user", JSON.stringify(this.userInfo));
       this.postOrder();
     },
@@ -343,8 +359,8 @@ export default {
         if (response.data.message === "Successfully added an order") {
           this.orderId = response.data.orderId;
           localStorage.setItem("go_farmmy_orderId", this.orderId);
-          localStorage.setItem("go_farmmy_order", true)
           this.checkOrderProccessing = false;
+          this.$store.dispatch("ChangeShoppingCart", []);
           this.$router.push({ name: "CheckOut-Payment" });
         } else {
           throw new Error(response.message);
