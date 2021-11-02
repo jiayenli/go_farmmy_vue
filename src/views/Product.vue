@@ -4,7 +4,7 @@
     <CartNavbar />
     <div class="product-cover" @click="controlCartModel">
       <img class="product-cover-title" src="./../assets/product-icon-1.png" />
-      <img class="product-cover-img" src="./../assets/product-img-1.png" />
+      <img class="product-cover-img" src="./../assets/about-img-2.png" />
     </div>
     <div class="product-content" @click="controlCartModel">
       <div class="product-content-nav">

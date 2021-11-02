@@ -3,8 +3,8 @@
     <Navbar />
      <CartNavbar />
     <div class="user-cover" @click="controlCartModel">
-      <img class="user-cover-title" src="./../assets/product-icon-1.png" />
-      <img class="user-cover-img" src="./../assets/product-img-1.png" />
+      <img class="user-cover-title" src="./../assets/member-title-1.png" />
+      <img class="user-cover-img" src="./../assets/home-img-5.png" />
     </div>
     <div class="user-content" @click="controlCartModel">
       <div class="user-content-nav">

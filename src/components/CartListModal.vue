@@ -16,9 +16,10 @@
           </div>
           <div
             class="cartList-modal-notication-content-item-delete"
+            :class="{canNotDelete:cart.controlButton}"
             @click.stop.prevent="deleteItems(item)"
           >
-            <h6>x</h6>
+            <h6 >x</h6>
           </div>
         </div>
 
@@ -50,6 +51,9 @@ export default {
   },
   methods: {
     async deleteItems(item) {
+      if(this.cart.controlButton) {
+        return
+      }
       if (this.isAuthenticated) {  
           this.$store.dispatch("deleteItem", item)
       } else {
@@ -128,7 +132,11 @@ export default {
           h6 {
             color: white;
           }
+         
         }
+         .canNotDelete {
+            opacity: 0.5;
+          }
       }
       &-button {
         border-radius: 5px;

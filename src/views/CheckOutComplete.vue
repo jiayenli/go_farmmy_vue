@@ -9,7 +9,7 @@
       />
       <img
         class="checkout-product-cover-img"
-        src="./../assets/product-img-1.png"
+        src="./../assets/about-img-2.png"
       />
     </div>
     <div class="checkout-product-step">

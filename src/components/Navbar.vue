@@ -1,8 +1,8 @@
 <template>
   <div class="home-nav" @click="controlCartModel">
-    <div class="home-nav-icon">
+   <router-link :to="{ name: 'About' }" class="home-nav-icon">
       <img src="./../assets/home-nav-icon-08.png" />
-    </div>
+   </router-link>
 
     <router-link :to="{ name: 'Product' }" class="home-nav-icon">
       <img src="./../assets/home-nav-icon-06.png" />

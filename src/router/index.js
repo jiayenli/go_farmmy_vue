@@ -12,15 +12,16 @@ const routes = [
     name: 'None',
     redirect: "/goFarmmy"
   },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue')
-  },
+
   {
     path: '/goFarmmy',
     name: 'Home',
     component: () => import('../views/HomePage.vue')
+  },
+  {
+    path: '/goFarmmy/about',
+    name: 'About',
+    component: () => import('../views/AboutUs.vue')
   },
   {
     path: "/goFarmmy/product/detail/:id",
@@ -101,7 +102,8 @@ router.beforeEach(async (to, from, next) => {
   const productInLocalStorage = JSON.parse(localStorage.getItem("go_farmmy_products")) || []
   let getItem = false
   let isAuthenticated = store.state.isAuthenticated
-  const pathsWithoutAuthentication = ['Sign-in', 'CheckOut-Sign-in']
+  const pathsWithoutAuthentication = ['Sign-in', 'CheckOut-Sign-in', 'Sign-up']
+  const memberOnly = ['User-Profile', 'User-Order', 'User-Order-Page', 'CheckOut-Products', 'CheckOut-Info', 'CheckOut-Payment', 'CheckOut-Complete']
   //const WithoutAuthenticationPage = ['Sign-in', 'CheckOut-Sign-in', 'Sign-up']
 
   //要再加入去會員中心會導到登入
@@ -112,10 +114,23 @@ router.beforeEach(async (to, from, next) => {
   //登入中不能去註冊跟登入頁面
 
 
-  if (!isAuthenticated && tokenInLocalStorage) {
+  //未登入不能去會員中心與結帳頁面
+  if (!isAuthenticated && !tokenInLocalStorage && memberOnly.includes(to.name)) {
+    next('/goFarmmy/signin')
+    return
+  }
+
+  //已登入者不能去登入與註冊頁面
+  if (isAuthenticated && tokenInLocalStorage && pathsWithoutAuthentication.includes(to.name)) {
+    next('/goFarmmy')
+    return
+  }
+
+  //無權限但有token者重新驗證(可能是重新整理的人或剛登入的人)
+
+ if (!isAuthenticated && tokenInLocalStorage) {
     store.dispatch('fetchSoppingCard')
     isAuthenticated = await store.dispatch('fetchCurrentUser')
-
   }
 
 
@@ -168,13 +183,6 @@ router.beforeEach(async (to, from, next) => {
   }
   
 
-
-
-  if (isAuthenticated && to.name.includes('Sign-up')) {
-    console.log('text有到這裡重導向路由')
-    next('/goFarmmy')
-    return
-  }
 
   next()
 

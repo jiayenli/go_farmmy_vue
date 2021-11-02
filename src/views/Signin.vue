@@ -4,7 +4,7 @@
     <CartNavbar />
     <div class="signin-cover" @click="controlCartModel">
       <img class="signin-cover-title" src="./../assets/sign-title-1.png" />
-      <img class="signin-cover-img" src="./../assets/product-icon-2.jpg" />
+      <img class="signin-cover-img" src="./../assets/home-img-5.png" />
     </div>
     <SigninForm />
   </div>

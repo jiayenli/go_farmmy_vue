@@ -9,7 +9,7 @@
       />
       <img
         class="checkout-product-cover-img"
-        src="./../assets/product-img-1.png"
+        src="./../assets/about-img-2.png"
       />
     </div>
     <div class="checkout-product-step">
@@ -76,7 +76,7 @@
               </td>
               <td class="product-totle">${{ product.totalPrice }} 元</td>
               <td class="product-delete">
-                <i class="fas fa-trash-alt" @click="deleteItems(product)"></i>
+                <i class="fas fa-trash-alt" @click="deleteItems(product)" :class="{canNotDelete:cart.controlButton}"></i>
               </td>
             </tr>
           </tbody>
@@ -202,6 +202,9 @@ export default {
       this.$store.dispatch("decreaseItemNumber", item);
     },
     async deleteItems(item) {
+         if(this.cart.controlButton) {
+      return
+    }
       this.$store.dispatch("deleteItem", item);
     },
   },
@@ -340,6 +343,9 @@ export default {
               &:hover {
                 transform: scale(1.1, 1.1);
               }
+            }
+            .canNotDelete {
+              opacity: 0.5;
             }
           }
         }
