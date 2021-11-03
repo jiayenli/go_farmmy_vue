@@ -49,6 +49,7 @@ export default {
        this.$store.commit('closeCartModel')
 
      },
-  }
+  },
+  
 };
 </script>

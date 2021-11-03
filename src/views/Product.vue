@@ -66,7 +66,6 @@ export default {
     async fetchData({ categoryId }) {
       try {
         const response = await ProductAPI.getProducts({ categoryId });
-        console.log('product',response)
         this.items = response.data.products;
         if (this.filterKeyword) {
           this.filterItem();

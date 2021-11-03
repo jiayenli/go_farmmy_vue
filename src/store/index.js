@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-//import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import UserAPI from "./../apis/users";
 import cart from './modules/cart'
 import order from './modules/order'
 import authenticated from './modules/authenticated'
+import router from "./../router/index";
 
 
 Vue.use(Vuex)
@@ -87,6 +88,39 @@ export default new Vuex.Store({
         return false
       }
     },
+
+    async fetchFbUser({ commit }, response) {
+      try {
+        const backEndResponse = await UserAPI.PostFbGoogleSignIn({
+          name: response.name,
+          email: response.email,
+        });
+        console.log("backEndResponse", backEndResponse.data);
+        const { data } = backEndResponse;
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        Swal.fire({
+          icon: "success",
+          title: `歡迎 ${data.user.name}回來！`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        localStorage.setItem("gofarmmy_token", data.token);
+        commit("setCurrentUser", data.user);
+        router.back();
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "登入錯誤，請洽客服",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    }
 
 
 

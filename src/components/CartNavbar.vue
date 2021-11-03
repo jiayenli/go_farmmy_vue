@@ -139,8 +139,9 @@ export default {
           return;
         }
       }
-this.$router.push({ name: "Sign-in" });
       this.$store.commit("logOut");
+this.$router.push({ name: "Sign-in" });
+      
       
       Swal.fire({
         icon: "success",

@@ -1,9 +1,14 @@
 <template>
   <div class="product-items">
     <h2 class="title">
+      <div v-if="!proccessing">
       季節特選。來自{{ item.origin }}的鮮採{{ item.name }}！
+      </div>
     </h2>
-    <div class="product-content-items-card">
+    <div class="product-items-spiner" v-if="proccessing">
+    <Spiner />
+    </div>
+    <div class="product-content-items-card" v-if="!proccessing">
       <div class="product-content-items-card-img">
         <div
           v-if="item.quantity > 0"
@@ -19,27 +24,10 @@
         </div>
         <img :src="item.image" />
       </div>
+      
       <div class="product-content-items-card-text">
         <h1>{{ item.name }} | {{ item.origin }}</h1>
-        <div class="product-content-items-card-price">
-          <h2><i class="fas fa-comment-dollar"></i> 價格：</h2><p class="price-focus">{{ item.price }}元/箱</p>
-        </div>
-        <div class="product-content-items-card-specification">
-          <h2><i class="fas fa-tag"></i> 規格：</h2> 
-          <p> {{ item.specification }}</p>
-        </div>
-                <div class="product-content-items-card-specification">
-          <h2><i class="fas fa-archive"></i> 保存方法：</h2>
-          <p>{{ item.storage_method }}</p>
-        </div>
-        <div class="product-content-items-card-description">
-
-          <h4>
-            {{ item.description }}
-          </h4>
-        </div>
-
-        <div class="product-content-items-card-panel">
+              <div class="product-content-items-card-panel">
           <div class="product-content-items-card-panel-number">
             <button
               class="product-content-items-card-panel-number-icon"
@@ -85,6 +73,25 @@
         上限 {{ item.quantity }} 組
       </div>
         </div>
+        <div class="product-content-items-card-price">
+          <h2><i class="fas fa-comment-dollar"></i> 價格：</h2><p class="price-focus">{{ item.price }}元/箱</p>
+        </div>
+        <div class="product-content-items-card-specification">
+          <h2><i class="fas fa-tag"></i> 規格：</h2> 
+          <p> {{ item.specification }}</p>
+        </div>
+                <div class="product-content-items-card-specification">
+          <h2><i class="fas fa-archive"></i> 保存方法：</h2>
+          <p>{{ item.storage_method }}</p>
+        </div>
+        <div class="product-content-items-card-description">
+
+          <h4>
+            {{ item.description }}
+          </h4>
+        </div>
+
+  
       </div>
 
       <div
@@ -109,6 +116,13 @@
   justify-content: start;
   flex-wrap: wrap;
   padding: 5% 2%;
+  &-spiner {
+      width: 100%;
+     background-color: white;
+  border: 4px $color-brown solid;
+  margin: 1% 0;
+
+  }
 }
 .title {
   width: 100%;
@@ -123,10 +137,9 @@
   position: relative;
   background-color: white;
   border: 4px $color-brown solid;
-
   display: flex;
   justify-content: space-between;
-  max-width: 100%;
+  width: 100%;
   padding: 2% 2%;
   margin: 1% 0;
   h1 {
@@ -138,7 +151,7 @@
   }
   &-specification,
   &-price {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     color: $color-brown;
     font-size: 14px;
@@ -146,6 +159,9 @@
   }
   h2 {
      color: #927f62;
+     white-space:nowrap;
+     
+     
   }
   p{
     font-weight: bolder;
@@ -185,13 +201,14 @@
   }
 
   &-panel {
+    width: 60%;
     position: relative;
-    background-color: $color-yellow;
-    border: 4px $color-brown solid;
+    //background-color: $color-yellow;
+   // border: 4px $color-brown solid;
     padding: 2%;
-    margin: 10% 0 5% 0;
+    margin: 2% 0 5% 0;
     display: flex;
-    justify-content: space-between;
+    //justify-content: center;
     align-items: flex-end;
     &-number {
       display: flex;
@@ -217,8 +234,8 @@
 
       input {
         display: inline-block;
-        width: 20%;
-        border: 1px $color-brown solid;
+        width: 30%;
+        border: 3px $color-brown solid;
         margin: 0 2%;
         height: 25px;
         padding-left: 2%;
@@ -248,8 +265,9 @@
   }
   &-warm {
     position: absolute;
-    bottom: -50%;
-    left: 20%;
+    white-space: nowrap;
+    top: 30%;
+    left: 100%;
     font-size: 12px;
     color: #ae0000;
   }
@@ -261,11 +279,19 @@ import { descriptionLengthFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
 import CartAPI from "./../apis/cart";
 import Swal from "sweetalert2";
+import Spiner from "./Spiner.vue";
 export default {
+  components: {
+    Spiner
+
+  },
   props: {
     item: {
       require: true,
     },
+    proccessing: {
+      require: true,
+    }
   },
   mixins: [descriptionLengthFilter],
   data() {

@@ -2,6 +2,7 @@
 
     
     <div class="product-items">
+    
       <div
         class="product-content-items-card"
         v-for="item in initialItems"
@@ -224,7 +225,9 @@ import { descriptionLengthFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
 import CartAPI from "./../apis/cart";
 import Swal from "sweetalert2";
+
 export default {
+
   props: {
     initialItems: {
       require: true,

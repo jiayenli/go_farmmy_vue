@@ -14,7 +14,8 @@
         <h2 class="title">商品介紹</h2>
 
         <!--商品卡片區-->
-        <ProductSingle :item = "this.item" />
+
+        <ProductSingle :item = "this.item" :proccessing= "proccessing" />
         
       </div>
     </div>
@@ -36,6 +37,7 @@ export default {
     CartNavbar,
     ProductSingle,
     ProductNavbar,
+  
   },
 
   data() {
@@ -43,6 +45,7 @@ export default {
       item: {},
       showItems: [],
       filterName: "",
+      proccessing: true
     };
   },
 
@@ -59,6 +62,7 @@ export default {
         const response = await ProductAPI.getProduct({id:Id});
         console.log(response)
         this.item = {...response.data.product};
+        this.proccessing = false
       } catch (error) {
         Swal.fire({
           icon: "error",

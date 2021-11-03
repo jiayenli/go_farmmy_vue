@@ -75,8 +75,9 @@
         </div>
         <div class="signin-form-content-fast">
           <h3>快速登入</h3>
+
           <div class="signin-form-content-fast-icon">
-            <i class="fab fa-facebook-f" @click="facebookSignIn"></i>
+            <i class="fab fa-facebook-f" @click.stop.prevent="fbLogin"> </i>
             <i class="fab fa-google" @click="googleSignIn"></i>
           </div>
         </div>
@@ -87,6 +88,7 @@
 
 <style lang="scss" scoped>
 @import "../assets/scss/color.scss";
+
 .signin-form {
   width: 100%;
   padding: 5% 0;
@@ -271,6 +273,9 @@
 <script>
 import UsersAPI from "./../apis/users";
 import Swal from "sweetalert2";
+import store from "./../store/index";
+
+
 export default {
   data() {
     return {
@@ -278,24 +283,17 @@ export default {
       email: "",
       password: "",
       processing: false,
+      fbConnect: false,
     };
   },
   methods: {
-    facebookSignIn() {
-      localStorage.setItem("gofarmmy_facebook_connect", true);
-      window.location.href =
-        "https://go-farmmy-demo.herokuapp.com/api/auth/facebook";
-    },
+    // facebookSignIn() {
+    //   localStorage.setItem("gofarmmy_facebook_connect", true);
+    //   window.location.href =
+    //     "https://go-farmmy-demo.herokuapp.com/api/auth/facebook";
+    // },
 
-    async getFacebookStatus() {
-      console.log('有重新導回頁面')
-      const signinWayIsFacebook = localStorage.getItem('gofarmmy_facebook_connect') || ""
-      // const response = await UsersAPI.getFacebookCallback();
-      // console.log(response);
-      if(signinWayIsFacebook) {
-        console.log('有判斷是從facebook來的')
-      }
-    },
+
     googleSignIn() {
       window.location.href =
         "https://go-farmmy-demo.herokuapp.com/api/auth/google ";
@@ -325,7 +323,6 @@ export default {
       if (checkEmail) {
         return;
       }
-      
 
       try {
         this.processing = true;
@@ -385,6 +382,45 @@ export default {
         }
       }
     },
+
+    getFacebookStatus() {
+      window.FB.getLoginStatus((response) => {
+        if (response.status === "connected") {
+          console.log("已連接", response);
+          this.fbConnect = true;
+        }
+      });
+    },
+
+    fbLogin() {
+      if (this.fbConnect) {
+        window.FB.api(
+          "/me",
+          { fields: "name,email" },
+          async function (response) {
+            store.dispatch("fetchFbUser", response);
+          }
+        );
+      } else {
+        window.FB.login(
+          function (response) {
+            if (response.status === "connected") {
+              window.FB.api(
+                "/me",
+                { fields: "name,email" },
+                async function (response) {
+                  store.dispatch("fetchFbUser", response);
+                }
+              );
+            }
+          },
+          {
+            scope: "email, public_profile",
+            return_scopes: true,
+          }
+        );
+      }
+    },
   },
 
   mounted() {
@@ -392,7 +428,10 @@ export default {
       block: "end",
       inline: "nearest",
     });
-    this.getFacebookStatus()
+    this.getFacebookStatus();
   },
+
+  // Get FB Login Status
 };
 </script>
+

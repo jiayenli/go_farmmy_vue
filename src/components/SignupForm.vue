@@ -19,7 +19,7 @@
           <h3>快速登入</h3>
           <h5>您可以透過Facebook和Google免註冊登入</h5>
           <div class="signin-form-content-fast-icon">
-            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-facebook-f" @click.stop.prevent="fbLogin"></i>
             <i class="fab fa-google"></i>
           </div>
         </div>
@@ -302,6 +302,7 @@
 <script>
 import UsersAPI from "./../apis/users";
 import Swal from "sweetalert2";
+import store from "./../store/index";
 export default {
   data() {
     return {
@@ -311,6 +312,7 @@ export default {
       name: "",
       checkPassword: "",
       processing: false,
+      fbConnect: false,
     };
   },
   methods: {
@@ -398,6 +400,44 @@ export default {
     clickHidePassword() {
       this.showPassword = "password";
     },
+      getFacebookStatus() {
+      window.FB.getLoginStatus((response) => {
+        if (response.status === "connected") {
+          console.log("已連接", response);
+          this.fbConnect = true;
+        }
+      });
+    },
+
+    fbLogin() {
+      if (this.fbConnect) {
+        window.FB.api(
+          "/me",
+          { fields: "name,email" },
+          async function (response) {
+            store.dispatch("fetchFbUser", response);
+          }
+        );
+      } else {
+        window.FB.login(
+          function (response) {
+            if (response.status === "connected") {
+              window.FB.api(
+                "/me",
+                { fields: "name,email" },
+                async function (response) {
+                  store.dispatch("fetchFbUser", response);
+                }
+              );
+            }
+          },
+          {
+            scope: "email, public_profile",
+            return_scopes: true,
+          }
+        );
+      }
+    },
   },
 
   mounted() {
@@ -405,6 +445,7 @@ export default {
       block: "end",
       inline: "nearest",
     });
+    this.getFacebookStatus();
   },
 };
 </script>
