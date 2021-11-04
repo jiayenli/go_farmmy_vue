@@ -38,9 +38,7 @@ export default new Vuex.Store({
       state.checkOutStep = number
     },
 
-    changeFacebookConnect(state) {
-      state.facebookConnect = true
-    },
+
 
 
 
