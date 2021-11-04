@@ -73,7 +73,7 @@ export default new Vuex.Store({
       localStorage.removeItem("go_farmmy_user")
       localStorage.removeItem("gofarmmy_facebook_connect")
       localStorage.removeItem("go_farmmy_orderId")
-      
+
     }
 
   },
@@ -115,7 +115,8 @@ export default new Vuex.Store({
         });
         localStorage.setItem("gofarmmy_token", data.token);
         commit("setCurrentUser", data.user);
-        router.back();
+        router.push({ name: "Home" })
+
       } catch (error) {
         console.log(error);
         Swal.fire({

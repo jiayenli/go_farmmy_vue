@@ -330,11 +330,11 @@ export default {
         });
         localStorage.setItem("gofarmmy_token", data.JWTtoken);
         this.$store.commit("setCurrentUser", data.user);
-    
+
         if (this.$route.name === "CheckOut-Sign-in") {
           this.$router.push({ name: "CheckOut-Products" });
         } else {
-          this.$router.push({ name: "Home" })
+          this.$router.push({ name: "Home" });
         }
       } catch (error) {
         console.error(error);
@@ -395,11 +395,10 @@ export default {
         this.$store.commit("setCurrentUser", data.user);
         this.processing = false;
 
-        if (this.$route.name === "Sign-in") {
-          this.$router.back();
-        }
         if (this.$route.name === "CheckOut-Sign-in") {
           this.$router.push({ name: "CheckOut-Products" });
+        } else {
+          this.$router.push({ name: "Home" });
         }
       } catch (error) {
         this.password = "";
