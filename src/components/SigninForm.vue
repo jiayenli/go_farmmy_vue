@@ -79,9 +79,7 @@
 
           <div class="signin-form-content-fast-icon">
             <div class="fab">
-              <GoogleSignInButton
-                @sign-in="oAuthSignIn"
-              ></GoogleSignInButton>
+              <GoogleSignInButton @sign-in="oAuthSignIn"></GoogleSignInButton>
             </div>
             <i
               class="fab fa-facebook-f"
@@ -332,11 +330,11 @@ export default {
         });
         localStorage.setItem("gofarmmy_token", data.JWTtoken);
         this.$store.commit("setCurrentUser", data.user);
-        if (this.$route.name === "Sign-in") {
-          this.$router.back();
-        }
+    
         if (this.$route.name === "CheckOut-Sign-in") {
           this.$router.push({ name: "CheckOut-Products" });
+        } else {
+          this.$router.push({ name: "Home" })
         }
       } catch (error) {
         console.error(error);
@@ -475,16 +473,22 @@ export default {
         );
       }
     },
-    googleLogin() {},
   },
 
-  mounted() {
-    this.$refs.controlScroll.scrollIntoView({
-      block: "end",
-      inline: "nearest",
-    });
-    this.getFacebookStatus();
-  },
+  // mounted() {
+  //   this.$refs.controlScroll.scrollIntoView({
+  //     block: "end",
+  //     inline: "nearest",
+  //   });
+  //   this.getFacebookStatus();
+  //   window.gapi.load("auth2", () => {
+  //     console.log("google有到");
+  //     window.gapi.auth2.init({
+  //       client_id:
+  //         "502621069725-28dp0qf9isskob77rnm3cejet5k9jv2i.apps.googleusercontent.com",
+  //     });
+  //   });
+  // },
 
   computed: {
     ...mapState(["facebookConnect"]),

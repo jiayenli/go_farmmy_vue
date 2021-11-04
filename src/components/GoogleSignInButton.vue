@@ -1,6 +1,6 @@
 <template>
   <div class="button">
-    <div id="google-sign-in-button" ></div>
+    <div id="google-sign-in-button"  ></div>
   </div>
 </template>
 
@@ -37,6 +37,7 @@ export default {
   },
   methods: {
     signIn(googleUser) {
+      console.log('有到按鈕的地方')
       const id_token = googleUser.getAuthResponse().id_token;
       this.$emit("sign-in", id_token);
     },
