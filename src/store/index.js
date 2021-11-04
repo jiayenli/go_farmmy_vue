@@ -18,12 +18,18 @@ export default new Vuex.Store({
     token: '',
     cartModel: false,
     checkOutStep: 0,
-    filterKeyword: ""
+    filterKeyword: "",
+    facebookConnect: false,
   },
   mutations: {
     //搜尋關鍵字賦值
     addFilterKeyword(state, keyword) {
       state.filterKeyword = keyword
+    },
+
+    changeFacebookConnect(state) {
+      state.facebookConnect = true
+
     },
 
 
@@ -90,6 +96,7 @@ export default new Vuex.Store({
     },
 
     async fetchFbUser({ commit }, response) {
+      console.log('response', response)
       try {
         const backEndResponse = await UserAPI.PostFbGoogleSignIn({
           name: response.name,

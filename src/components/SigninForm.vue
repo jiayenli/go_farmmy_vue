@@ -274,6 +274,7 @@
 import UsersAPI from "./../apis/users";
 import Swal from "sweetalert2";
 import store from "./../store/index";
+import { mapState } from "vuex";
 
 
 export default {
@@ -283,7 +284,7 @@ export default {
       email: "",
       password: "",
       processing: false,
-      fbConnect: false,
+     // fbConnect: false,
     };
   },
   methods: {
@@ -387,16 +388,18 @@ export default {
       window.FB.getLoginStatus((response) => {
         if (response.status === "connected") {
           console.log("已連接", response);
-          this.fbConnect = true;
+          store.commit('changeFacebookConnect')
         }
       });
     },
 
     fbLogin() {
-      if (this.fbConnect) {
+      console.log('點登入按鈕')
+      if (this.facebookConnect) {
+        console.log('有偵測到連結')
         window.FB.api(
           "/me",
-          { fields: "name,email" },
+          { fields: "name , email" },
           async function (response) {
             store.dispatch("fetchFbUser", response);
           }
@@ -407,7 +410,7 @@ export default {
             if (response.status === "connected") {
               window.FB.api(
                 "/me",
-                { fields: "name,email" },
+                { fields: "name , email" },
                 async function (response) {
                   store.dispatch("fetchFbUser", response);
                 }
@@ -429,6 +432,10 @@ export default {
       inline: "nearest",
     });
     this.getFacebookStatus();
+  },
+
+    computed: {
+    ...mapState(["facebookConnect"]),
   },
 
   // Get FB Login Status
