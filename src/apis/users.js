@@ -16,10 +16,20 @@ export default {
     })
   },
 
-  PostFbGoogleSignIn({name , email}) {
-    return apiHelper.post('/users/fbGoogleSignIn', {
+  PostFbSignIn({name , email}) {
+    return apiHelper.post('/users/fbSignIn', {
       name,
       email,
+    }, {
+      validateStatus: function (status) {
+        return status <= 500
+      }
+    })
+  },
+
+  PostGoogleSignIn({ token }) {
+    return apiHelper.post('/users/googleSignIn', {
+      token
     }, {
       validateStatus: function (status) {
         return status <= 500

@@ -19,8 +19,10 @@
           <h3>快速登入</h3>
           <h5>您可以透過Facebook和Google免註冊登入</h5>
           <div class="signin-form-content-fast-icon">
+            <div class="fab">
+              <GoogleSignInButton @sign-in="oAuthSignIn"></GoogleSignInButton>
+            </div>
             <i class="fab fa-facebook-f" @click.stop.prevent="fbLogin"></i>
-            <i class="fab fa-google"></i>
           </div>
         </div>
         <div><h3>會員註冊</h3></div>
@@ -243,15 +245,17 @@
         margin-top: 1%;
         justify-content: center;
         .fab {
-          margin: 1%;
+          border: 4px solid $color-brown;
+          margin: 1% 2%;
           display: flex;
           justify-content: center;
           align-items: center;
-          background-color: $color-brown;
-          height: 40px;
-          width: 40px;
-          border-radius: 50%;
-          color: white;
+          background-color: white;
+          height: 56px;
+          width: 56px;
+          border-radius: 5px;
+          font-size: 20px;
+          color: #3b5998;
           transition: 0.3s;
           &:hover {
             cursor: pointer;
@@ -264,20 +268,20 @@
 }
 @keyframes vegatable-move-1 {
   0% {
-     opacity: 0.3;
+    opacity: 0.3;
     transform: rotate(180deg);
   }
   50% {
-     opacity: 0.6;
+    opacity: 0.6;
     transform: rotate(120deg);
   }
   80% {
-     opacity: 0.8;
+    opacity: 0.8;
     transform: rotate(-10deg);
   }
 
   100% {
-     opacity: 1;
+    opacity: 1;
     transform: rotate(0deg);
   }
 }
@@ -303,7 +307,11 @@
 import UsersAPI from "./../apis/users";
 import Swal from "sweetalert2";
 import store from "./../store/index";
+import GoogleSignInButton from "./GoogleSignInButton";
 export default {
+  components: {
+    GoogleSignInButton,
+  },
   data() {
     return {
       showPassword: "password",
@@ -316,6 +324,39 @@ export default {
     };
   },
   methods: {
+    async oAuthSignIn(token) {
+      this.googleToken = token;
+      try {
+        console.log("丟去後端");
+        const response = await UsersAPI.PostGoogleSignIn({
+          token: this.googleToken,
+        });
+        const { data } = response;
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        console.log(response);
+        Swal.fire({
+          icon: "success",
+          title: `歡迎 ${data.user.name}回來！`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        localStorage.setItem("gofarmmy_token", data.JWTtoken);
+        this.$store.commit("setCurrentUser", data.user);
+        this.$router.push({ name: 'Home' });
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "登入錯誤，請洽客服",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    },
     async signUp() {
       this.$store.commit("closeCartModel");
       //確認缺格
@@ -400,7 +441,7 @@ export default {
     clickHidePassword() {
       this.showPassword = "password";
     },
-      getFacebookStatus() {
+    getFacebookStatus() {
       window.FB.getLoginStatus((response) => {
         if (response.status === "connected") {
           console.log("已連接", response);

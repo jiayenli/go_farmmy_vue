@@ -29,7 +29,12 @@ export default {
         version: "v12.0",
       });
 
-
+      window.gapi.load("auth2", () => {
+        console.log('google有到')
+        window.gapi.auth2.init({
+          client_id: "502621069725-00a7nbrqvaboparvj4vqb3llias7fa0n.apps.googleusercontent.com",
+        });
+      });
 
       console.log("fbAsyncInit");
     };
