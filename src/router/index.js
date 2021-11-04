@@ -35,6 +35,11 @@ const routes = [
     component: () => import('../views/Product.vue')
   },
   {
+    path: '/goFarmmy/producer',
+    name: 'Producer',
+    component: () => import('../views/Producer.vue')
+  },
+  {
     path: '/goFarmmy/user/profile',
     name: 'User-Profile',
     component: () => import('../views/User.vue')

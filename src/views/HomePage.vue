@@ -8,7 +8,7 @@
       <div class="home-anime">
         <div><img src="./../assets/home-img-4.png" /></div>
         <div><img src="./../assets/home-img-5.png" /></div>
-        <div><img src="./../assets/home-img-3.jpg" /></div>
+        <div><img src="./../assets/home-img-3.png" /></div>
       </div>
     </div>
     <div class="home-major" @click="controlCartModel">

@@ -146,7 +146,7 @@ export default {
           console.log("Google User signed out.");
           this.$store.commit("logOut");
           this.$router.push({ name: "Sign-in" });
-        });
+        });//這裡之後改寫try error形式
 
       Swal.fire({
         icon: "success",

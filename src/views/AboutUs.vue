@@ -27,7 +27,7 @@
             />
             <img
               class="about-content-top-image-2-4"
-              src="./../assets/home-img-3.jpg"
+              src="./../assets/home-img-3.png"
             />
           </div>
         </div>

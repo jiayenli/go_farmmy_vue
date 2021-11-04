@@ -13,9 +13,9 @@
         <img src="./../assets/home-logo.png" />
       </router-link>
     </div>
-    <div class="home-nav-icon">
+    <router-link :to="{ name: 'Producer' }" class="home-nav-icon">
       <img src="./../assets/home-nav-icon-09.png" />
-    </div>
+    </router-link>
     <router-link :to="{ name: 'User-Profile' }" class="home-nav-icon">
       <img src="./../assets/home-nav-icon-07.png" />
     </router-link>
