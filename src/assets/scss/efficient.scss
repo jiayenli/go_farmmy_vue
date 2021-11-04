@@ -1,0 +1,39 @@
+%cover-title {
+  position: absolute;
+  max-height: 90px;
+  max-width: 250px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+}
+
+%cover-img {
+  margin: 2.5% 0;
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+}
+
+%checkout-button-area {
+  margin: 2% auto;
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+    height: 60px;
+}
+
+%checkout-button {
+     border-radius: 5px;
+      width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $color-yellow;
+      border: 3px $color-brown solid;
+      font-size: 18px;
+      font-weight: bold;
+      color: $color-brown;
+      transform: 0.3s;
+      cursor: pointer;
+
+}
