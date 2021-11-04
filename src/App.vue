@@ -22,6 +22,7 @@ export default {
   name: "App",
   mounted() {
     window.fbAsyncInit = function () {
+      console.log("fb有到");
       window.FB.init({
         appId: "279524904068988",
         cookie: true,
@@ -32,11 +33,11 @@ export default {
       window.gapi.load("auth2", () => {
         console.log('google有到')
         window.gapi.auth2.init({
-          client_id: "502621069725-00a7nbrqvaboparvj4vqb3llias7fa0n.apps.googleusercontent.com",
+          client_id: "502621069725-6ksmjc0une7bfj1m7k0tj9gv5gi1cif4.apps.googleusercontent.com",
         });
       });
 
-      console.log("fbAsyncInit");
+      
     };
   },
 };
