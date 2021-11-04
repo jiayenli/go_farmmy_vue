@@ -139,10 +139,15 @@ export default {
           return;
         }
       }
-      this.$store.commit("logOut");
-this.$router.push({ name: "Sign-in" });
-      
-      
+      window.gapi.auth2
+        .getAuthInstance()
+        .signOut()
+        .then(() => {
+          console.log("Google User signed out.");
+          this.$store.commit("logOut");
+          this.$router.push({ name: "Sign-in" });
+        });
+
       Swal.fire({
         icon: "success",
         title: "登出成功！",

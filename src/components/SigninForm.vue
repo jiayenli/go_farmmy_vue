@@ -75,10 +75,21 @@
         </div>
         <div class="signin-form-content-fast">
           <h3>快速登入</h3>
+          <div id="google-signin-button"></div>
 
           <div class="signin-form-content-fast-icon">
-            <i class="fab fa-facebook-f" @click.stop.prevent="fbLogin"> </i>
-            <i class="fab fa-google" @click="googleSignIn"></i>
+            <div class="fab">
+              <GoogleSignInButton
+                @sign-in="oAuthSignIn"
+              ></GoogleSignInButton>
+            </div>
+            <i
+              class="fab fa-facebook-f"
+              @click.stop.prevent="fbLogin"
+              data-onsuccess="onSignIn"
+            >
+            </i>
+            <!-- <i class="fab fa-google" @click="googleSignIn(googleUser)"></i> -->
           </div>
         </div>
       </div>
@@ -211,18 +222,20 @@
 
       &-icon {
         display: flex;
-        margin-top: 1%;
+        margin-top: 2%;
         justify-content: center;
         .fab {
-          margin: 1%;
+          border: 4px solid $color-brown;
+          margin: 0 2%;
           display: flex;
           justify-content: center;
           align-items: center;
-          background-color: $color-brown;
-          height: 40px;
-          width: 40px;
-          border-radius: 50%;
-          color: white;
+          background-color: white;
+          height: 56px;
+          width: 56px;
+          border-radius: 5px;
+          font-size: 20px;
+          color: #3b5998;
           transition: 0.3s;
           &:hover {
             cursor: pointer;
@@ -275,16 +288,20 @@ import UsersAPI from "./../apis/users";
 import Swal from "sweetalert2";
 import store from "./../store/index";
 import { mapState } from "vuex";
-
+import GoogleSignInButton from "./GoogleSignInButton";
 
 export default {
+  components: {
+    GoogleSignInButton,
+  },
   data() {
     return {
       showPassword: "password",
       email: "",
       password: "",
       processing: false,
-     // fbConnect: false,
+      googleToken: "",
+      // fbConnect: false,
     };
   },
   methods: {
@@ -294,11 +311,45 @@ export default {
     //     "https://go-farmmy-demo.herokuapp.com/api/auth/facebook";
     // },
 
-
-    googleSignIn() {
-      window.location.href =
-        "https://go-farmmy-demo.herokuapp.com/api/auth/google ";
+    async oAuthSignIn(token) {
+      this.googleToken = token;
+      try {
+        console.log("丟去後端");
+        const response = await UsersAPI.PostGoogleSignIn({
+          token: this.googleToken,
+        });
+        const { data } = response;
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        console.log(response);
+        Swal.fire({
+          icon: "success",
+          title: `歡迎 ${data.user.name}回來！`,
+          toast: true,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        localStorage.setItem("gofarmmy_token", data.JWTtoken);
+        this.$store.commit("setCurrentUser", data.user);
+        if (this.$route.name === "Sign-in") {
+          this.$router.back();
+        }
+        if (this.$route.name === "CheckOut-Sign-in") {
+          this.$router.push({ name: "CheckOut-Products" });
+        }
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "登入錯誤，請洽客服",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     },
+
     controlCartModel() {
       this.$store.commit("closeCartModel");
     },
@@ -388,15 +439,15 @@ export default {
       window.FB.getLoginStatus((response) => {
         if (response.status === "connected") {
           console.log("已連接", response);
-          store.commit('changeFacebookConnect')
+          store.commit("changeFacebookConnect");
         }
       });
     },
 
     fbLogin() {
-      console.log('點登入按鈕')
+      console.log("點登入按鈕");
       if (this.facebookConnect) {
-        console.log('有偵測到連結')
+        console.log("有偵測到連結");
         window.FB.api(
           "/me",
           { fields: "name , email" },
@@ -424,6 +475,7 @@ export default {
         );
       }
     },
+    googleLogin() {},
   },
 
   mounted() {
@@ -434,7 +486,7 @@ export default {
     this.getFacebookStatus();
   },
 
-    computed: {
+  computed: {
     ...mapState(["facebookConnect"]),
   },
 

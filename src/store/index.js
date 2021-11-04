@@ -73,6 +73,7 @@ export default new Vuex.Store({
       localStorage.removeItem("go_farmmy_user")
       localStorage.removeItem("gofarmmy_facebook_connect")
       localStorage.removeItem("go_farmmy_orderId")
+      
     }
 
   },
@@ -96,7 +97,7 @@ export default new Vuex.Store({
     async fetchFbUser({ commit }, response) {
       console.log('response', response)
       try {
-        const backEndResponse = await UserAPI.PostFbGoogleSignIn({
+        const backEndResponse = await UserAPI.PostFbSignIn({
           name: response.name,
           email: response.email,
         });
