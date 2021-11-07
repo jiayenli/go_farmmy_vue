@@ -117,23 +117,25 @@ export default {
       &-text {
         margin: 0 auto;
         width: 40%;
-        margin-left: 2%;
         padding: 2% 0 2% 2%;
-        border: 4px solid $color-brown;
         border-top-left-radius: 50px;
         border-top-right-radius: 50px;
         border-bottom-right-radius: 50px;
-        background-color: white;
-        background-color: $color-yellow;
+        background-color: $color-brown;
+        h1, h4 {
+          text-align: center;
+          color: white
+        }
       }
      
     }
      &-producer {
-        border-left: 10px solid $color-brown;
-    border-right: 10px solid $color-brown;
+    //     border-left: 10px solid $color-brown;
+    // border-right: 10px solid $color-brown;
       
         display: flex;
-        margin: 5% 2%;
+        margin: 5% auto;
+        justify-content: center;
         &-1 {
           img {
             border-bottom-right-radius: 70%;
@@ -160,7 +162,7 @@ export default {
         }
 
         .producerimage {
-          margin: 0 2%;
+          margin: 0 3%;
           text-align: center;
 
           img {
