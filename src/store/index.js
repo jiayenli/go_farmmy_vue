@@ -20,8 +20,19 @@ export default new Vuex.Store({
     checkOutStep: 0,
     filterKeyword: "",
     facebookConnect: false,
+    signinProcessing: false,
   },
   mutations: {
+    //登入過程
+    isSigninProcessing(state) {
+      state.signinProcessing = true
+    },
+    notSigninProcessing(state) {
+      state.signinProcessing = false
+    },
+
+
+
     //搜尋關鍵字賦值
     addFilterKeyword(state, keyword) {
       state.filterKeyword = keyword

@@ -27,7 +27,7 @@
             />
             <img
               class="about-content-top-image-2-4"
-              src="./../assets/home-img-3.jpg"
+              src="./../assets/home-img-3.png"
             />
           </div>
         </div>
@@ -49,6 +49,40 @@
               我們努力將每一顆好果送到島民手上，期盼日後能與島民一起發掘更多美果。
             </h4>
           </div>
+        </div>
+      </div>
+      <div class="about-content-middle">
+        <div class="about-content-middle-title">
+          <h1>農作伙的特色</h1>
+          <h4>產地直送，新鮮有保障！</h4>
+        </div>
+        <div class="about-content-middle-content">
+          <h3>| 特色一：產地直送，全程冷藏宅配，確保好品質！</h3>
+          <h3>| 特色二：甜度平均高達20以上，口口甜蜜好滋味！</h3>
+
+          <h3>| 特色三：直接向農民買，實質回饋農民，農民心血看的見！</h3>
+        </div>
+      </div>
+      <div class="about-content-buttom">
+        <div class="about-content-buttom-title">
+          <h1>聯繫我們</h1>
+          <h4>想知道更多農作伙的消息，歡迎追蹤我們社群！</h4>
+        </div>
+        <div class="about-content-buttom-content">
+          <a
+            href="https://www.facebook.com/%E8%BE%B2%E4%BD%9C%E4%BC%99-Go-Farmmy-104432345254333/"
+            target="_blank"
+            ><i class="fab fa-facebook-square"></i
+          ></a>
+          <a
+            href="https://l.facebook.com/l.php?u=http%3A%2F%2Finstagram.com%2Fgo_farmmy%3Ffbclid%3DIwAR3Cj7RjXG0w8V2-dPwfQAOSN7afgLykLj721PSZcgeLyn9i_myrRlxgH08&h=AT1Pjj931PAmhbqlPLKmmQkB0OUOHzWpCP9ELsAqytOIeMqla9y7XWuepU3aOGoG1XYPMD9ATPxgy_dqHWHmcqPNKtbQehpbR8y3Jto-e4PLoMI4alP0AXOA7dVC77MIINbhhw"
+            target="_blank"
+          >
+            <i class="fab fa-instagram-square"></i
+          ></a>
+          <a href="mailto:gofarmmy.tw@gmail.com" target="_blank">
+            <i class="fas fa-envelope-square"></i
+          ></a>
         </div>
       </div>
     </div>
@@ -104,9 +138,9 @@ export default {
     }
   }
   &-content {
-    width: 80%;
-    display: flex;
-    margin: 3% auto;
+    width: 100%;
+
+    margin: 3% auto 0 auto;
     &-nav {
       width: 30%;
       padding-left: 10%;
@@ -114,6 +148,8 @@ export default {
       // outline: green 1px solid;
     }
     &-top {
+      width: 80%;
+      margin: 0 auto;
       display: flex;
       &-image {
         width: 50%;
@@ -121,12 +157,20 @@ export default {
         position: relative;
         object-fit: cover;
         &-1 {
+          height: 20vw;
           width: 80%;
           z-index: 5;
           position: absolute;
           opacity: 1;
           transition: 0.6s;
-          object-fit: cover;
+
+          img {
+            object-fit: cover;
+            border-bottom-right-radius: 70%;
+            border-top-right-radius: 60%;
+            border-top-left-radius: 70%;
+            border-bottom-left-radius: 60%;
+          }
         }
         &-2 {
           transition: 0.3s;
@@ -142,7 +186,10 @@ export default {
             transition: 1s;
             height: 180px;
             width: 180px;
-            border-radius: 50%;
+            border-bottom-right-radius: 50%;
+            border-top-right-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-left-radius: 60%;
             object-fit: cover;
             position: absolute;
           }
@@ -171,34 +218,43 @@ export default {
           }
           .about-content-top-image-2 {
             opacity: 1;
+
             &-1 {
               transform: translate(-75%, -60%);
+              opacity: 0.5;
               &:hover {
-                box-shadow: 0 0 0 3px white;
+                opacity: 1;
+                //box-shadow: 0 0 0 3px $color-brown;
                 z-index: 5;
                 transform: scale(1.8, 1.8) translate(-10%, -20%);
               }
             }
             &-2 {
+              opacity: 0.5;
               transform: translate(20%, 60%);
-                &:hover {
-                 box-shadow: 0 0 0 3px white;
+              &:hover {
+                opacity: 1;
+                //box-shadow: 0 0 0 3px white;
                 z-index: 5;
                 transform: scale(1.8, 1.8) translate(-10%, 12%);
               }
             }
             &-3 {
               transform: translate(-75%, 60%);
-                &:hover {
-                 box-shadow: 0 0 0 3px white;
+              opacity: 0.5;
+              &:hover {
+                opacity: 1;
+                // box-shadow: 0 0 0 3px white;
                 z-index: 5;
                 transform: scale(1.8, 1.8) translate(-10%, 12%);
               }
             }
             &-4 {
+              opacity: 0.5;
               transform: translate(20%, -60%);
-                 &:hover {
-                 box-shadow: 0 0 0 3px white;
+              &:hover {
+                opacity: 1;
+                // box-shadow: 0 0 0 3px white;
                 z-index: 5;
                 transform: scale(1.8, 1.8) translate(-10%, -20%);
               }
@@ -217,8 +273,6 @@ export default {
           border-top-right-radius: 50px;
           border-bottom-right-radius: 50px;
           background-color: white;
-          &:hover {
-          }
         }
         &-content {
           margin-top: 5%;
@@ -227,6 +281,68 @@ export default {
             line-height: 180%;
             margin-top: 3%;
           }
+        }
+      }
+    }
+    &-middle {
+      width: 65%;
+      margin: 2% auto;
+
+      &-title {
+        width: 45%;
+        padding: 1.5% 0 1.5% 2%;
+        border: 4px solid $color-brown;
+        border-top-left-radius: 50px;
+        border-top-right-radius: 50px;
+        border-bottom-left-radius: 50px;
+        background-color: white;
+      }
+      &-content {
+        margin-top: 2%;
+        padding-left: 1%;
+        font-weight: border;
+        padding-bottom: 2%;
+        h3 {
+          line-height: 180%;
+        }
+      }
+    }
+    &-buttom {
+      background-color: rgba(163, 158, 148, 0.3);
+
+      padding: 3% 0 3% 0;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &-title {
+        width: 30%;
+        padding: 1.5% 0;
+        border-radius: 50px;
+        background-color: $color-brown;
+        h1,
+        h4 {
+          text-align: center;
+          color: white;
+        }
+      }
+      &-content {
+        width: 100%;
+        margin-top: 2%;
+        padding-left: 1%;
+        font-weight: border;
+        text-align: center;
+        a {
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+        .fab,
+        .fas {
+          margin: 1%;
+          font-size: 50px;
+          color: $color-brown;
         }
       }
     }

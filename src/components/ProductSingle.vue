@@ -1,13 +1,16 @@
 <template>
-  <div class="product-items">
+<div>
+<div v-if="proccessing">
+      <Spiner />
+    </div>
+  <div class="product-items" v-if="!proccessing">
+    
     <h2 class="title">
-      <div v-if="!proccessing">
-      季節特選。來自{{ item.origin }}的鮮採{{ item.name }}！
+      <div >
+        季節特選。來自{{ item.origin }}的鮮採{{ item.name }}！
       </div>
     </h2>
-    <div class="product-items-spiner" v-if="proccessing">
-    <Spiner />
-    </div>
+
     <div class="product-content-items-card" v-if="!proccessing">
       <div class="product-content-items-card-img">
         <div
@@ -24,10 +27,10 @@
         </div>
         <img :src="item.image" />
       </div>
-      
+
       <div class="product-content-items-card-text">
         <h1>{{ item.name }} | {{ item.origin }}</h1>
-              <div class="product-content-items-card-panel">
+        <div class="product-content-items-card-panel">
           <div class="product-content-items-card-panel-number">
             <button
               class="product-content-items-card-panel-number-icon"
@@ -66,32 +69,30 @@
           >
             加入
           </button>
-                <div
-        class="product-content-items-card-warm"
-        v-if="item.number > item.quantity && item.quantity !== 0"
-      >
-        上限 {{ item.quantity }} 組
-      </div>
+          <div
+            class="product-content-items-card-warm"
+            v-if="item.number > item.quantity && item.quantity !== 0"
+          >
+            上限 {{ item.quantity }} 組
+          </div>
         </div>
         <div class="product-content-items-card-price">
-          <h2><i class="fas fa-comment-dollar"></i> 價格：</h2><p class="price-focus">{{ item.price }}元/箱</p>
+          <h2><i class="fas fa-comment-dollar"></i> 價格：</h2>
+          <p class="price-focus">{{ item.price }}元/箱</p>
         </div>
         <div class="product-content-items-card-specification">
-          <h2><i class="fas fa-tag"></i> 規格：</h2> 
-          <p> {{ item.specification }}</p>
+          <h2><i class="fas fa-tag"></i> 規格：</h2>
+          <p>{{ item.specification }}</p>
         </div>
-                <div class="product-content-items-card-specification">
+        <div class="product-content-items-card-specification">
           <h2><i class="fas fa-archive"></i> 保存方法：</h2>
           <p>{{ item.storage_method }}</p>
         </div>
         <div class="product-content-items-card-description">
-
           <h4>
             {{ item.description }}
           </h4>
         </div>
-
-  
       </div>
 
       <div
@@ -106,6 +107,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <style lang="scss" scoped>
@@ -117,11 +119,10 @@
   flex-wrap: wrap;
   padding: 5% 2%;
   &-spiner {
-      width: 100%;
-     background-color: white;
-  border: 4px $color-brown solid;
-  margin: 1% 0;
-
+    width: 100%;
+    background-color: white;
+    border: 4px $color-brown solid;
+    margin: 1% 0;
   }
 }
 .title {
@@ -158,18 +159,16 @@
     margin-top: 1%;
   }
   h2 {
-     color: #927f62;
-     white-space:nowrap;
-     
-     
+    color: #927f62;
+    white-space: nowrap;
   }
-  p{
+  p {
     font-weight: bolder;
-    font-size: 16px
+    font-size: 16px;
   }
   .price-focus {
     font-weight: bolder;
-    color: $color-red
+    color: $color-red;
   }
   h4 {
     color: #927f62;
@@ -179,7 +178,7 @@
   &-img {
     border-radius: 10px;
     position: relative;
-   width: 55%;
+    width: 55%;
     overflow: hidden;
     &-number {
       border-radius: 10px;
@@ -197,14 +196,13 @@
     img {
       object-fit: cover;
     }
-
   }
 
   &-panel {
     width: 60%;
     position: relative;
     //background-color: $color-yellow;
-   // border: 4px $color-brown solid;
+    // border: 4px $color-brown solid;
     padding: 2%;
     margin: 2% 0 5% 0;
     display: flex;
@@ -228,7 +226,6 @@
         &:hover {
           background-color: $color-brown;
           transform: scale(1.1, 1.1);
-          
         }
       }
 
@@ -279,11 +276,10 @@ import { descriptionLengthFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
 import CartAPI from "./../apis/cart";
 import Swal from "sweetalert2";
-import Spiner from "./Spiner.vue";
+import Spiner from "./ProductSingleSpiner.vue";
 export default {
   components: {
-    Spiner
-
+    Spiner,
   },
   props: {
     item: {
@@ -291,7 +287,7 @@ export default {
     },
     proccessing: {
       require: true,
-    }
+    },
   },
   mixins: [descriptionLengthFilter],
   data() {

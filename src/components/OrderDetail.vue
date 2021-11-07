@@ -1,5 +1,7 @@
 <template>
-  <div class="checkout-product-content">
+
+
+  <div class="checkout-product-content" v-if="!isProcessing">
     <div class="checkout-product-content-top">
       <h4>訂單日期：{{ order.createdAt | newTime }}</h4>
       <h4>
@@ -85,6 +87,7 @@
       </button>
     </div>
   </div>
+
 </template>
 
 
@@ -92,7 +95,6 @@
 // import Navbar from "@/components/Navbar.vue";
 // import CartNavbar from "@/components/CartNavbar.vue";
 // import CheckOutStep from "@/components/CheckOutStep.vue";
-// import CheckOrderSpinner from "@/components/CheckOrderSpinner.vue";
 // import CheckOutModal from "@/components/CheckOutModal.vue";
 
 import { mapState } from "vuex";
@@ -106,9 +108,11 @@ import moment from "moment";
 
 export default {
   name: "Order-Detail",
-  components: {},
+  components: {
+  },
   data() {
-    return {};
+    return {
+    };
   },
   props: {
     order: {
