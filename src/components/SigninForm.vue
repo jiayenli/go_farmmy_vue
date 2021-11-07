@@ -299,7 +299,6 @@ export default {
       password: "",
       processing: false,
       googleToken: "",
-      // fbConnect: false,
     };
   },
   methods: {
@@ -310,6 +309,7 @@ export default {
     // },
 
     async oAuthSignIn(token) {
+      this.$store.commit("isSigninProcessing");
       this.googleToken = token;
       try {
         console.log("丟去後端");
@@ -328,8 +328,10 @@ export default {
           showConfirmButton: false,
           timer: 3000,
         });
+
         localStorage.setItem("gofarmmy_token", data.JWTtoken);
         this.$store.commit("setCurrentUser", data.user);
+        this.$store.commit("notSigninProcessing");
 
         if (this.$route.name === "CheckOut-Sign-in") {
           this.$router.push({ name: "CheckOut-Products" });
@@ -345,6 +347,7 @@ export default {
           showConfirmButton: false,
           timer: 1500,
         });
+        this.$store.commit("notSigninProcessing");
       }
     },
 
@@ -375,7 +378,7 @@ export default {
       }
 
       try {
-        this.processing = true;
+        this.$store.commit("isSigninProcessing");
         const response = await UsersAPI.PostSignIn({
           email: this.email,
           password: this.password,
@@ -393,7 +396,7 @@ export default {
         });
         localStorage.setItem("gofarmmy_token", data.token);
         this.$store.commit("setCurrentUser", data.user);
-        this.processing = false;
+        this.$store.commit("notSigninProcessing");
 
         if (this.$route.name === "CheckOut-Sign-in") {
           this.$router.push({ name: "CheckOut-Products" });
@@ -402,7 +405,7 @@ export default {
         }
       } catch (error) {
         this.password = "";
-        this.processing = false;
+        this.$store.commit("notSigninProcessing");
 
         if (error.message === "User does not exist") {
           Swal.fire({
@@ -442,35 +445,40 @@ export default {
     },
 
     fbLogin() {
-      console.log("點登入按鈕");
-      if (this.facebookConnect) {
-        console.log("有偵測到連結");
-        window.FB.api(
-          "/me",
-          { fields: "name , email" },
-          async function (response) {
-            store.dispatch("fetchFbUser", response);
-          }
-        );
-      } else {
-        window.FB.login(
-          function (response) {
-            if (response.status === "connected") {
-              window.FB.api(
-                "/me",
-                { fields: "name , email" },
-                async function (response) {
-                  store.dispatch("fetchFbUser", response);
-                }
-              );
+        this.$store.commit("isSigninProcessing");
+        console.log("點登入按鈕");
+        if (this.facebookConnect) {
+          console.log("有偵測到連結");
+          window.FB.api(
+            "/me",
+            { fields: "name , email" },
+            async function (response) {
+              await store.dispatch("fetchFbUser", response);
+              store.commit("notSigninProcessing");
             }
-          },
-          {
-            scope: "email, public_profile",
-            return_scopes: true,
-          }
-        );
-      }
+          );
+        } else {
+          window.FB.login(
+            function (response) {
+              if (response.status === "connected") {
+                window.FB.api(
+                  "/me",
+                  { fields: "name , email" },
+                  async function (response) {
+                    await store.dispatch("fetchFbUser", response);
+                    store.commit("notSigninProcessing");
+                  }
+                );
+              } else {
+                store.commit("notSigninProcessing")
+              }
+            },
+            {
+              scope: "email, public_profile",
+              return_scopes: true,
+            }
+          );
+        }
     },
   },
 

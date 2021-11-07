@@ -13,7 +13,10 @@
       <div class="user-content-items">
 
         <!--商品卡片區-->
-        <OrderDetail :order= "order"/>
+     
+<OrderDetailSpiner v-if="isProcessing"/>
+
+        <OrderDetail :order= "order" v-if="!isProcessing"/>
         
       </div>
     </div>
@@ -27,6 +30,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import OrderDetail from "@/components/OrderDetail.vue";
 import Swal from "sweetalert2";
 import OrderAPI from "./../apis/order";
+ import OrderDetailSpiner from "@/components/OrderDetailSpiner.vue";
 
 
 
@@ -36,7 +40,8 @@ export default {
     Navbar,
     UserNavbar,
     OrderDetail,
-    CartNavbar
+    CartNavbar,
+    OrderDetailSpiner
 
   },
 
@@ -44,6 +49,9 @@ export default {
     return {
       order: {},
       filterName: "",
+    isProcessing: true
+      
+
     };
   },
 
@@ -58,9 +66,7 @@ export default {
        try{ 
          const response = await OrderAPI.getOrder({ Id: id });
          this.order = response.data.order
-         
-         console.log('response', response)
-
+         this.isProcessing= false
        } catch(error) {
          console.log(error)
                  Swal.fire({
