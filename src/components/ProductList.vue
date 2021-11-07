@@ -1,7 +1,9 @@
 <template>
-
-    
     <div class="product-items">
+      <template  v-if="ProductProccessing">
+        <ProductListSpiner />
+      </template>
+      <template v-if="!ProductProccessing">
     
       <div
         class="product-content-items-card"
@@ -93,6 +95,7 @@
           請輸入有效數量
         </div>
       </div>
+      </template>
     </div>
 
 </template>
@@ -109,10 +112,10 @@
 .product-content-items-card {
   //margin-right: 4%;
   position: relative;
-  max-height: 420px;
+  height: 420px;
  width: 33.3%;
   padding: 0 2%;
-  margin-bottom: 5%;
+  margin-bottom: 1%;
   h2 {
     margin-top: 3%;
     text-align: center;
@@ -127,8 +130,10 @@
     position: relative;
     display: flex;
     height: 60%;
+    max-height: 220px;
     white-space: normal;
     overflow: hidden;
+    background-color:rgb(230, 219, 196) ;
 
     &-number {
       position: absolute;
@@ -225,13 +230,20 @@ import { descriptionLengthFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
 import CartAPI from "./../apis/cart";
 import Swal from "sweetalert2";
-
+import ProductListSpiner from "./ProductListSpiner.vue";
 export default {
+  components: {
+   ProductListSpiner
+
+  },
 
   props: {
     initialItems: {
       require: true,
     },
+    ProductProccessing : {
+      require: true
+    }
   },
   mixins: [descriptionLengthFilter],
   data() {

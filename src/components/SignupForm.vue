@@ -308,6 +308,7 @@ import UsersAPI from "./../apis/users";
 import Swal from "sweetalert2";
 import store from "./../store/index";
 import GoogleSignInButton from "./GoogleSignInButton";
+import { mapState } from "vuex";
 export default {
   components: {
     GoogleSignInButton,
@@ -320,11 +321,12 @@ export default {
       name: "",
       checkPassword: "",
       processing: false,
-      fbConnect: false,
+       googleToken: ""
     };
   },
   methods: {
     async oAuthSignIn(token) {
+      this.$store.commit("isSigninProcessing");
       this.googleToken = token;
       try {
         console.log("丟去後端");
@@ -345,9 +347,11 @@ export default {
         });
         localStorage.setItem("gofarmmy_token", data.JWTtoken);
         this.$store.commit("setCurrentUser", data.user);
+        this.$store.commit("notSigninProcessing");
         this.$router.push({ name: 'Home' });
       } catch (error) {
         console.error(error);
+        this.$store.commit("notSigninProcessing");
         Swal.fire({
           icon: "error",
           title: "登入錯誤，請洽客服",
@@ -384,7 +388,7 @@ export default {
       }
 
       try {
-        this.processing = true;
+        this.$store.commit("isSigninProcessing");
         const response = await UsersAPI.PostSignUp({
           name: this.name,
           email: this.email,
@@ -404,12 +408,13 @@ export default {
           showConfirmButton: false,
           timer: 2000,
         });
-        this.processing = false;
+        this.$store.commit("notSigninProcessing");
         this.$router.push({ name: "Sign-in" });
       } catch (error) {
         this.processing = false;
         this.password = "";
         this.checkPassword = "";
+        this.$store.commit("notSigninProcessing");
         if (error.message === "This email has been registered") {
           Swal.fire({
             icon: "warning",
@@ -445,18 +450,20 @@ export default {
       window.FB.getLoginStatus((response) => {
         if (response.status === "connected") {
           console.log("已連接", response);
-          this.fbConnect = true;
+          store.commit("changeFacebookConnect");
         }
       });
     },
 
     fbLogin() {
-      if (this.fbConnect) {
+      this.$store.commit("isSigninProcessing");
+      if (this.facebookConnect) {
         window.FB.api(
           "/me",
           { fields: "name,email" },
           async function (response) {
-            store.dispatch("fetchFbUser", response);
+          await store.dispatch("fetchFbUser", response);
+          store.commit("notSigninProcessing");
           }
         );
       } else {
@@ -467,10 +474,13 @@ export default {
                 "/me",
                 { fields: "name,email" },
                 async function (response) {
-                  store.dispatch("fetchFbUser", response);
+                 await store.dispatch("fetchFbUser", response);
+                 store.commit("notSigninProcessing");
                 }
               );
-            }
+            }  else {
+                store.commit("notSigninProcessing")
+              }
           },
           {
             scope: "email, public_profile",
@@ -487,6 +497,9 @@ export default {
       inline: "nearest",
     });
     this.getFacebookStatus();
+  },
+   computed: {
+    ...mapState(["facebookConnect"]),
   },
 };
 </script>

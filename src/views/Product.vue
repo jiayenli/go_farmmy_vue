@@ -15,7 +15,9 @@
         <h2 class="title">商品一覽</h2>
 
         <!--商品卡片區-->
-        <ProductList :initialItems="showItems" />
+        <ProductList 
+        :initialItems="showItems"
+        :ProductProccessing="ProductProccessing" />
       </div>
     </div>
   </div>
@@ -37,12 +39,14 @@ export default {
     CartNavbar,
     ProductList,
     ProductNavbar,
+    
   },
 
   data() {
     return {
       items: [],
       showItems: [],
+      ProductProccessing: true,
     };
   },
 
@@ -64,6 +68,7 @@ export default {
       this.$store.commit("closeCartModel");
     },
     async fetchData({ categoryId }) {
+      this.ProductProccessing = true
       try {
         const response = await ProductAPI.getProducts({ categoryId });
         this.items = response.data.products;
@@ -72,6 +77,7 @@ export default {
         } else {
           this.showItems = [...this.items];
         }
+        this.ProductProccessing = false
       } catch (error) {
         Swal.fire({
           icon: "error",

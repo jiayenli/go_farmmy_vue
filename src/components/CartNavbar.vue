@@ -139,22 +139,29 @@ export default {
           return;
         }
       }
-      window.gapi.auth2
-        .getAuthInstance()
-        .signOut()
-        .then(() => {
-          console.log("Google User signed out.");
-          this.$store.commit("logOut");
-          this.$router.push({ name: "Sign-in" });
+      try {
+        await window.gapi.auth2.getAuthInstance().signOut();
+        console.log("Google User signed out.");
+        this.$store.commit("logOut");
+        this.$router.push({ name: "Sign-in" });
+        Swal.fire({
+          icon: "success",
+          title: "登出成功！",
+          toast: true,
+          showConfirmButton: false,
+          timer: 2000,
         });
-
-      Swal.fire({
-        icon: "success",
-        title: "登出成功！",
-        toast: true,
-        showConfirmButton: false,
-        timer: 2000,
-      });
+      } catch (error) {
+        console.log(error);
+        this.$store.commit("logOut");
+        this.$router.push({ name: "Sign-in" });
+      }
+      // window.gapi.auth2.getAuthInstance().signOut()
+      //   .then(() => {
+      //     console.log("Google User signed out.");
+      //     this.$store.commit("logOut");
+      //     this.$router.push({ name: "Sign-in" });
+      //   });//這裡之後改寫try error形式
     },
   },
 };
