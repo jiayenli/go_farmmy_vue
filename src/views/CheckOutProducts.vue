@@ -177,7 +177,7 @@ export default {
         return;
       }
 
-      if (this.totle) {
+      if (this.total) {
         this.$router.push({ name: "CheckOut-Info" });
       } else {
         Swal.fire({
