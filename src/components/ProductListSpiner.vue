@@ -2,9 +2,7 @@
   <div class="product-spiner">
     <div class="product-spiner-items-card" v-for="item in items" :key="item.id">
       <div class="product-spiner-items-card-img">
-        <div class="product-spiner-items-card-img-2">
-        </div>
-
+        <div class="product-spiner-items-card-img-2"></div>
       </div>
       <div class="title"><div></div></div>
       <div class="product-spiner-items-card-specification">
@@ -15,14 +13,17 @@
       </div>
       <div class="product-spiner-items-card-panel">
         <div class="product-spiner-items-card-panel-number">
-          <button
-            class="product-spiner-items-card-panel-number-icon"
-          ></button>
-          <button class="product-spiner-items-card-panel-number-icon"></button>
-          <div class="input"></div>
-          <span></span>
+          <button class="product-spiner-items-card-panel-number-icon">
+            <div></div>
+          </button>
+          <button class="product-spiner-items-card-panel-number-icon">
+            <div></div>
+          </button>
+          <div class="input"><div></div></div>
         </div>
-        <button class="product-spiner-items-card-panel-button"></button>
+        <button class="product-spiner-items-card-panel-button">
+          <div></div>
+        </button>
       </div>
     </div>
   </div>
@@ -55,7 +56,6 @@
       background-color: $color-spinerBrown;
       animation: spiner 1s linear infinite;
       height: 100%;
-
     }
   }
   &-specification,
@@ -66,10 +66,9 @@
     margin-top: 1%;
     background-color: $color-lightBrown;
     div {
-        background-color: $color-spinerBrown;
+      background-color: $color-spinerBrown;
       animation: spiner 1s linear infinite;
       height: 100%;
-
     }
   }
   &-img {
@@ -77,13 +76,12 @@
     height: 60%;
     max-height: 220px;
     background-color: $color-lightBrown;
-    
+
     overflow: hidden;
     &-2 {
       height: 100%;
       background-color: $color-spinerBrown;
       animation: spiner 1s linear infinite;
-
     }
   }
 
@@ -102,6 +100,11 @@
         width: 25px;
         margin-right: 3%;
         padding: 2% 0 0 0;
+        div {
+          background-color: $color-spinerBrown;
+          animation: spiner 1s linear infinite;
+          height: 100%;
+        }
       }
       .input {
         background-color: $color-lightBrown;
@@ -110,6 +113,11 @@
         margin: 0 2%;
         height: 25px;
         padding-left: 2%;
+        div {
+          background-color: $color-spinerBrown;
+          animation: spiner 1s linear infinite;
+          height: 100%;
+        }
       }
     }
     &-button {
@@ -117,6 +125,11 @@
       height: 25px;
       width: 30%;
       padding: 2%;
+      div {
+        background-color: $color-spinerBrown;
+        animation: spiner 1s linear infinite;
+        height: 100%;
+      }
     }
   }
   @keyframes spiner {
@@ -128,11 +141,24 @@
     }
     100% {
       width: 100%;
-    
     }
-    
   }
 }
+@media screen and (max-width: 1000px) {
+  .product-spiner-items-card {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 539px) {
+  .product-spiner-items-card {
+    height: 280px;
+    &-panel {
+      display: none;
+    }
+  }
+
+}
+
 </style>
 
 <script>

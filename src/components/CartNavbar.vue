@@ -89,6 +89,18 @@
     color: $color-brown;
   }
 }
+@media screen and (max-width: 1300px) {
+  .cart-navbar {
+    top: 17%;
+  }
+
+}
+@media screen and (max-width: 767px) {
+  .cart-navbar {
+    top: 5%;
+  }
+
+}
 </style>
 
 <script>

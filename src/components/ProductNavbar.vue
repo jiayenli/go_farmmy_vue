@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div class="product-nav">
     <div class="product-content-nav-search">
       <div>
         <i class="fas fa-search" @click="filterItem"></i>
@@ -18,27 +18,26 @@
         <router-link
           class="product-content-nav-category-link"
           :to="{ name: 'Product' }"
-          
         >
           <h3>全部</h3>
         </router-link>
 
-        <div>
+        
           <router-link
             class="product-content-nav-category-link"
             :to="{ name: 'Product', query: { categoryId: 1 } }"
           >
             <h3>果物</h3>
           </router-link>
-        </div>
-        <div>
+       
+        
           <router-link
-            class="product-content-nav-category-link cat"
+            class="product-content-nav-category-link"
             :to="{ name: 'Product', query: { categoryId: 11 } }"
           >
             <h3>蔬菜</h3>
           </router-link>
-        </div>
+       
       </div>
     </div>
   </div>
@@ -48,64 +47,56 @@
 export default {
   data() {
     return {
-    filterName:""
-    }
-
+      filterName: "",
+    };
   },
 
   methods: {
-    refresh(){
-      this.$emit('refresh')
+    refresh() {
+      this.$emit("refresh");
     },
     filterItem() {
-      this.$store.commit('addFilterKeyword', this.filterName)
-      this.$emit('listPageFilter')
-      this.$emit('detailPageFilter')
-      this.filterName = ""
-
-    }
-
+      this.$store.commit("addFilterKeyword", this.filterName);
+      this.$emit("listPageFilter");
+      this.$emit("detailPageFilter");
+      this.filterName = "";
+    },
   },
-}
-
-
-
+};
 </script>
 
 <style lang="scss" scoped>
 @import "../assets/scss/color.scss";
 @import "../assets/scss/efficient.scss";
 
-      // outline: green 1px solid;
-      .product-content-nav-search {
-        display: flex;
-        //padding: 2%;
-        //background-color: $color-brown;
-        input {
-          margin-left: 5%;
-          height: 40px;
-          border: 4px $color-brown solid;
-          padding-left: 2%;
-          width: 100%;
-        }
-        div {
-          flex-shrink: 0;
-          display: flex;
-          height: 40px;
-          width: 40px;
-          background-color: $color-brown;
-          justify-content: center;
-          align-items: center;
-          color: white;
-          transition: 0.2s;
-          &:hover {
-            cursor: pointer;
-            transform: scale(1.05,1.05);
-
-          }
-        }
-      }
-    
+// outline: green 1px solid;
+.product-content-nav-search {
+  display: flex;
+  //padding: 2%;
+  //background-color: $color-brown;
+  input {
+    margin-left: 5%;
+    height: 40px;
+    border: 4px $color-brown solid;
+    padding-left: 2%;
+    width: 100%;
+  }
+  div {
+    flex-shrink: 0;
+    display: flex;
+    height: 40px;
+    width: 40px;
+    background-color: $color-brown;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    transition: 0.2s;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.05, 1.05);
+    }
+  }
+}
 
 .product-content-nav-category {
   margin-top: 18%;
@@ -145,6 +136,34 @@ export default {
   .router-link-exact-active {
     h3::before {
       background-color: $color-brown;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .product-content-nav-category {
+    background-color: unset;
+    border: 0px $color-brown solid;
+    margin-top: 0%;
+    width: 100%;
+
+    h2 {
+      display: none;
+    }
+    &-name {
+      background-image: unset;
+      justify-content: center;
+      display: flex;
+    padding-top: 2%;
+    }
+    &-link {
+      width: 20%;
+      h3 {
+        text-align: center;
+        margin-bottom: 0%;
+       // white-space: nowrap;
+        
+        
+      }
     }
   }
 }

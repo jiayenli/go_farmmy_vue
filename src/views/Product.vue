@@ -8,16 +8,16 @@
     </div>
     <div class="product-content" @click="controlCartModel">
       <div class="product-content-nav">
-        <ProductNavbar @listPageFilter="filterItem"
-        @refresh ="refresh" />
+        <ProductNavbar @listPageFilter="filterItem" @refresh="refresh" />
       </div>
       <div class="product-content-items">
         <h2 class="title">商品一覽</h2>
 
         <!--商品卡片區-->
-        <ProductList 
-        :initialItems="showItems"
-        :ProductProccessing="ProductProccessing" />
+        <ProductList
+          :initialItems="showItems"
+          :ProductProccessing="ProductProccessing"
+        />
       </div>
     </div>
   </div>
@@ -39,7 +39,6 @@ export default {
     CartNavbar,
     ProductList,
     ProductNavbar,
-    
   },
 
   data() {
@@ -52,8 +51,7 @@ export default {
 
   methods: {
     refresh() {
-      this.filterItem()
-
+      this.filterItem();
     },
     filterItem() {
       this.showItems = this.items.filter(
@@ -68,7 +66,7 @@ export default {
       this.$store.commit("closeCartModel");
     },
     async fetchData({ categoryId }) {
-      this.ProductProccessing = true
+      this.ProductProccessing = true;
       try {
         const response = await ProductAPI.getProducts({ categoryId });
         this.items = response.data.products;
@@ -77,7 +75,7 @@ export default {
         } else {
           this.showItems = [...this.items];
         }
-        this.ProductProccessing = false
+        this.ProductProccessing = false;
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -144,5 +142,48 @@ export default {
       //outline: red 1px solid;
     }
   }
+}
+@media screen and (max-width: 1100px) {
+    .product {
+    &-content {
+      &-nav {
+       padding-left: 3%;
+      }
+      &-items {
+        padding-right: 3.5%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .product {
+    &-content {
+      &-nav {
+        width: 35%;
+      }
+      &-items {
+        width: 65%;
+        
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .product {
+    &-content {
+      flex-direction: column;
+          &-nav {
+        width: 100%;
+      }
+      &-items {
+        margin-top: 2% ;
+        width: 100%;
+        padding-right: 0%;
+      }
+    }
+  }
+  
 }
 </style>

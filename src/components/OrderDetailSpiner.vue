@@ -41,11 +41,11 @@
         </div>
       </div>
     </div>
-    <div class="checkout-product-spiner-button">
+    <!-- <div class="checkout-product-spiner-button">
       <button class="checkout-product-spiner-button-previous" disabled></button>
       <button class="checkout-product-spiner-button-next" disabled></button>
       <button class="checkout-product-spiner-button-delete" disabled></button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -218,4 +218,17 @@
 .fas {
   cursor: pointer;
 }
+  @media screen and (max-width: 1100px) {
+    .checkout-product {
+    &-spiner {
+      &-top {
+       width: 100%;
+      }
+      &-left {
+        width: 100%;
+      }
+    }
+  }
+}
+
 </style>

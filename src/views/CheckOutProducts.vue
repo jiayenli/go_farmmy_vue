@@ -53,30 +53,49 @@
               </td>
               <td class="product-price">${{ product.price }} 元</td>
               <td class="product-number">
-                <div>
-                  <button
-                    class="add-item"
-                    @click="increaseItem(product)"
-                    :disabled="
-                      product.number === product.quantity || cart.controlButton
-                    "
-                  >
-                    +
-                  </button>
-                  <span>{{ product.number }}組</span>
-                  <button
-                    class="reduce-item"
-                    @click="decreaseItem(product)"
-                    :disabled="product.number <= 1 || cart.controlButton"
-                  >
-                    -
-                  </button>
+                <div class="product-number-flex">
+                  <div>
+                    <button
+                      class="add-item desk-add"
+                      @click="increaseItem(product)"
+                      :disabled="
+                        product.number === product.quantity ||
+                        cart.controlButton
+                      "
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div class="number-input">{{ product.number }}組</div>
+                  <div>
+                    <button
+                      class="add-item phone-add"
+                      @click="increaseItem(product)"
+                      :disabled="
+                        product.number === product.quantity ||
+                        cart.controlButton
+                      "
+                    >
+                      +
+                    </button>
+                    <button
+                      class="reduce-item"
+                      @click="decreaseItem(product)"
+                      :disabled="product.number <= 1 || cart.controlButton"
+                    >
+                      -
+                    </button>
+                  </div>
                 </div>
                 <h6>商品剩{{ product.quantity }}組</h6>
               </td>
               <td class="product-totle">${{ product.totalPrice }} 元</td>
               <td class="product-delete">
-                <i class="fas fa-trash-alt" @click="deleteItems(product)" :class="{canNotDelete:cart.controlButton}"></i>
+                <i
+                  class="fas fa-trash-alt"
+                  @click="deleteItems(product)"
+                  :class="{ canNotDelete: cart.controlButton }"
+                ></i>
               </td>
             </tr>
           </tbody>
@@ -114,11 +133,12 @@
     <div class="checkout-product-button">
       <button class="checkout-product-button-previous">上一步</button>
       <button
-        class="checkout-product-button-next" 
+        class="checkout-product-button-next"
         :class="total ? '' : 'block'"
-        @click.prevent.stop ="nextStep"
-        >填寫資料</button
+        @click.prevent.stop="nextStep"
       >
+        填寫資料
+      </button>
     </div>
   </div>
 </template>
@@ -129,7 +149,6 @@ import CartNavbar from "@/components/CartNavbar.vue";
 import CheckOutStep from "@/components/CheckOutStep.vue";
 import Swal from "sweetalert2";
 import { mapState } from "vuex";
-
 
 export default {
   name: "checkout-product",
@@ -147,30 +166,28 @@ export default {
   },
   methods: {
     nextStep() {
-      if(this.cart.shoppingCart.length === 0) {
-         Swal.fire({
+      if (this.cart.shoppingCart.length === 0) {
+        Swal.fire({
           icon: "warning",
           title: `購物車內沒有商品唷`,
           toast: true,
           showConfirmButton: false,
           timer: 2000,
         });
-        return
+        return;
       }
 
-      if(this.cart.totalPrice) {
-        this.$router.push({ name: 'CheckOut-Info' })
+      if (this.totle) {
+        this.$router.push({ name: "CheckOut-Info" });
       } else {
-            Swal.fire({
+        Swal.fire({
           icon: "warning",
-          title: `購物車發生錯誤，請洽客服`,
+          title: `超過購買上限，請洽客服`,
           toast: true,
           showConfirmButton: false,
           timer: 2000,
         });
-
       }
-
     },
     calculateTotal() {
       this.total = this.cart.totalPrice + this.cart.shippingInfo.fee;
@@ -202,9 +219,9 @@ export default {
       this.$store.dispatch("decreaseItemNumber", item);
     },
     async deleteItems(item) {
-         if(this.cart.controlButton) {
-      return
-    }
+      if (this.cart.controlButton) {
+        return;
+      }
       this.$store.dispatch("deleteItem", item);
     },
   },
@@ -317,11 +334,21 @@ export default {
           }
           .product-number {
             color: $color-red;
+            &-flex {
+              display: flex;
+              justify-content: center;
+            }
             h6 {
               font-size: 12px;
             }
+            .number-input {
+              margin: 0 3%;
+            }
             .add-item,
             .reduce-item {
+              // display: flex;
+              // align-items: center;
+              // justify-content: center;
               margin: 0 5%;
               height: 30px;
               width: 30px;
@@ -334,6 +361,9 @@ export default {
               &:hover {
                 transform: scale(1.1, 1.1);
               }
+            }
+            .phone-add {
+              display: none;
             }
           }
           .product-delete {
@@ -418,22 +448,164 @@ export default {
 
   &-button {
     @extend %checkout-button-area;
-     &-next, &-previous {
-       @extend %checkout-button;
-        color: $color-brown;
-     }
+    &-next,
+    &-previous {
+      @extend %checkout-button;
+      color: $color-brown;
+    }
 
-    &-previous{
+    &-previous {
       opacity: 0.5;
       cursor: not-allowed;
     }
 
     &-next {
-        &:hover {
-          transform: scale(1.1, 1.1);
-        }
-      
+      &:hover {
+        transform: scale(1.1, 1.1);
+      }
     }
+  }
+}
+@media screen and (max-width: 1100px) {
+  .checkout-product {
+    &-button {
+      width: 60%;
+      &-next,
+      &-previous {
+        margin: 0 3%;
+      }
+    }
+    &-content {
+      &-product {
+        width: 85%;
+        table {
+          thead {
+            .product-name-th {
+              width: 30%;
+            }
+            .product-price-th {
+              width: 15%;
+            }
+            .product-number-th {
+              width: 25%;
+            }
+            .product-totle-th {
+              width: 25%;
+            }
+            .product-delete-th {
+              width: 5%;
+            }
+          }
+          tbody {
+            .product-name {
+              div {
+                h6 {
+                  display: none;
+                }
+              }
+              img {
+                height: 60%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .checkout-product {
+    &-content {
+      &-product {
+        table {
+          thead {
+            .product-name-th {
+              width: 20%;
+            }
+            .product-price-th {
+              width: 20%;
+            }
+            .product-number-th {
+              width: 25%;
+            }
+            .product-totle-th {
+              width: 25%;
+            }
+            .product-delete-th {
+              width: 5%;
+            }
+          }
+          tbody {
+            .product-name {
+              text-align: center;
+            }
+            .product-number {
+              &-flex {
+                flex-direction: column;
+              }
+              .phone-add {
+                display: unset;
+              }
+              .desk-add {
+                display: none;
+              }
+            }
+            img {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 539px) {
+  .checkout-product {
+    &-content {
+      &-delivery {
+        &-notice {
+          display: none;
+        }
+      }
+      &-product {
+        table {
+          thead {
+            .product-name-th,
+            .product-price-th,
+            .product-number-th,
+            .product-totle-th,
+            .product-delete-th {
+              font-size: 14px;
+            }
+          }
+          tbody {
+            .product-price {
+              font-size: 16px;
+            }
+            .product-name {
+              text-align: center;
+            }
+             .product-totle {
+                font-size: 16px;
+              }
+            .product-number {
+              .number-input {
+                font-size: 16px;
+              }
+            }
+            img {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+     &-button {
+         &-next,
+    &-previous {
+      font-size: 15px;
+    }
+     }
   }
 }
 </style>

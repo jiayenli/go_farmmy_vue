@@ -35,9 +35,9 @@
               v-if="!productList"
             ></i
             ><i class="fas fa-minus-circle" v-else @click="openProductList"></i>
-            <h6>訂單編號：{{orderList.id}}</h6>
+            <h6>訂單編號：{{ orderList.id }}</h6>
           </h2>
-          
+
           <div class="checkout-product-content-left-content" v-if="productList">
             <div class="checkout-product-content-left-content-products">
               <div class="checkout-product-content-left-content-title">
@@ -128,13 +128,7 @@
       <input type="hidden" name="TradeSha" :value="tradeInfo.TradeSha" />
       <input type="hidden" name="Version" :value="tradeInfo.Version" />
       <div class="checkout-product-button">
-
-        <button
-          type="submit"
-          class="checkout-product-button-next"  
-        >
-          付款
-        </button>
+        <button type="submit" class="checkout-product-button-next">付款</button>
       </div>
     </form>
   </div>
@@ -245,7 +239,6 @@ export default {
         return;
       }
     },
-
   },
   mounted() {
     this.$store.commit("changeCheckOutStep", 3);
@@ -256,14 +249,13 @@ export default {
     this.checkOrderProccessing = true;
     this.pay(Id);
     this.getOrder(Id);
-
   },
 
   computed: {
     ...mapState(["isAuthenticated", "cart"]),
   },
   beforeDestroy() {
-    localStorage.removeItem("go_farmmy_orderId")
+    localStorage.removeItem("go_farmmy_orderId");
     this.$store.commit("changeCheckOutStep", 0);
   },
 };
@@ -404,5 +396,28 @@ export default {
 }
 .fas {
   cursor: pointer;
+}
+@media screen and (max-width: 1100px) {
+  .checkout-product {
+    &-content {
+      width: 90%;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .checkout-product {
+    &-content {
+      flex-direction: column;
+      width: 90%;
+      &-left {
+        width: 100%;
+      }
+      &-right {
+        margin-top: 5%;
+        width: 100%;
+      }
+    }
+  }
 }
 </style>

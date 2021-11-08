@@ -307,4 +307,44 @@ export default {
 .fas {
   cursor: pointer;
 }
+@media screen and (max-width: 1100px) {
+    .checkout-product {
+    &-content {
+      &-button {
+      width: 80%;
+    }
+      &-top {
+       width: 100%;
+      }
+      &-left {
+        width: 100%;
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .checkout-product {
+  &-content {
+    &-button {
+      width: 60%;
+    }
+
+
+  }
+  }
+
+}
+@media screen and (max-width: 539px) {
+  .checkout-product {
+  &-content {
+    &-button {
+      width: 100%;
+    }
+
+
+  }
+  }
+
+}
+
 </style>
