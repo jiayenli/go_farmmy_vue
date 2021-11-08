@@ -58,7 +58,7 @@
         </div>
         <div class="about-content-middle-content">
           <h3>| 特色一：產地直送，全程冷藏宅配，確保好品質！</h3>
-          <h3>| 特色二：甜度平均高達20以上，口口甜蜜好滋味！</h3>
+          <h3>| 特色二：火龍果甜度平均高達20以上，鮮甜好滋味！</h3>
 
           <h3>| 特色三：直接向農民買，實質回饋農民，農民心血看的見！</h3>
         </div>
@@ -139,14 +139,8 @@ export default {
   }
   &-content {
     width: 100%;
-
     margin: 3% auto 0 auto;
-    &-nav {
-      width: 30%;
-      padding-left: 10%;
-      padding-right: 3%;
-      // outline: green 1px solid;
-    }
+
     &-top {
       width: 80%;
       margin: 0 auto;
@@ -318,7 +312,7 @@ export default {
 
       &-title {
         width: 30%;
-        padding: 1.5% 0;
+        padding: 1.5% 1.5%;
         border-radius: 50px;
         background-color: $color-brown;
         h1,
@@ -359,5 +353,71 @@ export default {
   100% {
     opacity: 0;
   }
+}
+
+@media screen and (max-width: 1100px) {
+  .about {
+    &-content {
+      &-top,
+      &-middle {
+        width: 90%;
+        &-image {
+          &:hover {
+            .about-content-top-image-1 {
+              opacity: 1;
+              transform: scale(1, 1);
+            }
+          }
+          &-2 {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .about {
+    &-content {
+      &-top {
+        flex-direction: column;
+        &-image {
+          text-align: center;
+          width: 100%;
+          &-1 {
+            width: 100%;
+            height: 30vw;
+            
+            position: relative;
+            img {
+                       border-bottom-right-radius: 30px;
+            border-top-right-radius: 30px;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            }
+
+          }
+
+        }
+         &-text {
+           width: 100%;
+         }
+      }
+      &-middle {
+        width: 80%;
+        &-title {
+          padding: 4% 0 4% 4%;
+          width: 100%;
+        }
+      }
+       &-buttom {
+         &-title {
+           width: 60%;
+         }
+       }
+    }
+  }
+}
+@media screen and (max-width: 539px) {
 }
 </style>

@@ -103,16 +103,8 @@ export default {
 
     width: 80%;
     margin: 3% auto;
-    &-nav {
-      width: 30%;
-      padding-left: 10%;
-      padding-right: 3%;
-      // outline: green 1px solid;
-    }
     &-top {
       //border-bottom: 6px solid $color-brown;
-
-
       width: 100%;
       &-text {
         margin: 0 auto;
@@ -164,6 +156,8 @@ export default {
         .producerimage {
           margin: 0 3%;
           text-align: center;
+           width: 15vw;
+          height: 15vw;
 
           img {
             opacity: 0.5;
@@ -176,8 +170,7 @@ export default {
             transition: 0.4s;
           }
 
-          width: 15vw;
-          height: 15vw;
+         
 
           &:hover {
             img {
@@ -191,11 +184,69 @@ export default {
             h2,
             h3,
             h4 {
+            
               opacity: 1;
             }
           }
         }
       }
   }
+}
+@media screen and (max-width: 1100px) {
+  .about {
+    &-content {
+      padding-top:2% ;
+      width: 100%;
+      &-top{
+        &-text {
+          width: 50%;
+        }
+      }
+    }
+  }
+
+
+}
+@media screen and (max-width: 767px) {
+    .about {
+    &-content {
+
+      &-top{
+        &-text {
+          width: 80%;
+        }
+      }
+      &-producer {
+        flex-direction: column;
+        align-items: center;
+        .producerimage {
+          margin:3% 0 8% 0%;
+           width: 45vw;
+          height: 45vw;
+        
+          }
+
+      }
+    }
+  }
+
+}
+@media screen and (max-width: 539px) {
+    .about {
+    &-content {
+
+      &-producer {
+
+        .producerimage {
+          margin:3% 0 18% 0%;
+           width: 60vw;
+          height: 60vw;
+        
+          }
+
+      }
+    }
+  }
+
 }
 </style>

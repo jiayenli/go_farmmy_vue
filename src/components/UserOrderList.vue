@@ -78,7 +78,9 @@
         </div>
         <div class="orderList-list-card-button">
           <button @click="orderDetailPage(order.id)"><h4>訂單詳情</h4></button>
-          <button @click="gotoPay(order)" v-if="order.payment_status === '0'"><h4>前往付款</h4></button>
+          <button @click="gotoPay(order)" v-if="order.payment_status === '0'">
+            <h4>前往付款</h4>
+          </button>
         </div>
       </div>
       <div
@@ -197,7 +199,7 @@
         width: 80px;
         display: flex;
         flex-direction: column;
-        
+
         background-color: $color-brown;
         justify-content: center;
         align-items: center;
@@ -236,6 +238,30 @@
             white-space: nowrap;
           }
         }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .orderList {
+    width: 100%;
+  }
+  .orderList {
+    &-welcome {
+      &-spinner {
+        width: 7vw;
+        height: 7vw;
+      }
+    }
+  }
+}
+@media screen and (max-width: 539px) {
+    .orderList {
+    &-welcome {
+      &-spinner {
+        width: 15vw;
+        height: 15vw;
       }
     }
   }
@@ -312,7 +338,6 @@ export default {
     };
   },
 
-
   filters: {
     newTime(datetime) {
       return moment(datetime).format("YYYY-MM-DD");
@@ -320,8 +345,7 @@ export default {
   },
   methods: {
     orderDetailPage(id) {
-      this.$router.push({ name: 'User-Order-Page',  params: { id } });
-
+      this.$router.push({ name: "User-Order-Page", params: { id } });
     },
     addSearchActive() {
       this.listActive = false;

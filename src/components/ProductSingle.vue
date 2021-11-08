@@ -1,113 +1,110 @@
 <template>
-<div>
-<div v-if="proccessing">
+  <div>
+    <div v-if="proccessing">
       <Spiner />
     </div>
-  <div class="product-items" v-if="!proccessing">
-    
-    <h2 class="title">
-      <div >
-        季節特選。來自{{ item.origin }}的鮮採{{ item.name }}！
-      </div>
-    </h2>
+    <div class="product-items" v-if="!proccessing">
+      <h2 class="title">
+        <div>季節特選。來自{{ item.origin }}的鮮採{{ item.name }}！</div>
+      </h2>
 
-    <div class="product-content-items-card" v-if="!proccessing">
-      <div class="product-content-items-card-img">
-        <div
-          v-if="item.quantity > 0"
-          class="product-content-items-card-img-number"
-        >
-          <h5>限量{{ item.quantity }}組</h5>
-        </div>
-        <div
-          v-if="item.quantity === 0"
-          class="product-content-items-card-img-number"
-        >
-          <h5>已售完</h5>
-        </div>
-        <img :src="item.image" />
-      </div>
-
-      <div class="product-content-items-card-text">
-        <h1>{{ item.name }} | {{ item.origin }}</h1>
-        <div class="product-content-items-card-panel">
-          <div class="product-content-items-card-panel-number">
-            <button
-              class="product-content-items-card-panel-number-icon"
-              @click="addNumber(item)"
-              :disabled="Number(item.number) >= item.quantity"
-            >
-              +
-            </button>
-            <button
-              class="product-content-items-card-panel-number-icon"
-              @click="deleteNumber(item)"
-              :disabled="Number(item.number) <= 1"
-            >
-              -
-            </button>
-            <input
-              v-model="item.number"
-              class="product-content-items-card-panel-number-input"
-              id="number"
-              type="number"
-              :max="item.number"
-              @change="changeNumber(item)"
-              required
-            />
-            <span>組</span>
-          </div>
-          <button
-            class="product-content-items-card-panel-button"
-            @click.stop.prevent="addItemsTOcard(item)"
-            :disabled="
-              item.number > item.quantity ||
-              Number(item.number) <= 0 ||
-              !Number.isInteger(Number(item.number)) ||
-              item.quantity === 0
-            "
-          >
-            加入
-          </button>
+      <div class="product-content-items-card" v-if="!proccessing">
+        <div class="product-content-items-card-img">
           <div
-            class="product-content-items-card-warm"
-            v-if="item.number > item.quantity && item.quantity !== 0"
+            v-if="item.quantity > 0"
+            class="product-content-items-card-img-number"
           >
-            上限 {{ item.quantity }} 組
+            <h5>限量{{ item.quantity }}組</h5>
+          </div>
+          <div
+            v-if="item.quantity === 0"
+            class="product-content-items-card-img-number"
+          >
+            <h5>已售完</h5>
+          </div>
+          <img :src="item.image" />
+        </div>
+
+        <div class="product-content-items-card-text">
+          <h1>{{ item.name }} | {{ item.origin }}</h1>
+          <div class="product-content-items-card-panel">
+            <div class="product-content-items-card-panel-number">
+              <button
+                class="product-content-items-card-panel-number-icon"
+                @click="addNumber(item)"
+                :disabled="Number(item.number) >= item.quantity"
+              >
+                +
+              </button>
+              <button
+                class="product-content-items-card-panel-number-icon"
+                @click="deleteNumber(item)"
+                :disabled="Number(item.number) <= 1"
+              >
+                -
+              </button>
+              <input
+                v-model="item.number"
+                class="product-content-items-card-panel-number-input"
+                id="number"
+                type="number"
+                :max="item.number"
+                @change="changeNumber(item)"
+                required
+              />
+              <span>組</span>
+            </div>
+            <button
+              class="product-content-items-card-panel-button"
+              @click.stop.prevent="addItemsTOcard(item)"
+              :disabled="
+                item.number > item.quantity ||
+                Number(item.number) <= 0 ||
+                !Number.isInteger(Number(item.number)) ||
+                item.quantity === 0
+              "
+            >
+              加入
+            </button>
+            <div
+              class="product-content-items-card-warm"
+              v-if="item.number > item.quantity && item.quantity !== 0"
+            >
+              上限 {{ item.quantity }} 組
+            </div>
+          </div>
+          <div class="product-content-items-card-price">
+            <h2><i class="fas fa-comment-dollar"></i> 價格：</h2>
+            <p class="price-focus">{{ item.price }}元/箱</p>
+          </div>
+          <div class="product-content-items-card-specification">
+            <h2><i class="fas fa-tag"></i> 規格：</h2>
+            <p>{{ item.specification }}</p>
+          </div>
+          <div class="product-content-items-card-specification">
+            <h2><i class="fas fa-archive"></i> 保存方法：</h2>
+            <p>{{ item.storage_method }}</p>
+          </div>
+          <div class="product-content-items-card-description">
+            <h4>
+              {{ item.description }}
+            </h4>
           </div>
         </div>
-        <div class="product-content-items-card-price">
-          <h2><i class="fas fa-comment-dollar"></i> 價格：</h2>
-          <p class="price-focus">{{ item.price }}元/箱</p>
-        </div>
-        <div class="product-content-items-card-specification">
-          <h2><i class="fas fa-tag"></i> 規格：</h2>
-          <p>{{ item.specification }}</p>
-        </div>
-        <div class="product-content-items-card-specification">
-          <h2><i class="fas fa-archive"></i> 保存方法：</h2>
-          <p>{{ item.storage_method }}</p>
-        </div>
-        <div class="product-content-items-card-description">
-          <h4>
-            {{ item.description }}
-          </h4>
-        </div>
-      </div>
 
-      <div
-        class="product-content-items-card-warm"
-        v-if="
-          !Number.isInteger(Number(item.number)) ||
-          Number(item.number) < 0 ||
-          (item.number === '0' && item.quantity !== 0)
-        "
-      >
-        請輸入有效數量
+        <div
+          class="product-content-items-card-warm"
+          v-if="
+            !Number.isInteger(Number(item.number)) ||
+            Number(item.number) < 0 ||
+            (item.number === '0' && item.quantity !== 0)
+          "
+        >
+          請輸入有效數量
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <style lang="scss" scoped>
@@ -163,6 +160,7 @@
     white-space: nowrap;
   }
   p {
+    color: $color-red;
     font-weight: bolder;
     font-size: 16px;
   }
@@ -171,7 +169,7 @@
     color: $color-red;
   }
   h4 {
-    color: #927f62;
+    color: $color-brown;
     line-height: 160%;
     margin-top: 4%;
   }
@@ -267,6 +265,54 @@
     left: 100%;
     font-size: 12px;
     color: #ae0000;
+  }
+}
+
+
+@media screen and (max-width: 1100px) {
+  .product-content-items-card {
+    &-specification,
+    &-price {
+      flex-direction: column;
+    }
+    &-img {
+      height: 30vw;
+    }
+       &-panel {
+         width: 80%;
+     }
+  }
+}
+@media screen and (max-width: 767px) {
+  .product-content-items-card {
+
+    &-img {
+      height: unset;
+    }
+     &-panel {
+       width: 80%;
+     }
+  }
+}
+@media screen and (max-width: 539px) {
+  .product-content-items-card {
+    flex-direction: column;
+    h1 {
+      text-align: center;
+    }
+      &-panel {
+       margin: 0 auto;
+     }
+     &-specification,
+    &-price {
+      flex-direction: row;
+    }
+      &-text {
+    width: 100%;
+  }
+  &-img {
+    width: 100%;
+  }
   }
 }
 </style>

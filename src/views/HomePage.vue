@@ -1,12 +1,14 @@
 <template>
   <div class="home">
+    <CartNavbar />
+    <div class="nav">
+      <Navbar />
+    </div>
 
-      <CartNavbar />
-
-      <img class="home-slogan" src="./../assets/home-slogan.png" />
+    <img class="home-slogan" src="./../assets/home-slogan.png" />
     <div class="home-mask" @click="controlCartModel">
       <div class="home-anime">
-        <div><img src="./../assets/home-img-4.png" /></div>
+        <div><img src="./../assets/producer3.jpg" /></div>
         <div><img src="./../assets/home-img-5.png" /></div>
         <div><img src="./../assets/home-img-3.png" /></div>
       </div>
@@ -18,8 +20,12 @@
       <img class="home-major-product" src="./../assets/home-major.jpg" />
       <img class="home-major-name" src="./../assets/home-major-04.png" />
     </div>
-    <div class="nav">
-      <Navbar />
+
+    <div class="phone-nav-logo">
+      <router-link :to="{ name: 'Product' }">
+        <img src="./../assets/home-logo.png" />
+        <h2>- 進入 -</h2>
+      </router-link>
     </div>
   </div>
 </template>
@@ -31,15 +37,13 @@ export default {
   name: "Home",
   components: {
     Navbar,
-    CartNavbar
+    CartNavbar,
   },
   methods: {
-        controlCartModel() {
-       this.$store.commit('closeCartModel')
-
-
-     },
-  }
+    controlCartModel() {
+      this.$store.commit("closeCartModel");
+    },
+  },
 };
 </script>
 
@@ -53,9 +57,10 @@ export default {
   height: 100vh;
   background-image: url("./../assets/home-background.png");
   position: relative;
+  overflow: hidden;
 
   &-slogan {
-    z-index: 5;
+    z-index: 3;
     left: 5%;
     position: absolute;
     width: 250px;
@@ -63,6 +68,7 @@ export default {
   }
 
   &-mask {
+    height: 100vh;
     width: 100%;
     -webkit-mask: url("./../assets/home-img-cover.png") no-repeat center center /
       contain;
@@ -126,9 +132,24 @@ export default {
   }
 }
 .nav {
+  width: 100%;
   position: absolute;
-  bottom:6vh;
-
+  bottom: 1vh;
+  z-index: 5;
+}
+.phone-nav-logo {
+  display: none;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  bottom: 3%;
+  width: 40%;
+  h2 {
+    border-radius: 10px;
+    text-align: center;
+    background-color: $color-brown;
+    color: white;
+  }
 }
 
 /*動畫關鍵影格, slider動畫名字*/
@@ -158,5 +179,37 @@ export default {
 
 .home-anime div:nth-child(3) {
   animation-delay: 12s;
+}
+
+@media screen and (max-width: 1100px) {
+  .home {
+    &-mask {
+      height: 110vh;
+    }
+    &-anime {
+      position: relative;
+      height: 100vh;
+    }
+  }
+  .nav {
+    position: absolute;
+    bottom: 1vh;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .home-major {
+    display: none;
+  }
+  .phone-nav-logo {
+    display: block;
+  }
+  .nav {
+    bottom: 100%;
+  }
+}
+
+@media screen and (max-width: 539px) {
+
 }
 </style>

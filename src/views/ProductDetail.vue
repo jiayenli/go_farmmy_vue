@@ -128,4 +128,46 @@ export default {
     }
   }
 }
+@media screen and (max-width: 1100px) {
+    .product {
+    &-content {
+      &-nav {
+       padding-left: 3%;
+      }
+      &-items {
+        padding-right: 3.5%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .product {
+    &-content {
+      &-nav {
+        width: 35%;
+      }
+      &-items {
+        width: 65%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .product {
+    &-content {
+      flex-direction: column;
+          &-nav {
+        width: 100%;
+      }
+      &-items {
+        margin-top: 2% ;
+        width: 100%;
+        padding-right: 0%;
+      }
+    }
+  }
+  
+}
 </style>

@@ -520,4 +520,45 @@ export default {
     }
   }
 }
+@media screen and (max-width: 1100px) {
+  .checkout-product {
+          &-button {
+      width: 60%;
+    &-next,
+    &-previous {
+      margin: 0 3%;
+
+    }
+    }
+  &-content {
+    &-top {
+ 
+      width: 90%;
+      .checkout-input {
+        width: 100%;
+      }
+    }
+  }
+  }
+
+
+}
+@media screen and (max-width: 539px) {
+  .checkout-product {
+    &-content {
+      .checkout-input {
+        input {
+          font-size: 14px;
+        }
+      }
+    
+    }
+     &-button {
+         &-next,
+    &-previous {
+      font-size: 15px;
+    }
+     }
+  }
+}
 </style>

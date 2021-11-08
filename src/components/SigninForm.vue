@@ -279,6 +279,25 @@
     transform: rotate(360deg);
   }
 }
+
+@media screen and (max-width: 1100px) {
+  .signin-form {
+     form {
+       width: 60%;
+     }
+
+  }
+
+}
+@media screen and (max-width: 539px) {
+  .signin-form {
+     form {
+       width: 80%;
+     }
+
+  }
+
+}
 </style>
 
 <script>

@@ -233,6 +233,18 @@
     }
   }
 }
+
+ @media screen and (max-width: 1100px) {
+   .signin-form {
+     h2 {
+       width: 100%;
+     }
+     form {
+       width: 100%;
+     }
+   }
+
+ }
 </style>
 
 <script>
