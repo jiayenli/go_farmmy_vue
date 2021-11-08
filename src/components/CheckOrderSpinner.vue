@@ -70,6 +70,16 @@
   }
 }
 
+@media screen and (max-width: 767px) {
+  .loader-area {
+
+  &-hightlight {
+    width: 70%;
+  }
+  }
+
+}
+
 
 </style>
 

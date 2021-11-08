@@ -1,5 +1,6 @@
 <template>
   <div class="signin">
+    <SigninSpiner v-if="signinProcessing"/>
     <Navbar />
     <CartNavbar />
     <div class="signin-cover" @click="controlCartModel">
@@ -37,18 +38,24 @@
 import Navbar from "@/components/Navbar.vue";
 import CartNavbar from "@/components/CartNavbar.vue";
 import SigninForm from "@/components/SigninForm.vue";
+import SigninSpiner from "@/components/SigninSpiner.vue";
+import { mapState } from "vuex";
 export default {
   name: "Sign-in",
   components: {
     Navbar,
     CartNavbar,
-    SigninForm
+    SigninForm,
+     SigninSpiner
   },
   methods: {
        controlCartModel() {
        this.$store.commit('closeCartModel')
 
      },
+  },
+     computed: {
+    ...mapState(["signinProcessing"]),
   },
 
 };

@@ -138,4 +138,20 @@ export default {
 .yellow {
   background-color: $color-yellow;
 }
+@media screen and (max-width: 1100px) {
+  .checkout-step{
+     &-content {
+    width: 60%;
+     }
+  }
+
+}
+@media screen and (max-width: 539px) {
+   .checkout-step{
+     &-content {
+    width: 95%;
+     }
+  }
+
+}
 </style>

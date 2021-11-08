@@ -64,13 +64,13 @@ export default {
 
   methods: {
     nextStep() {
-      this.$router.push({ name: 'User-Order' });
+      this.$router.push({ name: "User-Order" });
     },
     previousPage() {
       this.$router.push({ name: "Product" });
     },
     empyItems() {
-          localStorage.removeItem("go_farmmy_orderId")
+      localStorage.removeItem("go_farmmy_orderId");
       this.$store.dispatch("ChangeShoppingCart", []);
     },
   },
@@ -136,5 +136,16 @@ export default {
 }
 .fas {
   cursor: pointer;
+}
+@media screen and (max-width: 1100px) {
+  .checkout-product {
+    &-button {
+      width: 60%;
+      &-next,
+      &-previous {
+        margin: 0 3%;
+      }
+    }
+  }
 }
 </style>

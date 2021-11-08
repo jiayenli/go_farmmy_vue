@@ -1,35 +1,31 @@
 <template>
-    <div class="product-items">
-      <template  v-if="ProductProccessing">
-        <ProductListSpiner />
-      </template>
-      <template v-if="!ProductProccessing">
-    
+  <div class="product-items">
+    <template v-if="ProductProccessing">
+      <ProductListSpiner />
+    </template>
+    <template v-if="!ProductProccessing">
       <div
         class="product-content-items-card"
         v-for="item in initialItems"
         :key="item.id"
       >
-         <router-link
-            :to="{ name: 'Product-Detail', params: { id: item.id } }"
-          >
-        <div class="product-content-items-card-img">
-          <div
-            v-if="item.quantity > 0"
-            class="product-content-items-card-img-number"
-          >
-            <h5>限量{{ item.quantity }}組</h5>
+        <router-link :to="{ name: 'Product-Detail', params: { id: item.id } }">
+          <div class="product-content-items-card-img">
+            <div
+              v-if="item.quantity > 0"
+              class="product-content-items-card-img-number"
+            >
+              <h5>限量{{ item.quantity }}組</h5>
+            </div>
+            <div
+              v-if="item.quantity === 0"
+              class="product-content-items-card-img-number"
+            >
+              <h5>已售完</h5>
+            </div>
+            <img :src="item.image" />
           </div>
-          <div
-            v-if="item.quantity === 0"
-            class="product-content-items-card-img-number"
-          >
-            <h5>已售完</h5>
-          </div>
-          <img :src="item.image" />
-           
-        </div>
-         </router-link>
+        </router-link>
         <h2>{{ item.name }} | {{ item.origin }}</h2>
         <div class="product-content-items-card-specification">
           <i class="fas fa-tag"></i> {{ item.specification }}
@@ -95,9 +91,8 @@
           請輸入有效數量
         </div>
       </div>
-      </template>
-    </div>
-
+    </template>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -113,7 +108,7 @@
   //margin-right: 4%;
   position: relative;
   height: 420px;
- width: 33.3%;
+  width: 33.3%;
   padding: 0 2%;
   margin-bottom: 1%;
   h2 {
@@ -133,7 +128,7 @@
     max-height: 220px;
     white-space: normal;
     overflow: hidden;
-    background-color:rgb(230, 219, 196) ;
+    background-color: rgb(230, 219, 196);
 
     &-number {
       position: absolute;
@@ -144,12 +139,12 @@
       opacity: 1;
     }
     img {
-       object-fit: cover;
+      object-fit: cover;
       transition: 0.5s;
     }
     &:hover {
       img {
-        transform: scale(1.1,1.1);
+        transform: scale(1.1, 1.1);
       }
 
       .product-content-items-card-img-number {
@@ -223,6 +218,24 @@
     color: #ae0000;
   }
 }
+
+
+
+@media screen and (max-width: 1000px) {
+  .product-content-items-card {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 539px) {
+  .product-content-items-card {
+    height: 280px;
+    &-panel {
+      display: none;
+    }
+  }
+
+}
+
 </style>
 
 <script>
@@ -233,17 +246,16 @@ import Swal from "sweetalert2";
 import ProductListSpiner from "./ProductListSpiner.vue";
 export default {
   components: {
-   ProductListSpiner
-
+    ProductListSpiner,
   },
 
   props: {
     initialItems: {
       require: true,
     },
-    ProductProccessing : {
-      require: true
-    }
+    ProductProccessing: {
+      require: true,
+    },
   },
   mixins: [descriptionLengthFilter],
   data() {

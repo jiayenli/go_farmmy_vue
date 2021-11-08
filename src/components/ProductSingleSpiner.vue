@@ -135,4 +135,55 @@
     width: 100%;
   }
 }
+
+@media screen and (max-width: 1000px) {
+  .product-spiner-items-card {
+    height: 100%;
+    &-specification,
+    &-price {
+      flex-direction: column;
+    }
+    &-img {
+      height: 30vw;
+    }
+    &-description {
+      height: 20%;
+    }
+    &-panel {
+      width: 80%;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .product-spiner-items-card {
+    &-img {
+      height: 40vw;
+    }
+    &-panel {
+      width: 80%;
+    }
+  }
+}
+@media screen and (max-width: 539px) {
+  .product-spiner-items-card {
+    flex-direction: column;
+    h1 {
+      margin-top: 5% ;
+      text-align: center;
+    }
+    &-panel {
+      margin: 0 auto;
+    }
+    &-specification,
+    &-price {
+      flex-direction: row;
+    }
+    &-text {
+      width: 100%;
+    }
+    &-img {
+      width: 100%;
+    }
+  }
+}
 </style>
