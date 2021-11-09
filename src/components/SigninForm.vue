@@ -331,7 +331,6 @@ export default {
       this.$store.commit("isSigninProcessing");
       this.googleToken = token;
       try {
-        console.log("丟去後端");
         const response = await UsersAPI.PostGoogleSignIn({
           token: this.googleToken,
         });
@@ -339,7 +338,6 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        console.log(response);
         Swal.fire({
           icon: "success",
           title: `歡迎 ${data.user.name}回來！`,
@@ -465,7 +463,6 @@ export default {
 
     fbLogin() {
         this.$store.commit("isSigninProcessing");
-        console.log("點登入按鈕");
         if (this.facebookConnect) {
           console.log("有偵測到連結");
           window.FB.api(
