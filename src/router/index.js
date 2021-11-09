@@ -168,7 +168,7 @@ router.beforeEach(async (to, from, next) => {
       })
 
       //要保留local host資料
-      console.log(productInLocalStorage)
+      //console.log(productInLocalStorage)
       if (result.isConfirmed) {
         await store.dispatch('ChangeShoppingCart', productInLocalStorage)
       }
