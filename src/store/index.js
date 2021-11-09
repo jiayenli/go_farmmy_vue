@@ -106,13 +106,11 @@ export default new Vuex.Store({
     },
 
     async fetchFbUser({ commit }, response) {
-      console.log('response', response)
       try {
         const backEndResponse = await UserAPI.PostFbSignIn({
           name: response.name,
           email: response.email,
         });
-        console.log("backEndResponse", backEndResponse.data);
         const { data } = backEndResponse;
         if (data.status !== "success") {
           throw new Error(data.message);
