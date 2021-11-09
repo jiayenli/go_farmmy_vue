@@ -52,7 +52,7 @@ export default {
 
 .home {
   margin: 0 0;
-  outline: 1px red solid;
+ // outline: 1px red solid;
   width: 100vw;
   height: 100vh;
   background-image: url("./../assets/home-background.png");
