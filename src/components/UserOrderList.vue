@@ -122,15 +122,19 @@
       border: 4px solid $color-brown;
       cursor: pointer;
       background-color: $color-yellow;
+      animation: spinerMove 1s ease-in-out infinite;
     }
 
     .listActive {
       background-color: $color-yellow;
-      animation: sk-scaleout 0.5s ease-in-out;
+       animation: spinerMove 1s ease-in-out infinite;
+      //animation: sk-scaleout 0.5s ease-in-out;
+      
     }
     .searchActive {
       background-color: $color-green;
-      animation: sk-scaleout-2 0.5s ease-in-out;
+     // animation: sk-scaleout-2 0.5s ease-in-out;
+       animation: spinerMove 1s ease-in-out infinite;
     }
 
     &-text {
@@ -267,32 +271,28 @@
   }
 }
 
-@keyframes sk-scaleout {
-  0% {
-    transform: translateX(0%);
-  }
-  50% {
-    transform: translateX(70%);
-    width: 3.7vw;
-    height: 4.3vw;
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
-@keyframes sk-scaleout-2 {
-  0% {
-    transform: translateX(0%);
-  }
-  50% {
-    transform: translateX(70%);
-    width: 3.7vw;
-    height: 4.3vw;
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
+// @keyframes sk-scaleout {
+//   0% {
+//     transform: translateX(0%);
+//   }
+//   50% {
+//     transform: scale(0.8, 1.1);
+//   }
+//   100% {
+//     transform: translateX(0%);
+//   }
+// }
+// @keyframes sk-scaleout-2 {
+//   0% {
+//     transform: translateX(0%);
+//   }
+//   50% {
+//     transform: scale(0.8, 1.1);;
+//   }
+//   100% {
+//     transform: translateX(0%);
+//   }
+// }
 
 @keyframes listAppear {
   0% {
@@ -315,6 +315,17 @@
   }
   100% {
     opacity: 1;
+  }
+}
+@keyframes spinerMove {
+  0% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(0.95, 0.95);
+  }
+  100% {
+    transform: scale(1, 1);
   }
 }
 </style>
@@ -361,7 +372,6 @@ export default {
     async fetchOrder() {
       try {
         const { data } = await UserAPI.getCurrentUser();
-        console.log(data);
         this.orders = [...data.userOrders];
         this.unCompleteOrder = this.orders.filter(
           (order) => order.payment_status === "0"

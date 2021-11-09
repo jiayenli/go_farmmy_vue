@@ -380,10 +380,12 @@ export default {
   .about {
     &-content {
       &-top {
+        
         flex-direction: column;
         &-image {
           text-align: center;
           width: 100%;
+          margin-bottom: 2%;
           &-1 {
             width: 100%;
             height: 30vw;
@@ -400,18 +402,28 @@ export default {
 
         }
          &-text {
+           margin-top: 3%;
            width: 100%;
          }
       }
       &-middle {
-        width: 80%;
+        margin-top: 3%;
+        width: 90%;
         &-title {
           padding: 4% 0 4% 4%;
           width: 100%;
         }
+             &-content {
+
+        h3 {
+          margin-bottom: 2% ;
+        }
+      }
       }
        &-buttom {
+         margin-top: 10%;
          &-title {
+           margin-top: 5%;
            width: 60%;
          }
        }
