@@ -175,10 +175,11 @@ export default {
     &-content {
       flex-direction: column;
           &-nav {
+            margin-top: 5%;
         width: 100%;
       }
       &-items {
-        margin-top: 2% ;
+        margin-top: 3% ;
         width: 100%;
         padding-right: 0%;
       }

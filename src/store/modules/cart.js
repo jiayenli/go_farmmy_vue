@@ -84,7 +84,6 @@ const mutations = {
 
 const actions = {
   async fetchSoppingCard({ commit }) {
-    console.log('有在fetch')
     try {
       const { data } = await CartAPI.getCart()
       const  {cart}  = data
@@ -117,7 +116,6 @@ const actions = {
   async addEmptyShoppingCart({ commit, dispatch }, items) {
     try {
       commit('updateProducts', items)
-      console.log('items', items)
       const promise = await Promise.all(
         items.map(async item => await CartAPI.postCart({
           productId: item.id,
@@ -129,11 +127,15 @@ const actions = {
       } else {
         throw new Error(promise[0].data.status)
       }
-
     } catch (error) {
-
+      Swal.fire({
+        icon: "error",
+        title: "購物車添加失敗，請稍後再試！",
+        toast: true,
+        showConfirmButton: false,
+        timer: 2000,
+      });
       console.log(error)
-
     }
   },
 
@@ -148,6 +150,13 @@ const actions = {
       }
     } catch (error) {
       console.log(error)
+      Swal.fire({
+        icon: "error",
+        title: "購物車更新失敗，請稍後再試！",
+        toast: true,
+        showConfirmButton: false,
+        timer: 2000,
+      });
     }
   },
 
