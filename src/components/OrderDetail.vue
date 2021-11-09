@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="checkout-product-content" v-if="!isProcessing">
+  <div class="checkout-product-content">
     <div class="checkout-product-content-top">
       <h4>訂單日期：{{ order.createdAt | newTime }}</h4>
       <h4>

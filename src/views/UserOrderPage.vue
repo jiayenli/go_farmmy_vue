@@ -1,23 +1,19 @@
 <template>
   <div class="user">
     <Navbar />
-     <CartNavbar />
+    <CartNavbar />
     <div class="user-cover" @click="controlCartModel">
       <img class="user-cover-title" src="./../assets/member-title-1.png" />
       <img class="user-cover-img" src="./../assets/home-img-5.png" />
     </div>
     <div class="user-content" @click="controlCartModel">
       <div class="user-content-nav">
-        <UserNavbar @detailPageFilter="productFilter"/>
+        <UserNavbar @detailPageFilter="productFilter" />
       </div>
       <div class="user-content-items">
-
-        <!--商品卡片區-->
-     
-<OrderDetailSpiner v-if="isProcessing"/>
-
-        <OrderDetail :order= "order" v-if="!isProcessing"/>
-        
+        <!--訂單卡片區-->
+        <OrderDetailSpiner v-if="isProcessing" />
+        <OrderDetail :order="order" v-if="!isProcessing" />
       </div>
     </div>
   </div>
@@ -30,9 +26,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import OrderDetail from "@/components/OrderDetail.vue";
 import Swal from "sweetalert2";
 import OrderAPI from "./../apis/order";
- import OrderDetailSpiner from "@/components/OrderDetailSpiner.vue";
-
-
+import OrderDetailSpiner from "@/components/OrderDetailSpiner.vue";
 
 export default {
   name: "Member",
@@ -41,54 +35,45 @@ export default {
     UserNavbar,
     OrderDetail,
     CartNavbar,
-    OrderDetailSpiner
-
+    OrderDetailSpiner,
   },
 
   data() {
     return {
       order: {},
       filterName: "",
-    isProcessing: true
-      
-
+      isProcessing: true,
     };
   },
 
   methods: {
     productFilter() {
-      this.$router.push({ name: 'Product'})
+      this.$router.push({ name: "Product" });
     },
     controlCartModel() {
       this.$store.commit("closeCartModel");
     },
-     async fetchData(id) {
-       try{ 
-         const response = await OrderAPI.getOrder({ Id: id });
-         this.order = response.data.order
-         this.isProcessing= false
-       } catch(error) {
-         console.log(error)
-                 Swal.fire({
+    async fetchData(id) {
+      try {
+        const response = await OrderAPI.getOrder({ Id: id });
+        this.order = response.data.order;
+        this.isProcessing = false;
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
           icon: "warning",
           title: `訂單載入失敗，請稍後再試 `,
           toast: true,
           showConfirmButton: false,
           timer: 2000,
         });
-
-       }
-
-     }
-
+      }
+    },
   },
   created() {
-  const {id} = this.$route.params;
-  console.log('id',id)
+    const { id } = this.$route.params;
     this.fetchData(id);
-  }
-
-
+  },
 };
 </script>
 
@@ -120,10 +105,8 @@ export default {
       padding-left: 10%;
       padding-right: 3%;
       // outline: green 1px solid;
-
     }
     &-items {
-
       padding-right: 7.5%;
       width: 70%;
 
@@ -132,10 +115,10 @@ export default {
   }
 }
 @media screen and (max-width: 1100px) {
-    .user {
+  .user {
     &-content {
       &-nav {
-       padding-left: 3%;
+        padding-left: 3%;
       }
       &-items {
         padding-right: 3.5%;
@@ -157,19 +140,18 @@ export default {
   }
 }
 @media screen and (max-width: 767px) {
-    .user {
+  .user {
     &-content {
       flex-direction: column;
-          &-nav {
+      &-nav {
         width: 100%;
       }
       &-items {
-        margin-top: 2% ;
+        margin-top: 2%;
         width: 100%;
         padding: 1.5%;
       }
     }
   }
-
 }
 </style>

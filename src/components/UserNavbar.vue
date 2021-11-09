@@ -132,10 +132,16 @@ export default {
   }
 }
 @media screen and (max-width: 767px) {
+  .product-content-nav-search {
+ margin-top: 5%;
+ 
+  }
   .user-content-nav-category {
+   
     justify-content: center;
     width: 100%;
-    margin-top: 2%;
+    margin-top: 3%;
+    
     display: flex;
 
     &-name {
@@ -154,6 +160,8 @@ export default {
 }
 @media screen and (max-width: 539px) {
   .user-content-nav-category {
+    margin-top: 5%;
+    margin-bottom: 4%;
     &-name {
       width: 50%;
     }
