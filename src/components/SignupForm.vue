@@ -310,10 +310,22 @@
   }
 
 }
-@media screen and (max-width: 539px) {
+@media screen and (max-width: 767px) {
   .signin-form {
      form {
        width: 80%;
+     }
+
+  }
+
+}
+@media screen and (max-width: 539px) {
+  .signin-form {
+     &-content {
+       &-button,
+    &-signin {
+      width: 30%;
+    }
      }
 
   }

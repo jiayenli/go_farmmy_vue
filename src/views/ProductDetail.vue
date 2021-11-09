@@ -60,7 +60,6 @@ export default {
     async fetchData(Id) {
       try {
         const response = await ProductAPI.getProduct({id:Id});
-        console.log(response)
         this.item = {...response.data.product};
         this.proccessing = false
       } catch (error) {
@@ -159,10 +158,11 @@ export default {
     &-content {
       flex-direction: column;
           &-nav {
+            margin-top: 5%;
         width: 100%;
       }
       &-items {
-        margin-top: 2% ;
+        margin-top: 3% ;
         width: 100%;
         padding-right: 0%;
       }
