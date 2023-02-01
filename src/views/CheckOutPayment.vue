@@ -200,12 +200,10 @@ export default {
       }
       try {
         const response = await OrderAPI.getPayment({ Id });
-        if (response.statusText === "OK") {
-          this.tradeInfo = response.data.tradeInfo;
-          this.checkOrderProccessing = false;
-        }
+        this.tradeInfo = response.data.tradeInfo;
+        this.checkOrderProccessing = false;
       } catch (error) {
-        console.log(error);
+        this.checkOrderProccessing = false;
         Swal.fire({
           icon: "warning",
           title: `訂單建立失敗，請與客服聯繫 `,
@@ -213,6 +211,7 @@ export default {
           showConfirmButton: false,
           timer: 2000,
         });
+        setTimeout(this.previousPage, 2000);
       }
     },
 
@@ -222,8 +221,7 @@ export default {
         if (response.data.order.payment_status === "1") {
           this.$router.push({ name: "CheckOut-Complete" });
           return;
-        }
-        if (response.statusText === "OK") {
+        } else {
           this.orderList = response.data.order;
           this.checkOrderProccessing = false;
         }
