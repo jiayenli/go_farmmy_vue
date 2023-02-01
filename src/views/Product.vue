@@ -69,7 +69,7 @@ export default {
       this.ProductProccessing = true;
       try {
         const response = await ProductAPI.getProducts({ categoryId });
-        this.items = response.data.products;
+        this.items = response.data;
         if (this.filterKeyword) {
           this.filterItem();
         } else {

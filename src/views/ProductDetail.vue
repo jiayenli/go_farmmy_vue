@@ -60,7 +60,7 @@ export default {
     async fetchData(Id) {
       try {
         const response = await ProductAPI.getProduct({id:Id});
-        this.item = {...response.data.product};
+        this.item = {...response.data};
         this.proccessing = false
       } catch (error) {
         Swal.fire({
