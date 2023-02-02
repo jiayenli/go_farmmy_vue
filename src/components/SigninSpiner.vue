@@ -11,11 +11,10 @@
 
 @import "../assets/scss/color.scss";
 .loader-area {
-        display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   z-index: 999;
   background-color: rgba(0, 0, 0, 0.7);
   height: 100vh;
@@ -24,19 +23,16 @@
   position: fixed;
 
   &-hightlight {
-      display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  width: 30%;
-  border: 8px $color-yellow solid;
-  border-radius: 20px;
-  padding-bottom: 2% ;
-   //height: 250px;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 30%;
+    border: 8px $color-yellow solid;
+    border-radius: 20px;
+    padding-bottom: 2% ;
   }
-
 }
 .loader,
 .loader:after {
@@ -61,11 +57,17 @@
 }
 @-webkit-keyframes load8 {
   0% {
-    -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
     transform: rotate(360deg);
   }
 }

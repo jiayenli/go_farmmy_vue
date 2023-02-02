@@ -112,7 +112,7 @@
 
 .product-items {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   flex-wrap: wrap;
   padding: 5% 2%;
   &-spiner {

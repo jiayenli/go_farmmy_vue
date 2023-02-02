@@ -21,7 +21,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   z-index: 999;
   background-color: rgba(0, 0, 0, 0.7);
   height: 100vh;
@@ -47,7 +46,6 @@
     justify-content: center;
     align-items: center;
     button {
-      //border: 5px $color-brown dashed;
       border-radius: 5px;
       padding: 4%;
       font-size: 20px;
