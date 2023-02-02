@@ -283,7 +283,7 @@ export default {
     margin: 2% auto 2% auto;
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: flex-start;
     &-right {
       border: 4px $color-brown solid;
       width: 40%;

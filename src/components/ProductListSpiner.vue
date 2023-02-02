@@ -35,7 +35,7 @@
 .product-spiner {
   width: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 .product-spiner-items-card {

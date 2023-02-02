@@ -10,27 +10,19 @@
 
 @import "../assets/scss/color.scss";
 .loader-area {
-        display: flex;
+  display: flex;
   justify-content: center;
   align-items: flex-start;
   z-index: 999;
   height: 100%;
   width: 100%;
   overflow: hidden;
-  //background-color:grey ;
-  //position: fixed;
-
-
   &-hightlight {
-      display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-   //height: 250px;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
-
 }
 .loader,
 .loader:after {
@@ -55,24 +47,28 @@
 }
 @-webkit-keyframes load8 {
   0% {
-    -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+@keyframes load8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @media screen and (max-width: 767px) {
   .loader-area {
-
   &-hightlight {
     width: 70%;
   }
   }
-
 }
-
 
 </style>
 
